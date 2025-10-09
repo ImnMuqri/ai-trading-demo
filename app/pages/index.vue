@@ -8,12 +8,11 @@
     </div>
 
     <div class="relative z-10 max-w-2xl px-6">
-      <div class="mb-4 grid grid-cols-1 gap-1">
-        <h1 class="text-4xl font-bold text-white">Welcome to AI Trading App</h1>
+      <div class="mb-4 grid grid-cols-1 gap-4">
         <div class="flex items-center justify-center gap-2">
-          <p class="text-sky-500 text-[12px] capitalize">
+          <div class="text-sky-500 text-[12px] capitalize">
             powered by TrueProTech
-          </p>
+          </div>
           <span class="relative flex size-2">
             <span
               class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
@@ -21,6 +20,7 @@
               class="relative inline-flex size-2 rounded-full bg-sky-400"></span
           ></span>
         </div>
+        <h1 class="text-4xl font-bold text-white">Welcome to AI Trading App</h1>
       </div>
       <p class="text-gray-300 mb-8">
         A modern app built with trusted technologies to help you trade smarter.

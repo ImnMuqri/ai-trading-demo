@@ -23,8 +23,8 @@
       ></UiButton>
     </div>
 
-    <div class="flex flex-wrap w-full gap-4">
-      <UiCard is-gradient class="p-4 h-[560px] w-[350px] rounded-lg"
+    <div class="flex flex-wrap-reverse w-full gap-4">
+      <UiCard is-gradient class="p-4 h-[560px] w-full lg:w-[350px] rounded-lg"
         ><div class="flex gap-1 items-center">
           <p class="text-md">Signal & Insights</p>
           <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon></div
@@ -36,7 +36,7 @@
         </UiCard>
       </client-only>
     </div>
-    <div class="flex w-full gap-4 mt-4">
+    <div class="flex flex-wrap w-full gap-4 mt-4">
       <UiCard class="flex flex-col gap-2 border p-4 h-80 flex-1 h-[540px]">
         <div class="flex items-center justify-between">
           <div class="flex gap-1 items-center">
@@ -63,7 +63,7 @@
           central banks diversifying from the dollar, but a stronger dollar and
           profit-taking may cause short-term dips.
         </p>
-        <div class="grid grid-cols-9 gap-4 mt-2 flex-1">
+        <div class="grid grid-cols-1 lg:grid-cols-9 gap-4 mt-2 flex-1 overflow-y-auto">
           <div class="col-span-5">Chart</div>
           <div class="w-full col-span-4">
             <p class="pb-4">Key Factor</p>
@@ -96,7 +96,7 @@
           </div>
         </div></UiCard
       >
-      <UiCard class="border p-4 w-[400px] h-full">
+      <UiCard class="border p-4 w-full lg:w-[400px] h-full">
         <div class="flex gap-2 items-center pb-2">
           <p>Live News</p>
           <span class="relative flex size-2">
@@ -125,8 +125,8 @@
         </client-only>
       </UiCard>
     </div>
-    <div class="flex w-full gap-4 mt-4">
-      <UiCard is-gradient class="border p-4 h-[500px] w-[450px]"
+    <div class="flex flex-wrap w-full gap-4 mt-4">
+      <UiCard is-gradient class="border p-4 h-[500px] w-full lg:w-[450px]"
         ><div class="flex items-center gap-1 mb-2">
           <p>Upcoming Catalysts</p>
           <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
@@ -149,7 +149,7 @@
           <div><CatalystList></CatalystList></div>
         </client-only>
       </UiCard>
-      <UiCard class="border p-4 flex-1">
+      <UiCard class="border w-full p-4 flex-1">
         <div class="grid grid-cols-1 gap-2">
           <div class="flex items-center gap-1">
             <p>AI Sentiment Index</p>

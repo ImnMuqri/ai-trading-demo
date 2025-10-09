@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       title: "AI Trading App",
-      meta: [{ name: "description", content: "Ai Trading Applicatin" }],
+      meta: [{ name: "description", content: "Ai Trading Application" }],
     },
   },
   icon: {

@@ -3,7 +3,7 @@
     class="min-h-screen flex items-center justify-center bg-[#0D0D0D] overflow-hidden">
     <div
       ref="containerRef"
-      class="capsule bg-[#00BDA7] h-10 w-[180px] rounded-full flex flex-col items-center justify-center px-4 overflow-hidden transition-all duration-700 ease-out relative text-white">
+      class="capsule bg-[#00BDA7] h-8 w-[180px] rounded-full flex flex-col items-center justify-center px-4 overflow-hidden transition-all duration-700 ease-out relative text-white">
       <!-- Sliding ball before expand -->
       <div
         v-if="!expanded"
@@ -11,7 +11,7 @@
 
       <!-- Form content fades in after expand -->
       <transition name="fade">
-        <div v-if="expanded" class="w-full max-w-sm px-6 py-6">
+        <div v-if="expanded" class="w-full max-w-sm px-6 mx-10 py-6">
           <h1 class="text-2xl font-semibold text-center mb-6 text-gray-800">
             Welcome Back
           </h1>
@@ -71,7 +71,7 @@ onMounted(async () => {
   // Morph capsule into full card
   setTimeout(() => {
     el.style.transition = "all 1.5s cubic-bezier(0.65, 0, 0.35, 1)";
-    el.style.width = "380px";
+    el.style.width = "350px";
     el.style.height = "440px";
     el.style.borderRadius = "1rem";
     el.style.backgroundColor = "#ffffff";
