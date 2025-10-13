@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
-  modules: ["@nuxt/icon", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxt/icon", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
   app: {
     head: {
       title: "AI Trading App",
@@ -17,5 +17,10 @@ export default defineNuxtConfig({
         dir: "./app/assets/icons",
       },
     ],
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.VITE_API_URL,
+    },
   },
 });

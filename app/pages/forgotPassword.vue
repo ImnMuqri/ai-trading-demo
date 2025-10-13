@@ -12,8 +12,8 @@
       <!-- Form content fades in after expand -->
       <transition name="fade">
         <div v-if="expanded" class="w-full max-w-sm px-6 mx-10 py-12">
-          <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
-            Welcome Back
+          <h1 class="text-2xl font-semibold text-center my-8 text-gray-800 ">
+            Forgot your password?
           </h1>
 
           <form @submit.prevent="handleLogin" class="text-gray-700">
@@ -22,38 +22,17 @@
               <input
                 type="text"
                 v-model="email"
+                placeholder="example@example.com"
                 class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
             </div>
 
-            <div>
-              <label class="block mb-1 text-sm">Password</label>
-              <input
-                type="password"
-                v-model="password"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
-            </div>
-            <div class="pb-6">
-              <NuxtLink
-                to="/forgotpassword"
-                class="text-[10px] underline pt-[5px] px-1 cursor-pointer">
-                Forgot Password
-              </NuxtLink>
-            </div>
             <UiButton
               :isLoading="isLoading"
               type="submit"
               class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
-              Login
+              Send Reset Link
             </UiButton>
           </form>
-          <div class="flex gap-1 text-[12px] items-center justify-center pt-20">
-            <p>Don't have an account?</p>
-            <NuxtLink
-              to="/register"
-              class="underline text-[#00CDB5] font-semibold cursor-pointer">
-              Sign Up
-            </NuxtLink>
-          </div>
         </div>
       </transition>
     </div>
@@ -102,7 +81,7 @@ onMounted(async () => {
     setTimeout(() => {
       el.style.transition = "all 1.5s cubic-bezier(0.65, 0, 0.35, 1)";
       el.style.width = "350px";
-      el.style.height = "440px";
+      el.style.height = "300px";
       el.style.borderRadius = "1rem";
       el.style.backgroundColor = "#ffffff";
       el.style.color = "#000000";
@@ -154,7 +133,7 @@ onMounted(async () => {
   transform: translateY(20px);
 }
 .fade-enter-active {
-  transition: all 0.8s ease-out;
+  transition: all 0.6s ease-out;
 }
 .fade-enter-to {
   opacity: 1;

@@ -1,6 +1,6 @@
 <template>
   <div class="text-white">
-    <div class="flex items-center justify-between gap-2 py-2 px-1 w-full mb-2">
+    <div class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
@@ -24,7 +24,9 @@
     </div>
 
     <div class="flex flex-wrap-reverse w-full gap-4">
-      <UiCard is-gradient class="p-4 h-[560px] w-full lg:w-[350px] rounded-lg"
+      <UiCard
+        is-gradient
+        class="p-4 lg:h-[560px] w-full lg:w-[350px] rounded-lg"
         ><div class="flex gap-1 items-center">
           <p class="text-md">Signal & Insights</p>
           <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon></div
@@ -63,7 +65,8 @@
           central banks diversifying from the dollar, but a stronger dollar and
           profit-taking may cause short-term dips.
         </p>
-        <div class="grid grid-cols-1 lg:grid-cols-9 gap-4 mt-2 flex-1 overflow-y-auto">
+        <div
+          class="grid grid-cols-1 lg:grid-cols-9 gap-4 mt-2 flex-1 overflow-y-auto">
           <div class="col-span-5">Chart</div>
           <div class="w-full col-span-4">
             <p class="pb-4">Key Factor</p>

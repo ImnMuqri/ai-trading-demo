@@ -11,47 +11,68 @@
 
       <!-- Form content fades in after expand -->
       <transition name="fade">
-        <div v-if="expanded" class="w-full max-w-sm px-6 mx-10 py-12">
-          <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
-            Welcome Back
+        <div v-if="expanded" class="w-full h-full max-w-sm px-6 mx-10 py-6">
+          <h1 class="text-2xl font-semibold text-center my-4 text-gray-800">
+            Create an account
           </h1>
 
           <form @submit.prevent="handleLogin" class="text-gray-700">
-            <div class="mb-4">
-              <label class="block mb-1 text-sm">Email</label>
-              <input
-                type="text"
-                v-model="email"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
-            </div>
-
-            <div>
-              <label class="block mb-1 text-sm">Password</label>
-              <input
-                type="password"
-                v-model="password"
-                class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
-            </div>
-            <div class="pb-6">
-              <NuxtLink
-                to="/forgotpassword"
-                class="text-[10px] underline pt-[5px] px-1 cursor-pointer">
-                Forgot Password
-              </NuxtLink>
+            <div class="space-y-4 mb-6">
+              <div>
+                <UiInput
+                  label="Name"
+                  v-model="name"
+                  placeholder="Enter your name"
+                  type="text" />
+              </div>
+              <div>
+                <UiInput
+                  label="Email"
+                  v-model="email"
+                  placeholder="Enter your email"
+                  type="email" />
+              </div>
+              <div>
+                <UiInput
+                  label="Password"
+                  v-model="password"
+                  placeholder="Enter your password"
+                  type="password" />
+              </div>
+              <div>
+                <UiInput
+                  label="Country"
+                  v-model="country"
+                  placeholder="Malaysia"
+                  type="text" />
+              </div>
+              <div>
+                <UiInput
+                  label="Phone"
+                  v-model="phone"
+                  placeholder="+1234567890"
+                  type="tel" />
+              </div>
+              <div>
+                <UiInput
+                  label="Referred By"
+                  v-model="referredBy"
+                  placeholder="Referral code or email"
+                  type="text" />
+              </div>
             </div>
             <UiButton
               :isLoading="isLoading"
               type="submit"
               class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
-              Login
+              Sign Up
             </UiButton>
           </form>
-          <div class="flex gap-1 text-[12px] items-center justify-center pt-20">
-            <p>Don't have an account?</p>
+          <div class="text-sm text-center mt-4">
             <NuxtLink
-              to="/register"
+              to="/login"
               class="underline text-[#00CDB5] font-semibold cursor-pointer">
-              Sign Up
+              Login
             </NuxtLink>
           </div>
         </div>
@@ -66,6 +87,7 @@ import { useAuth } from "@/composables/auth";
 import { showToast } from "~/composables/useToastMessage";
 
 const { login, loading } = useAuth();
+const name = ref("");
 const email = ref("");
 const password = ref("");
 const expanded = ref(false);
@@ -101,8 +123,8 @@ onMounted(async () => {
     // Morph capsule into full card
     setTimeout(() => {
       el.style.transition = "all 1.5s cubic-bezier(0.65, 0, 0.35, 1)";
-      el.style.width = "350px";
-      el.style.height = "440px";
+      el.style.width = "400px";
+      el.style.height = "660px";
       el.style.borderRadius = "1rem";
       el.style.backgroundColor = "#ffffff";
       el.style.color = "#000000";

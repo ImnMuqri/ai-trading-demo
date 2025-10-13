@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-full">
-    <label v-if="label" class="mb-1 text-sm font-medium text-gray-300">
+    <label v-if="label" class="mb-1 text-sm font-medium text-gray-500">
       {{ label }}
     </label>
     <div class="relative w-full">
@@ -25,10 +25,10 @@
         :placeholder="placeholder"
         :disabled="isDisabled"
         :class="[
-          'w-full rounded-lg text-white text-sm bg-[#1C1C1C] border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
+          'w-full rounded-lg text-white text-sm !text-black bg-white border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
           isDisabled
             ? 'opacity-50 cursor-not-allowed'
-            : 'border-[#1C1C1C] focus:border-[#00BDA7]',
+            : 'border-gray-300 focus:border-[#00BDA7]',
           $slots['icon-left'] ? 'pl-10' : 'px-4',
           $slots['icon-right'] ? 'pr-10' : 'px-4',
           'py-2',
