@@ -1,11 +1,8 @@
 <template>
   <section
-    class="relative flex flex-col items-center justify-center min-h-screen text-center overflow-hidden">
+    class="relative flex flex-col items-center justify-center min-h-screen text-center overflow-hidden"
+  >
     <!-- Glowing floating spheres -->
-    <div class="absolute inset-0 overflow-hidden">
-      <div class="glow glow1"></div>
-      <div class="glow glow2"></div>
-    </div>
 
     <div class="flex gap-4 w-[55%] px-6">
       <div class="">
@@ -16,9 +13,11 @@
             </div>
             <span class="relative flex size-2">
               <span
-                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"
+              ></span>
               <span
-                class="relative inline-flex size-2 rounded-full bg-sky-400"></span
+                class="relative inline-flex size-2 rounded-full bg-sky-400"
+              ></span
             ></span>
           </div>
           <h1 class="text-4xl font-bold text-white text-left">
@@ -33,7 +32,8 @@
         <div class="flex flex-wrap justify-start gap-4 mt-4">
           <NuxtLink
             to="/login"
-            class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition w-full sm:w-auto">
+            class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition w-full sm:w-auto"
+          >
             Get Started
           </NuxtLink>
         </div>
@@ -43,7 +43,8 @@
           v-for="(notif, index) in notifications"
           :key="notif.id"
           class="notif-card !w-[350px] bg-gradient-to-br from-black to-teal-600"
-          :style="getCardStyle(index)">
+          :style="getCardStyle(index)"
+        >
           {{ notif.text }}
         </div>
       </div>
