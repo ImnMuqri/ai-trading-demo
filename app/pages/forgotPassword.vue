@@ -12,7 +12,7 @@
       <!-- Form content fades in after expand -->
       <transition name="fade">
         <div v-if="expanded" class="w-full max-w-sm px-6 mx-10 py-12">
-          <h1 class="text-2xl font-semibold text-center my-8 text-gray-800 ">
+          <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
             Forgot your password?
           </h1>
 
@@ -33,6 +33,14 @@
               Send Reset Link
             </UiButton>
           </form>
+          <NuxtLink
+            to="/login"
+            class="flex gap-1 text-sm items-center justify-center mt-4 text-[#00CDB5] hover:text-[#00CDB5]/70 cursor-pointer">
+            <UiIcon
+              icon="mingcute:arrow-left-fill"
+              customClass="w-4 h-4"></UiIcon>
+            <p class="font-semibold">Back to login</p>
+          </NuxtLink>
         </div>
       </transition>
     </div>
@@ -80,7 +88,7 @@ onMounted(async () => {
     // Morph capsule into full card
     setTimeout(() => {
       el.style.transition = "all 1.5s cubic-bezier(0.65, 0, 0.35, 1)";
-      el.style.width = "350px";
+      el.style.width = "400px";
       el.style.height = "300px";
       el.style.borderRadius = "1rem";
       el.style.backgroundColor = "#ffffff";
@@ -109,7 +117,7 @@ onMounted(async () => {
   }
 }
 .animate-slide {
-  animation: slide 1.5s ease-in-out infinite;
+  animation: slide 1s ease-in-out infinite;
 }
 
 /* Soft glow while capsule */
@@ -133,7 +141,7 @@ onMounted(async () => {
   transform: translateY(20px);
 }
 .fade-enter-active {
-  transition: all 0.6s ease-out;
+  transition: all 0.8s ease-out;
 }
 .fade-enter-to {
   opacity: 1;

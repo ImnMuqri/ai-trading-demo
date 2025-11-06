@@ -1,6 +1,7 @@
 <template>
   <div class="text-white">
-    <div class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
+    <div
+      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
@@ -112,7 +113,7 @@
         </div>
         <div class="flex gap-2 mb-4">
           <div class="w-fit max-w-28">
-            <UiInput custom-class="h-7 " placeholder="Search"
+            <UiInput dark custom-class="h-7 " placeholder="Search"
               ><template #icon-left
                 ><UiIcon
                   icon="ic:baseline-search"

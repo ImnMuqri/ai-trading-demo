@@ -25,7 +25,7 @@
         :placeholder="placeholder"
         :disabled="isDisabled"
         :class="[
-          'w-full rounded-lg text-white text-sm !text-black bg-white border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
+          'w-full rounded-lg text-white text-sm   transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
           isDisabled
             ? 'opacity-50 cursor-not-allowed'
             : 'border-gray-300 focus:border-[#00BDA7]',
@@ -33,6 +33,9 @@
           $slots['icon-right'] ? 'pr-10' : 'px-4',
           'py-2',
           customClass,
+          dark
+            ? 'bg-[#1C1C1C] border-[#2A2A2A] text-white'
+            : 'bg-white border !text-black',
         ]" />
     </div>
 
@@ -57,6 +60,7 @@ const props = defineProps({
   error: String,
   isDisabled: Boolean,
   customClass: String, // new prop for custom classes
+  dark: Boolean,
 });
 
 const emit = defineEmits(["update:modelValue"]);

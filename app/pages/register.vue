@@ -68,13 +68,14 @@
               Sign Up
             </UiButton>
           </form>
-          <div class="text-sm text-center mt-4">
-            <NuxtLink
-              to="/login"
-              class="underline text-[#00CDB5] font-semibold cursor-pointer">
-              Login
-            </NuxtLink>
-          </div>
+          <NuxtLink
+            to="/login"
+            class="flex gap-1 text-sm items-center justify-center mt-4 text-[#00CDB5] hover:text-[#00CDB5]/70 cursor-pointer">
+            <UiIcon
+              icon="mingcute:arrow-left-fill"
+              customClass="w-4 h-4"></UiIcon>
+            <p class="font-semibold">Back to login</p>
+          </NuxtLink>
         </div>
       </transition>
     </div>

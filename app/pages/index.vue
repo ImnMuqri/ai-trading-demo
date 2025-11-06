@@ -1,6 +1,6 @@
 <template>
   <section
-    class="relative flex flex-col items-center justify-center min-h-screen bg-[#0D0D0D] text-center overflow-hidden">
+    class="relative flex flex-col items-center justify-center min-h-screen  text-center overflow-hidden">
     <!-- Glowing floating spheres -->
     <div class="absolute inset-0 overflow-hidden">
       <div class="glow glow1"></div>
@@ -22,22 +22,84 @@
         </div>
         <h1 class="text-4xl font-bold text-white">Welcome to AI Trading App</h1>
       </div>
-      <p class="text-gray-300 mb-8">
+      <p class="text-gray-300 mb-2">
         A modern app built with trusted technologies to help you trade smarter.
       </p>
 
-      <div class="flex flex-wrap justify-center gap-4">
+      <!-- <div class="flex flex-wrap justify-center gap-4">
         <NuxtLink
           to="/login"
           class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition w-full sm:w-auto">
           Get Started
         </NuxtLink>
+      </div> -->
+      <div
+        class="relative w-full h-52 flex flex-col items-center justify-center overflow-hidden">
+        <div
+          v-for="(notif, index) in notifications"
+          :key="notif.id"
+          class="absolute w-[60%] p-4 rounded-2xl glass-card bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg text-center transition-all duration-700 ease-in-out"
+          :style="getCardStyle(index)">
+          {{ notif.text }}
+        </div>
       </div>
     </div>
   </section>
 </template>
+<script setup>
+import { ref, onMounted } from "vue";
 
+const notifications = ref([
+  { id: 1, text: "Buy now at RM 45,646" },
+  { id: 2, text: "Sell now at RM 45,700" },
+  { id: 3, text: "Buy now at RM 45,500" },
+  { id: 4, text: "Sell now at RM 45,800" },
+  { id: 5, text: "Buy now at RM 46,000" },
+]);
+
+const cardCount = notifications.value.length;
+const visibleCount = 4;
+
+// Track front card index
+const frontIndex = ref(0);
+
+// Map of styles based on position from front card
+const scaleMap = [1, 0.95, 0.9, 0.8, 0.7];
+const opacityMap = [1, 0.8, 0.7, 0.3, 0.2];
+const yMap = [0, -15, 15, -40, -48]; // negative = below front card
+
+const getCardStyle = (index) => {
+  let pos = (index - frontIndex.value + cardCount) % cardCount;
+  if (pos >= visibleCount) pos = visibleCount;
+
+  const blurAmount = 0 + pos * 4; // 0px for front, 4px, 8px, etc. for behind
+
+  return {
+    transform: `translateY(${yMap[pos] || yMap[yMap.length - 1]}px) scale(${
+      scaleMap[pos] || scaleMap[scaleMap.length - 1]
+    })`,
+    opacity: opacityMap[pos] || opacityMap[opacityMap.length - 1],
+    zIndex: visibleCount - (pos > visibleCount ? visibleCount : pos),
+    backdropFilter: `blur(${blurAmount}px)`,
+  };
+};
+
+// Loop animation
+onMounted(() => {
+  setInterval(() => {
+    frontIndex.value = (frontIndex.value + 1) % cardCount;
+  }, 2000);
+});
+</script>
 <style scoped>
+.glass-card {
+  /* background: rgba(255, 255, 255, 0.15); */
+  /* backdrop-filter: blur(10px); */
+  /* border: 1px solid rgba(255, 255, 255, 0.2); */
+  transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out,
+    backdrop-filter 0.7s ease-in-out;
+}
+
 .glow {
   position: absolute;
   width: 340px;

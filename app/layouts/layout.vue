@@ -48,8 +48,8 @@
           ]">
           <UiIcon
             icon="material-symbols:dashboard-outline-rounded"
-            custom-class="w-5 h-5" />
-          <span v-if="!isCollapsed">Dashboard</span>
+            custom-class="w-4 h-4" />
+          <span v-if="!isCollapsed" class="text-sm">Dashboard</span>
         </NuxtLink>
 
         <NuxtLink
@@ -59,11 +59,27 @@
             isActive('/dailybias') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-center' : 'justify-start',
           ]">
-          <UiIcon icon="solar:bag-broken" custom-class="w-5 h-5" />
-          <span v-if="!isCollapsed" class="whitespace-nowrap">Daily Bias</span>
+          <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
+          <span v-if="!isCollapsed" class="whitespace-nowrap text-sm"
+            >Daily Bias</span
+          >
         </NuxtLink>
       </nav>
-
+      <div class="p-3">
+        <div
+          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm">
+          <p class="text-[12px] text-white mb-3">
+            Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
+          </p>
+          <NuxtLink
+            to="/pro"
+            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            exact>
+            <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
+            <span class="text-[11px]">Upgrade to Ai Pro</span>
+          </NuxtLink>
+        </div>
+      </div>
       <!-- Logout, anchored bottom -->
       <div class="p-4 border-t border-[#1C1C1C] mt-auto">
         <button
