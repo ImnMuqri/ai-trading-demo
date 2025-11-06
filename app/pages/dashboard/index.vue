@@ -40,7 +40,7 @@
       </client-only>
     </div>
     <div class="flex flex-wrap w-full gap-4 mt-4">
-      <UiCard class="flex flex-col gap-2 border p-4 h-80 flex-1 h-[540px]">
+      <UiCard class="flex flex-col gap-2 border px-4 pt-4 flex-1">
         <div class="flex items-center justify-between">
           <div class="flex gap-1 items-center">
             <span class="text-[#00BDA7] text-md">Contextual Factors </span>
@@ -66,142 +66,141 @@
           central banks diversifying from the dollar, but a stronger dollar and
           profit-taking may cause short-term dips.
         </p>
-        <div class="grid grid-cols-1 gap-4 mt-2 flex-1 overflow-y-auto">
-          <template>
-            <div
-              class="grid grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
-              <!-- Meter 1 -->
-              <div class="flex flex-col items-center">
-                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                  <path
-                    class="text-gray-700/20"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path
-                    class="text-emerald-400"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-dasharray="65, 100"
-                    stroke-linecap="round"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text
-                    x="18"
-                    y="20.35"
-                    class="text-sm fill-emerald-400 font-semibold"
-                    text-anchor="middle">
-                    65%
-                  </text>
-                </svg>
-                <p class="text-sm text-gray-300">Performance</p>
-              </div>
-
-              <!-- Meter 2 -->
-              <div class="flex flex-col items-center">
-                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                  <path
-                    class="text-gray-700/20"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path
-                    class="text-yellow-400"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-dasharray="45, 100"
-                    stroke-linecap="round"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text
-                    x="18"
-                    y="20.35"
-                    class="text-sm fill-yellow-400 font-semibold"
-                    text-anchor="middle">
-                    45%
-                  </text>
-                </svg>
-                <p class="text-sm text-gray-300">Volatility</p>
-              </div>
-
-              <!-- Meter 3 -->
-              <div class="flex flex-col items-center">
-                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                  <path
-                    class="text-gray-700/20"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path
-                    class="text-sky-400"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-dasharray="80, 100"
-                    stroke-linecap="round"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text
-                    x="18"
-                    y="20.35"
-                    class="text-sm fill-sky-400 font-semibold"
-                    text-anchor="middle">
-                    80%
-                  </text>
-                </svg>
-                <p class="text-sm text-gray-300">Sentiment</p>
-              </div>
-
-              <!-- Meter 4 -->
-              <div class="flex flex-col items-center">
-                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                  <path
-                    class="text-gray-700/20"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <path
-                    class="text-red-400"
-                    stroke="currentColor"
-                    stroke-width="3"
-                    stroke-dasharray="25, 100"
-                    stroke-linecap="round"
-                    fill="none"
-                    d="M18 2.0845
-             a 15.9155 15.9155 0 0 1 0 31.831
-             a 15.9155 15.9155 0 0 1 0 -31.831" />
-                  <text
-                    x="18"
-                    y="20.35"
-                    class="text-sm fill-red-400 font-semibold"
-                    text-anchor="middle">
-                    25%
-                  </text>
-                </svg>
-                <p class="text-sm text-gray-300">Risk Index</p>
-              </div>
+        <div
+          class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
+          <div
+            class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
+            <!-- Meter 1 -->
+            <div class="flex flex-col items-center">
+              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                <path
+                  class="text-gray-700/20"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <path
+                  class="text-emerald-400"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-dasharray="65, 100"
+                  stroke-linecap="round"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <text
+                  x="19"
+                  y="21"
+                  class="text-[10px] fill-emerald-400 font-semibold"
+                  text-anchor="middle">
+                  65%
+                </text>
+              </svg>
+              <p class="text-sm text-gray-300">Performance</p>
             </div>
-          </template>
 
-          <div class="w-full col-span-4">
-            <p class="pb-4">Key Factor</p>
+            <!-- Meter 2 -->
+            <div class="flex flex-col items-center">
+              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                <path
+                  class="text-gray-700/20"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <path
+                  class="text-yellow-400"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-dasharray="45, 100"
+                  stroke-linecap="round"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <text
+                  x="19"
+                  y="21"
+                  class="text-[10px] fill-yellow-400 font-semibold"
+                  text-anchor="middle">
+                  45%
+                </text>
+              </svg>
+              <p class="text-sm text-gray-300">Volatility</p>
+            </div>
+
+            <!-- Meter 3 -->
+            <div class="flex flex-col items-center">
+              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                <path
+                  class="text-gray-700/20"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <path
+                  class="text-sky-400"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-dasharray="80, 100"
+                  stroke-linecap="round"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <text
+                  x="19"
+                  y="21"
+                  class="text-[10px] fill-sky-400 font-semibold"
+                  text-anchor="middle">
+                  80%
+                </text>
+              </svg>
+              <p class="text-sm text-gray-300">Sentiment</p>
+            </div>
+
+            <!-- Meter 4 -->
+            <div class="flex flex-col items-center">
+              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                <path
+                  class="text-gray-700/20"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <path
+                  class="text-red-400"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-dasharray="25, 100"
+                  stroke-linecap="round"
+                  fill="none"
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                <text
+                  x="19"
+                  y="21"
+                  class="text-[10px] fill-red-400 font-semibold"
+                  text-anchor="middle">
+                  25%
+                </text>
+              </svg>
+              <p class="text-sm text-gray-300">Risk Index</p>
+            </div>
+          </div>
+
+          <!-- Toggle Button -->
+          <div
+            class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
+            @click="showKeyFactors = !showKeyFactors">
+            <UiIcon
+              :icon="
+                showKeyFactors ? 'mdi:eye-off-outline' : 'meteor-icons:robot'
+              "></UiIcon>
+            <p class="text-sm text-gray-400">
+              {{ showKeyFactors ? "Hide details" : "See key takeaways" }}
+            </p>
+          </div>
+
+          <!-- Key Factors -->
+          <div
+            class="w-full overflow-hidden transition-all duration-500 ease-in-out"
+            :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
+            <p class="pb-4 pt-4">Key Factors</p>
             <div
               v-for="item in keyFactors"
               :key="item.title"
@@ -232,8 +231,8 @@
         </div></UiCard
       >
     </div>
-    <div class="flex flex-wrap w-full gap-4 mt-4">
-      <UiCard is-gradient class="px-2 py-2">
+    <div class="grid grid-cols-3 gap-4 mt-4">
+      <UiCard class="px-2 py-2 col-span-2">
         <!-- Tabs -->
         <div class="flex mb-4">
           <button
@@ -252,7 +251,7 @@
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="p-4 h-[500px] w-full lg:w-[450px]">
+          <div class="p-4 w-full">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
@@ -280,7 +279,7 @@
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="p-4 w-full lg:w-[450px] h-full">
+          <div class="p-4 w-full">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
@@ -311,8 +310,7 @@
           </div>
         </div>
       </UiCard>
-
-      <UiCard class="border w-full p-4 flex-1">
+      <UiCard is-gradient class="border p-4">
         <div class="grid grid-cols-1 gap-2">
           <div class="flex items-center gap-1">
             <p>AI Sentiment Index</p>
@@ -341,7 +339,7 @@ definePageMeta({
 
 const tabs = ["Live News", "Upcoming Catalysts"];
 const activeTab = ref(tabs[0]);
-
+const showKeyFactors = ref(false);
 const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
 
 const { symbols } = useTradingViewSymbols();
@@ -439,4 +437,23 @@ watch([selectedSymbol, selectedInterval], ([symbol, interval]) => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.4s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>

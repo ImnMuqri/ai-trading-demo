@@ -1,44 +1,48 @@
 <template>
   <section
-    class="relative flex flex-col items-center justify-center min-h-screen  text-center overflow-hidden">
+    class="relative flex flex-col items-center justify-center min-h-screen text-center overflow-hidden">
     <!-- Glowing floating spheres -->
     <div class="absolute inset-0 overflow-hidden">
       <div class="glow glow1"></div>
       <div class="glow glow2"></div>
     </div>
 
-    <div class="relative z-10 max-w-2xl px-6">
-      <div class="mb-4 grid grid-cols-1 gap-4">
-        <div class="flex items-center justify-center gap-2">
-          <div class="text-sky-500 text-[12px] capitalize">
-            powered by TrueProTech
+    <div class="flex gap-4 w-[55%] px-6">
+      <div class="">
+        <div class="mb-4 grid grid-cols-1 gap-4">
+          <div class="flex items-center gap-2">
+            <div class="text-sky-500 text-[12px] capitalize">
+              powered by TrueProTech
+            </div>
+            <span class="relative flex size-2">
+              <span
+                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+              <span
+                class="relative inline-flex size-2 rounded-full bg-sky-400"></span
+            ></span>
           </div>
-          <span class="relative flex size-2">
-            <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
-            <span
-              class="relative inline-flex size-2 rounded-full bg-sky-400"></span
-          ></span>
+          <h1 class="text-4xl font-bold text-white text-left">
+            Welcome to AI Trading App
+          </h1>
         </div>
-        <h1 class="text-4xl font-bold text-white">Welcome to AI Trading App</h1>
-      </div>
-      <p class="text-gray-300 mb-2">
-        A modern app built with trusted technologies to help you trade smarter.
-      </p>
 
-      <!-- <div class="flex flex-wrap justify-center gap-4">
-        <NuxtLink
-          to="/login"
-          class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition w-full sm:w-auto">
-          Get Started
-        </NuxtLink>
-      </div> -->
-      <div
-        class="relative w-full h-52 flex flex-col items-center justify-center overflow-hidden">
+        <p class="text-gray-200 mb-2 text-left">
+          A modern app built with trusted technologies to help you trade
+          smarter.
+        </p>
+        <div class="flex flex-wrap justify-start gap-4 mt-4">
+          <NuxtLink
+            to="/login"
+            class="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition w-full sm:w-auto">
+            Get Started
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="notif-stack flex-1">
         <div
           v-for="(notif, index) in notifications"
           :key="notif.id"
-          class="absolute w-[60%] p-4 rounded-2xl glass-card bg-gradient-to-r from-blue-500 to-emerald-500 text-white shadow-lg text-center transition-all duration-700 ease-in-out"
+          class="notif-card !w-[350px] bg-gradient-to-br from-black to-teal-600"
           :style="getCardStyle(index)">
           {{ notif.text }}
         </div>
@@ -59,36 +63,44 @@ const notifications = ref([
 
 const cardCount = notifications.value.length;
 const visibleCount = 4;
-
-// Track front card index
 const frontIndex = ref(0);
 
-// Map of styles based on position from front card
-const scaleMap = [1, 0.95, 0.9, 0.8, 0.7];
-const opacityMap = [1, 0.8, 0.7, 0.3, 0.2];
-const yMap = [0, -15, 15, -40, -48]; // negative = below front card
+const scaleMap = [1, 0.95, 0.9, 0.85, 0.8];
+const opacityMap = [1, 0.85, 0.6, 0.4, 0.2];
+const yMap = [0, 15, 30, 45, 60, 80]; // extra buffer for disappearing cards
 
 const getCardStyle = (index) => {
   let pos = (index - frontIndex.value + cardCount) % cardCount;
-  if (pos >= visibleCount) pos = visibleCount;
 
-  const blurAmount = 0 + pos * 4; // 0px for front, 4px, 8px, etc. for behind
+  // Use extra buffer for smooth cycling
+  if (pos >= visibleCount) {
+    // position it slightly below the last visible card
+    return {
+      transform: `translateY(${yMap[yMap.length - 1] + 40}px) scale(${
+        scaleMap[scaleMap.length - 1]
+      })`,
+      opacity: 0,
+      zIndex: 0,
+      backdropFilter: `blur(0px)`,
+      transition: "all 1s ease-in-out",
+    };
+  }
 
+  const blurAmount = pos * 2;
   return {
-    transform: `translateY(${yMap[pos] || yMap[yMap.length - 1]}px) scale(${
-      scaleMap[pos] || scaleMap[scaleMap.length - 1]
-    })`,
-    opacity: opacityMap[pos] || opacityMap[opacityMap.length - 1],
-    zIndex: visibleCount - (pos > visibleCount ? visibleCount : pos),
+    transform: `translateY(${yMap[pos]}px) scale(${scaleMap[pos]})`,
+    opacity: opacityMap[pos],
+    zIndex: visibleCount - pos,
     backdropFilter: `blur(${blurAmount}px)`,
+    transition: "all 1s ease-in-out",
   };
 };
 
-// Loop animation
+// smoother interval cycling
 onMounted(() => {
   setInterval(() => {
     frontIndex.value = (frontIndex.value + 1) % cardCount;
-  }, 2000);
+  }, 1800);
 });
 </script>
 <style scoped>
@@ -187,5 +199,27 @@ onMounted(() => {
     left: 50%;
     transform: translate(-50%, -50%) scale(1);
   }
+}
+
+.notif-stack {
+  position: relative;
+  width: 100%;
+  height: 13rem;
+  display: flex;
+  padding-top: 2rem;
+  align-items: start;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.notif-card {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  padding: 1rem;
+  color: white;
+  border-radius: 1rem;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out,
+    backdrop-filter 1s ease-in-out;
 }
 </style>
