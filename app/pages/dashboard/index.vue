@@ -66,9 +66,140 @@
           central banks diversifying from the dollar, but a stronger dollar and
           profit-taking may cause short-term dips.
         </p>
-        <div
-          class="grid grid-cols-1 lg:grid-cols-9 gap-4 mt-2 flex-1 overflow-y-auto">
-          <div class="col-span-5">Chart</div>
+        <div class="grid grid-cols-1 gap-4 mt-2 flex-1 overflow-y-auto">
+          <template>
+            <div
+              class="grid grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+              <!-- Meter 1 -->
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                  <path
+                    class="text-gray-700/20"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path
+                    class="text-emerald-400"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-dasharray="65, 100"
+                    stroke-linecap="round"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <text
+                    x="18"
+                    y="20.35"
+                    class="text-sm fill-emerald-400 font-semibold"
+                    text-anchor="middle">
+                    65%
+                  </text>
+                </svg>
+                <p class="text-sm text-gray-300">Performance</p>
+              </div>
+
+              <!-- Meter 2 -->
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                  <path
+                    class="text-gray-700/20"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path
+                    class="text-yellow-400"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-dasharray="45, 100"
+                    stroke-linecap="round"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <text
+                    x="18"
+                    y="20.35"
+                    class="text-sm fill-yellow-400 font-semibold"
+                    text-anchor="middle">
+                    45%
+                  </text>
+                </svg>
+                <p class="text-sm text-gray-300">Volatility</p>
+              </div>
+
+              <!-- Meter 3 -->
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                  <path
+                    class="text-gray-700/20"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path
+                    class="text-sky-400"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-dasharray="80, 100"
+                    stroke-linecap="round"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <text
+                    x="18"
+                    y="20.35"
+                    class="text-sm fill-sky-400 font-semibold"
+                    text-anchor="middle">
+                    80%
+                  </text>
+                </svg>
+                <p class="text-sm text-gray-300">Sentiment</p>
+              </div>
+
+              <!-- Meter 4 -->
+              <div class="flex flex-col items-center">
+                <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+                  <path
+                    class="text-gray-700/20"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <path
+                    class="text-red-400"
+                    stroke="currentColor"
+                    stroke-width="3"
+                    stroke-dasharray="25, 100"
+                    stroke-linecap="round"
+                    fill="none"
+                    d="M18 2.0845
+             a 15.9155 15.9155 0 0 1 0 31.831
+             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  <text
+                    x="18"
+                    y="20.35"
+                    class="text-sm fill-red-400 font-semibold"
+                    text-anchor="middle">
+                    25%
+                  </text>
+                </svg>
+                <p class="text-sm text-gray-300">Risk Index</p>
+              </div>
+            </div>
+          </template>
+
           <div class="w-full col-span-4">
             <p class="pb-4">Key Factor</p>
             <div
@@ -100,59 +231,87 @@
           </div>
         </div></UiCard
       >
-      <UiCard class="border p-4 w-full lg:w-[400px] h-full">
-        <div class="flex gap-2 items-center pb-2">
-          <p>Live News</p>
-          <span class="relative flex size-2">
-            <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
-            <span
-              class="relative inline-flex size-2 rounded-full bg-red-500"></span
-          ></span>
-          <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
-        </div>
-        <div class="flex gap-2 mb-4">
-          <div class="w-fit max-w-28">
-            <UiInput dark custom-class="h-7 " placeholder="Search"
-              ><template #icon-left
-                ><UiIcon
-                  icon="ic:baseline-search"
-                  custom-class="text-gray-300"></UiIcon></template
-            ></UiInput>
-          </div>
-          <UiIcon icon="carbon:funnel-sort"></UiIcon>
-        </div>
-        <client-only>
-          <div>
-            <NewsList></NewsList>
-          </div>
-        </client-only>
-      </UiCard>
     </div>
     <div class="flex flex-wrap w-full gap-4 mt-4">
-      <UiCard is-gradient class="border p-4 h-[500px] w-full lg:w-[450px]"
-        ><div class="flex items-center gap-1 mb-2">
-          <p>Upcoming Catalysts</p>
-          <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
+      <UiCard is-gradient class="px-2 py-2">
+        <!-- Tabs -->
+        <div class="flex mb-4">
+          <button
+            v-for="tab in tabs"
+            :key="tab"
+            @click="activeTab = tab"
+            class="px-4 py-2 text-sm font-medium transition"
+            :class="[
+              activeTab === tab
+                ? 'border-b-2 border-emerald-500 text-emerald-600'
+                : 'text-gray-500 hover:text-gray-700',
+            ]">
+            {{ tab }}
+          </button>
         </div>
-        <div class="flex gap-2 mb-2">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-            <span class="text-[12px]">Low Impact</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-            <span class="text-[12px]">Medium Impact</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-red-500"></div>
-            <span class="text-[12px]">High Impact</span>
+
+        <!-- Tab Content -->
+        <div v-if="activeTab === 'Upcoming Catalysts'">
+          <div class="p-4 h-[500px] w-full lg:w-[450px]">
+            <div class="flex items-center gap-1 mb-2">
+              <p>Upcoming Catalysts</p>
+              <UiIcon icon="material-symbols:info-outline-rounded" />
+            </div>
+
+            <div class="flex gap-2 mb-2">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                <span class="text-[12px]">Low Impact</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                <span class="text-[12px]">Medium Impact</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                <span class="text-[12px]">High Impact</span>
+              </div>
+            </div>
+
+            <client-only>
+              <CatalystList />
+            </client-only>
           </div>
         </div>
-        <client-only>
-          <div><CatalystList></CatalystList></div>
-        </client-only>
+
+        <div v-else-if="activeTab === 'Live News'">
+          <div class="p-4 w-full lg:w-[450px] h-full">
+            <div class="flex gap-2 items-center pb-2">
+              <p>Live News</p>
+              <span class="relative flex size-2">
+                <span
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
+                <span
+                  class="relative inline-flex size-2 rounded-full bg-red-500"></span>
+              </span>
+              <UiIcon icon="material-symbols:info-outline-rounded" />
+            </div>
+
+            <div class="flex gap-2 mb-4">
+              <div class="w-fit max-w-28">
+                <UiInput dark custom-class="h-7" placeholder="Search">
+                  <template #icon-left>
+                    <UiIcon
+                      icon="ic:baseline-search"
+                      custom-class="text-gray-300" />
+                  </template>
+                </UiInput>
+              </div>
+              <UiIcon icon="carbon:funnel-sort" />
+            </div>
+
+            <client-only>
+              <NewsList />
+            </client-only>
+          </div>
+        </div>
       </UiCard>
+
       <UiCard class="border w-full p-4 flex-1">
         <div class="grid grid-cols-1 gap-2">
           <div class="flex items-center gap-1">
@@ -171,6 +330,7 @@
 </template>
 <script setup>
 import { onMounted, watch, ref, nextTick } from "vue";
+import UiCard from "~/components/UiCard.vue";
 import { useTradingViewSymbols } from "~/composables/useTradingViewSymbols";
 
 definePageMeta({
@@ -178,6 +338,9 @@ definePageMeta({
   layout: "layout",
   middleware: "auth",
 });
+
+const tabs = ["Live News", "Upcoming Catalysts"];
+const activeTab = ref(tabs[0]);
 
 const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
 
