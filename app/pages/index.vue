@@ -7,7 +7,7 @@
       <div class="glow glow2"></div>
     </div>
 
-    <div class="flex gap-4 w-[55%] px-6">
+    <div class="flex relative gap-4 w-[55%] px-6">
       <div class="">
         <div class="mb-4 grid grid-cols-1 gap-4">
           <div class="flex items-center gap-2">
