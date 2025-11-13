@@ -1,9 +1,4 @@
 <template>
-  <!-- <img
-    src="/bg/BG.svg"
-    alt="Background"
-    class="absolute inset-0 w-full h-full object-cover" /> -->
-
   <div class="min-h-screen flex flex-col bg-gray-50">
     <div class="custom-background-image flex-1">
       <main class="flex-1">
