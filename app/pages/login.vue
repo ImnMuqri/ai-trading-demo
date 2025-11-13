@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center overflow-hidden">
-    <div class="w-full max-w-sm px-6 mx-10 py-12">
+    <div class="w-full max-w-sm px-8 mx-10 py-12 bg-white rounded-md">
       <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
         Welcome Back
       </h1>
@@ -11,7 +11,8 @@
           <input
             type="text"
             v-model="email"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]"
+          />
         </div>
 
         <div>
@@ -19,19 +20,22 @@
           <input
             type="password"
             v-model="password"
-            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
+            class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]"
+          />
         </div>
         <div class="pb-6">
           <NuxtLink
             to="/forgotpassword"
-            class="text-[10px] underline pt-[5px] px-1 cursor-pointer">
+            class="text-[10px] underline pt-[5px] px-1 cursor-pointer"
+          >
             Forgot Password
           </NuxtLink>
         </div>
         <UiButton
           :isLoading="isLoading"
           type="submit"
-          class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
+          class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition"
+        >
           Login
         </UiButton>
       </form>
@@ -39,7 +43,8 @@
         <p>Don't have an account?</p>
         <NuxtLink
           to="/register"
-          class="underline text-[#00CDB5] font-semibold cursor-pointer">
+          class="underline text-[#00CDB5] font-semibold cursor-pointer"
+        >
           Sign Up
         </NuxtLink>
       </div>
