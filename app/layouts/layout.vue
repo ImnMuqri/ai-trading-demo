@@ -72,7 +72,7 @@
             Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
           </p>
           <NuxtLink
-            to="/pro"
+            to="/settings/subscription"
             class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
             exact>
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>

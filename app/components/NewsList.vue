@@ -1,66 +1,82 @@
 <template>
-  <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
-    <div v-for="(group, date) in groupedNews" :key="date">
-      <div class="flex items-center justify-between gap-2 pb-2">
-        <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
-        <span
-          class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
-      </div>
-
-      <!-- News items for this date -->
-      <div
-        v-for="(news, index) in group"
-        :key="index"
-        class="px-4 py-3 mb-2 rounded-lg border border-[#1C1C1C] bg-[#0D0D0D] transition">
-        <a
-          :href="news.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="grid grid-cols-1 gap-1">
-          <p class="text-[12px] text-gray-500 capitalize">
-            {{ formatTime(news.publishedAt) }}
-          </p>
-          <h3 class="text-sm font-medium text-white mb-2">
-            {{ news.title }}
-          </h3>
-          <p class="text-[11px] bg-gray-700 px-3 py-1 w-fit rounded-full">
-            {{ news.tag }}
-          </p>
-          <p class="text-[12px] text-gray-400 text-end">
-            {{ news.source }}
-          </p>
-        </a>
+  <div>
+    <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
+      <div v-for="(group, date) in groupedNews" :key="date">
+        <div class="flex items-center justify-between gap-2 pb-2">
+          <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
+          <span
+            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+        </div>
+        <!-- News items for this date -->
         <div
-          class="flex gap-3 items-center justify-center mt-2 text-gray-500 border-t border-[#1C1C1C] pt-2">
+          v-for="(news, index) in group"
+          :key="index"
+          class="px-4 pt-4 pb-2 mb-2  rounded-lg border border-[#1C1C1C] bg-[#0D0D0D] transition">
+          <a
+            :href="news.url"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-row gap-6 items-center mb-2">
+            <!-- Show image if available -->
+            <img
+              v-if="news.image"
+              :src="news.image"
+              alt="news image"
+              :class="[
+                'h-auto rounded-md mb-2 col-span-1',
+                index === 0 ? 'w-[350px]' : 'w-[200px]',
+              ]" />
+            <div class="grid grid-cols-1 gap-2">
+              <p class="text-[12px] text-gray-500 capitalize">
+                {{ formatTime(news.publishedAt) }}
+              </p>
+
+              <h3 class="text-sm font-medium text-white">
+                {{ news.title }}
+              </h3>
+              <p class="text-[12px] text-gray-400 text-left mb-3">
+                {{ news.source }}
+              </p>
+              <p class="text-[11px] bg-gray-700 px-3 py-1 w-fit rounded-full">
+                {{ news.tag }}
+              </p>
+            </div>
+          </a>
+
           <div
-            class="border-[2px] border-gray-500 rounded-full p-1 cursor-pointer">
+            class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1">
             <UiIcon
-              icon="meteor-icons:robot"
-              custom-class="h-3 w-3 text-[#00BDA7]"></UiIcon>
+              icon="icon:ai-icon"
+              custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+
+            <span class="flex gap-1 text-sm"
+              >See analysis
+              <UiIcon
+                icon="ic:round-chevron-right"
+                custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
+            ></span>
           </div>
-          <UiIcon
-            icon="ri:heart-line"
-            custom-class="w-6 h-6 cursor-pointer"></UiIcon>
         </div>
       </div>
+
+      <div v-if="newsList.length === 0" class="p-4 text-gray-500">
+        No news available.
+      </div>
     </div>
 
-    <div v-if="newsList.length === 0" class="p-4 text-gray-500">
-      No news available.
-    </div>
-  </div>
-  <div class="flex text-[12px] gap-4 items-center justify-center mt-3">
-    <div class="flex gap-1 item-center">
-      <UiIcon
-        icon="healthicons:chart-line-24px"
-        custom-class="text-[#00BDA7]"></UiIcon
-      >View Market History
-    </div>
-    <div class="flex items-center">
-      <UiIcon
-        icon="ic:round-chevron-right"
-        custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
-      >View Recent Headline
+    <div class="flex text-[12px] gap-4 items-center justify-center mt-3">
+      <div class="flex gap-1 items-center">
+        <UiIcon
+          icon="healthicons:chart-line-24px"
+          custom-class="text-[#00BDA7]"></UiIcon>
+        View Market History
+      </div>
+      <div class="flex items-center">
+        <UiIcon
+          icon="ic:round-chevron-right"
+          custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon>
+        View Recent Headline
+      </div>
     </div>
   </div>
 </template>
@@ -68,48 +84,33 @@
 <script setup>
 import { ref, computed } from "vue";
 
-// Example static news array
-const newsList = ref([
-  {
-    title: "US Tariffs on China to Increase Next Month",
-    source: "Reuters",
-    url: "https://www.reuters.com/article/us-usa-tariffs-idUSKBN1",
-    tag: "Tariff",
-    publishedAt: "2025-10-06T12:15:00Z",
-  },
-  {
-    title: "Dow Jones Hits Record High Amid Tech Rally",
-    source: "Bloomberg",
-    url: "https://www.bloomberg.com/news/articles/dow-record",
-    tag: "US Stock",
-    publishedAt: "2025-10-07T11:50:00Z",
-  },
-  {
-    title: "Federal Reserve Signals Rate Cut",
-    source: "CNBC",
-    url: "https://www.cnbc.com/fed-rate-cut-news",
-    tag: "US Politics",
-    publishedAt: "2025-10-07T11:30:00Z",
-  },
-  {
-    title: "Oil Prices Surge on Middle East Tensions",
-    source: "Financial Times",
-    url: "https://www.ft.com/oil-prices-middle-east",
-    tag: "Commodities",
-    publishedAt: "2025-10-07T10:45:00Z",
-  },
-  {
-    title: "Gold Gains on Global Economic Uncertainty",
-    source: "Kitco",
-    url: "https://www.kitco.com/gold-news",
-    tag: "Metals",
-    publishedAt: "2025-10-07T10:20:00Z",
-  },
-]);
+const { $api } = useNuxtApp();
 
-// Group news by date
+// Dynamic currency and date (can be made reactive if needed)
+const currency = ref("EUR-USD");
+const dateFilter = ref("2025-11-16");
+
+const newsList = ref([]);
+
+// Fetch data from API
+// `api/forex-news?currency=${currency.value}&date=${dateFilter.value}`
+const res = await $api.get(`api/forex-news`);
+const apiData = res.data.data || []; // fallback to empty array
+newsList.value = apiData.map((item) => ({
+  publishedAt: item.date,
+  title: item.title,
+  text: item.text,
+  url: item.news_url,
+  source: item.source_name,
+  tag: item.sentiment,
+  topics: item.topics,
+  image: item.image_url,
+}));
+
+// Group news by date and sort descending
 const groupedNews = computed(() => {
   const groups = {};
+
   newsList.value.forEach((news) => {
     const dateKey = new Date(news.publishedAt).toLocaleDateString(undefined, {
       year: "numeric",
@@ -119,10 +120,24 @@ const groupedNews = computed(() => {
     if (!groups[dateKey]) groups[dateKey] = [];
     groups[dateKey].push(news);
   });
-  return groups;
+
+  // Sort each group by publishedAt descending
+  Object.keys(groups).forEach((key) => {
+    groups[key].sort(
+      (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+    );
+  });
+
+  // Sort the date groups descending
+  return Object.fromEntries(
+    Object.entries(groups).sort(
+      ([dateA], [dateB]) =>
+        new Date(dateB).getTime() - new Date(dateA).getTime()
+    )
+  );
 });
 
-// Format time for each news item
+// Format time for display
 function formatTime(dateString) {
   const date = new Date(dateString);
   const now = new Date();
@@ -138,20 +153,21 @@ function formatTime(dateString) {
   });
 }
 </script>
+
 <style scoped>
-/* Scrollbar track (the background of the scrollbar) */
+/* Scrollbar styles */
 div::-webkit-scrollbar {
-  width: 8px; /* scrollbar width */
-} /* Track */
+  width: 8px;
+}
 div::-webkit-scrollbar-track {
-  background: #2a2a2a; /* container color behind scrollbar */
+  background: #2a2a2a;
   border-radius: 4px;
-} /* Handle (the draggable part) */
+}
 div::-webkit-scrollbar-thumb {
-  background-color: #00bda7; /* scrollbar color */
+  background-color: #00bda7;
   border-radius: 4px;
-  border: 2px solid #2a2a2a; /* space around thumb */
-} /* Optional: Hover effect for scrollbar thumb */
+  border: 2px solid #2a2a2a;
+}
 div::-webkit-scrollbar-thumb:hover {
   background-color: #00e0c0;
 }

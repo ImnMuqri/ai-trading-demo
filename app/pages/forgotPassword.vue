@@ -1,7 +1,6 @@
 <template>
-  <div
-    class="min-h-screen flex items-center justify-center bg-[#0D0D0D] overflow-hidden">
-    <div class="w-full max-w-sm px-6 mx-10 py-12">
+  <div class="min-h-screen flex items-center justify-center overflow-hidden">
+    <div class="w-full max-w-sm px-6 mx-10 py-12 bg-white rounded-md">
       <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
         Forgot your password?
       </h1>

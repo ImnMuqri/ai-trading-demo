@@ -12,62 +12,54 @@
               label="Name"
               v-model="name"
               placeholder="Enter your name"
-              type="text"
-            />
+              type="text" />
           </div>
           <div>
             <UiInput
               label="Email"
               v-model="email"
               placeholder="Enter your email"
-              type="email"
-            />
+              type="email" />
           </div>
           <div>
             <UiInput
               label="Password"
               v-model="password"
               placeholder="Enter your password"
-              type="password"
-            />
+              type="password" />
           </div>
           <div>
             <UiInput
               label="Country"
               v-model="country"
               placeholder="Malaysia"
-              type="text"
-            />
+              type="text" />
           </div>
           <div>
             <UiInput
               label="Phone"
               v-model="phone"
               placeholder="+1234567890"
-              type="tel"
-            />
+              type="tel" />
           </div>
           <div>
             <UiInput
               label="Referred By"
               v-model="referredBy"
               placeholder="Referral code or email"
-              type="text"
-            />
+              type="text" />
           </div>
         </div>
         <UiButton
           :isLoading="isLoading"
           type="submit"
-          class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition"
-        >
+          class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
           Sign Up
         </UiButton>
       </form>
       <NuxtLink
         to="/login"
-        class="flex gap-1 text-sm items-center justify-center mt-4 text-[#00CDB5] hover:text-[#00CDB5]/70 cursor-pointer"
-      >
+        class="flex gap-1 text-sm items-center justify-center mt-4 text-[#00CDB5] hover:text-[#00CDB5]/70 cursor-pointer">
         <UiIcon icon="mingcute:arrow-left-fill" customClass="w-4 h-4"></UiIcon>
         <p class="font-semibold">Back to login</p>
       </NuxtLink>
@@ -79,6 +71,9 @@
 import { ref, onMounted, nextTick } from "vue";
 import { useAuth } from "@/composables/auth";
 import { showToast } from "~/composables/useToastMessage";
+definePageMeta({
+  layout: "default",
+});
 
 const { login, loading } = useAuth();
 const name = ref("");

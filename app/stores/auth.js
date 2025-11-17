@@ -7,10 +7,11 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     refreshToken: null,
     loading: false,
+    isRefreshing: false,
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.token,
+    isAuthenticated: (state) => Boolean(state.token),
   },
 
   actions: {
@@ -19,7 +20,6 @@ export const useAuthStore = defineStore("auth", {
       const config = useRuntimeConfig();
 
       try {
-        // Call your login API
         const response = await $fetch(
           `${config.public.apiBase}/api/auth/login`,
           {
@@ -28,24 +28,38 @@ export const useAuthStore = defineStore("auth", {
           }
         );
 
-        // Extract data from your response structure
         const data = response.data;
+
+        if (!data || !data.accessToken) {
+          throw new Error("Invalid login response");
+        }
 
         this.token = data.accessToken;
         this.refreshToken = data.refreshToken;
         this.user = data.user;
 
-        // Store tokens and user info in cookies
-        const tokenCookie = useCookie("token", { sameSite: "lax" });
-        const refreshCookie = useCookie("refreshToken", { sameSite: "lax" });
-        const userCookie = useCookie("user", { sameSite: "lax" });
+        const tokenCookie = useCookie("token", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+
+        const refreshCookie = useCookie("refreshToken", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 30,
+        });
+
+        const userCookie = useCookie("user", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+        });
 
         tokenCookie.value = data.accessToken;
         refreshCookie.value = data.refreshToken;
         userCookie.value = JSON.stringify(data.user);
       } catch (error) {
-        console.error("Login failed:", error);
-        throw error;
+        const message = error?.data?.message || "Login failed";
+        this.loading = false;
+        throw new Error(message);
       } finally {
         this.loading = false;
       }
@@ -61,26 +75,31 @@ export const useAuthStore = defineStore("auth", {
         this.refreshToken = refreshCookie.value;
 
         try {
-          // Try to parse JSON if it's a string
           this.user =
             typeof userCookie.value === "string"
               ? JSON.parse(userCookie.value)
               : userCookie.value;
-        } catch (err) {
-          console.warn("Invalid user cookie, clearing...", err);
-          useCookie("user").value = null; // clear broken cookie
+        } catch (error) {
+          useCookie("user").value = null;
           this.user = null;
         }
       }
     },
 
     async refreshTokens() {
+      if (this.isRefreshing) {
+        return;
+      }
+
       const config = useRuntimeConfig();
       const refreshCookie = useCookie("refreshToken");
+
       if (!refreshCookie.value) {
         this.logout();
         return;
       }
+
+      this.isRefreshing = true;
 
       try {
         const data = await $fetch(`${config.public.apiBase}/api/auth/refresh`, {
@@ -88,31 +107,36 @@ export const useAuthStore = defineStore("auth", {
           body: { refreshToken: refreshCookie.value },
         });
 
+        if (!data || !data.accessToken) {
+          throw new Error("Invalid refresh response");
+        }
+
         this.token = data.accessToken;
         this.refreshToken = data.refreshToken;
 
-        // Update cookies
         useCookie("token").value = data.accessToken;
         useCookie("refreshToken").value = data.refreshToken;
       } catch (error) {
-        console.error("Token refresh failed:", error);
         this.logout();
+      } finally {
+        this.isRefreshing = false;
       }
     },
 
     async logout() {
       const config = useRuntimeConfig();
+
       try {
         await $fetch(`${config.public.apiBase}/api/auth/logout`, {
           method: "POST",
-          headers: { Authorization: `Bearer ${this.token}` },
+          headers: { Authorization: "Bearer " + this.token },
         });
       } catch (error) {
-        console.warn("Logout request failed:", error);
+        console.warn("Failed to contact logout endpoint");
       } finally {
-        this.user = null;
         this.token = null;
         this.refreshToken = null;
+        this.user = null;
 
         useCookie("token").value = null;
         useCookie("refreshToken").value = null;

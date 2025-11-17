@@ -55,35 +55,13 @@
 
 <script setup>
 import { ref, computed } from "vue";
+const { $api } = useNuxtApp();
 
-// Example news array
-const newsList = ref([
-  {
-    title: "US GDP Growth Beats Expectations",
-    impact:
-      "US GDP growth influences USD strength and inflation expectations, directly affecting gold prices.",
-    country: "US",
-    severity: "high",
-    publishedAt: "2025-10-07T08:30:00Z",
-  },
-  {
-    title: "China Manufacturing PMI Falls Slightly",
-    impact:
-      "A slower PMI may signal softer economic growth, impacting commodity demand globally.",
-    country: "China",
-    severity: "medium",
-    publishedAt: "2025-10-07T09:45:00Z",
-  },
-  {
-    title: "Oil Supply Agreement Reached",
-    impact:
-      "OPEC+ agreement may stabilize oil prices, reducing volatility in energy markets.",
-    country: "Global",
-    severity: "low",
-    publishedAt: "2025-10-06T14:00:00Z",
-  },
-]);
+// const res = await $api.get(
+//   `api/forex-news?currency=${currency.value}&date=${dateFilter.value}`
+// );
 
+const apiData = res.data.data || []; // fallback to empty array
 const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString(undefined, {

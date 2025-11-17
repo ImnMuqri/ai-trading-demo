@@ -9,7 +9,7 @@
 </template>
 <style scoped>
 .custom-background-image {
-  background-image: url("~/assets/bg/Background-02.svg");
+  background-image: url("~/assets/bg/background-02.svg");
   background-repeat: no-repeat;
   background-size: cover; /* makes it fill the background */
   background-position: center; /* centers the image */

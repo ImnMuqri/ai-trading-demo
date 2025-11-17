@@ -4,14 +4,15 @@
       {{ label }}
     </label>
 
-    <!-- Input area -->
     <div class="relative w-full">
+      <!-- Input area -->
       <input
         type="text"
-        v-model="search"
+        :value="displayValue"
         :placeholder="placeholder"
         class="w-full bg-[#2A2A2A] border border-[#1C1C1C] text-white rounded-lg px-4 py-[11px] pr-10 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#00BDA7] transition-all"
-        @focus="isOpen = true" />
+        @focus="openDropdown"
+        @input="search = $event.target.value" />
 
       <!-- Chevron icon -->
       <svg
@@ -67,20 +68,23 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const selectedValue = ref(props.modelValue || "");
-const isOpen = ref(false);
 const search = ref("");
-
+const isOpen = ref(false);
+const userCleared = ref(false); // track if user manually cleared input
 const wrapper = ref(null);
 
-// Watch external modelValue
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    selectedValue.value = newVal;
-    const selectedOption = props.options.find((o) => o.value === newVal);
-    if (selectedOption) search.value = selectedOption.label;
-  }
-);
+// Compute the display value for the input
+const displayValue = computed(() => {
+  // If user manually cleared input, show empty
+  if (userCleared.value) return search.value;
+  // If user is typing, show what they type
+  if (isOpen.value) return search.value;
+  // Otherwise show selected option label
+  const selectedOption = props.options.find(
+    (o) => o.value === selectedValue.value
+  );
+  return selectedOption ? selectedOption.label : "";
+});
 
 // Filter options based on search
 const filteredOptions = computed(() =>
@@ -89,13 +93,40 @@ const filteredOptions = computed(() =>
   )
 );
 
+// Open dropdown
+function openDropdown() {
+  isOpen.value = true;
+  if (!userCleared.value) {
+    search.value = ""; // show all options if user hasn’t cleared manually
+  }
+}
+
+// Detect input changes
+function onInput(e) {
+  search.value = e.target.value;
+  userCleared.value = search.value === ""; // mark if input cleared
+}
+
 // Select an option
 function selectOption(option) {
   selectedValue.value = option.value;
   search.value = option.label;
+  userCleared.value = false;
   emit("update:modelValue", option.value);
   isOpen.value = false;
 }
+
+// Watch for external modelValue changes
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    selectedValue.value = newVal;
+    if (!newVal) {
+      search.value = "";
+      userCleared.value = true;
+    }
+  }
+);
 
 onMounted(() => {
   if (process.client) {
@@ -107,26 +138,20 @@ onMounted(() => {
   }
 });
 </script>
+
 <style scoped>
-/* Scrollbar track (the background of the scrollbar) */
 ul::-webkit-scrollbar {
-  width: 8px; /* scrollbar width */
+  width: 8px;
 }
-
-/* Track */
 ul::-webkit-scrollbar-track {
-  background: #2a2a2a; /* container color behind scrollbar */
+  background: #2a2a2a;
   border-radius: 4px;
 }
-
-/* Handle (the draggable part) */
 ul::-webkit-scrollbar-thumb {
-  background-color: #00bda7; /* scrollbar color */
+  background-color: #00bda7;
   border-radius: 4px;
-  border: 2px solid #2a2a2a; /* space around thumb */
+  border: 2px solid #2a2a2a;
 }
-
-/* Optional: Hover effect for scrollbar thumb */
 ul::-webkit-scrollbar-thumb:hover {
   background-color: #00e0c0;
 }

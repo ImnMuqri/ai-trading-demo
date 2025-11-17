@@ -24,19 +24,64 @@
       ></UiButton>
     </div>
 
-    <div class="flex flex-wrap-reverse w-full gap-4">
-      <UiCard
-        is-gradient
-        class="p-4 lg:h-[560px] w-full lg:w-[350px] rounded-lg"
+    <div class="flex gap-4 w-full h-full">
+      <UiCard is-gradient class="p-4 w-full lg:w-[400px] rounded-lg"
         ><div class="flex gap-1 items-center">
           <p class="text-md">Signal & Insights</p>
-          <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon></div
-      ></UiCard>
-      <client-only>
-        <UiCard class="border flex-1 p-4">
-          <p class="font-semibold text-[#00BDA7] pb-2 text-lg">Market Trend</p>
-          <div id="tradingview-container"></div>
-        </UiCard>
+          <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
+        </div>
+        <div class="grid grid-cols-1 h-fit">
+          <div class="h-fit grid grid-cols-1 gap-2 mt-4">
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Trend</p>
+              <p class="text-red-500">Bullish</p>
+            </div>
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Volatility</p>
+              <p class="text-yellow-500">Medium</p>
+            </div>
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Volume Analysis</p>
+              <p class="text-red-500">Decreasing</p>
+            </div>
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Market Sentiment</p>
+              <p class="text-emerald-500">Cautious</p>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col items-center justify-center gap-1 h-fit mt-10">
+            <div class="relative">
+              <UiIcon
+                icon="icon:ai-icon"
+                custom-class="h-28 w-48 text-[#00BDA7]"></UiIcon>
+              <p class="absolute bottom-0 left-8 text-[11px] text-center">
+                Need more information?
+              </p>
+            </div>
+            <UiButton class="my-2">Request Signal</UiButton>
+          </div>
+        </div>
+      </UiCard>
+      <client-only class="w-full">
+        <div class="grid grid-cols-1 gap-2">
+          <UiCard class="px-2">
+            <div class="tradingview-widget-container" ref="tickerContainer">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </UiCard>
+          <UiCard class="border p-4">
+            <p class="font-semibold text-[#00BDA7] pb-2 text-lg">
+              Market Trend
+            </p>
+            <div id="tradingview-container"></div>
+          </UiCard>
+        </div>
       </client-only>
     </div>
     <div class="flex flex-wrap w-full gap-4 mt-4">
@@ -70,8 +115,10 @@
           class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
           <div
             class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
-            <!-- Meter 1 -->
-            <div class="flex flex-col items-center">
+            <div
+              v-for="(meter, index) in meters"
+              :key="index"
+              class="flex flex-col items-center">
               <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
                 <path
                   class="text-gray-700/20"
@@ -80,109 +127,28 @@
                   fill="none"
                   d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
                 <path
-                  class="text-emerald-400"
-                  stroke="currentColor"
+                  :stroke="meter.fillColor"
                   stroke-width="3"
-                  stroke-dasharray="65, 100"
+                  :stroke-dasharray="`${meter.value}, 100`"
                   stroke-linecap="round"
                   fill="none"
                   d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <text
-                  x="19"
-                  y="21"
-                  class="text-[10px] fill-emerald-400 font-semibold"
-                  text-anchor="middle">
-                  65%
-                </text>
-              </svg>
-              <p class="text-sm text-gray-300">Performance</p>
-            </div>
 
-            <!-- Meter 2 -->
-            <div class="flex flex-col items-center">
-              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                <path
-                  class="text-gray-700/20"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <path
-                  class="text-yellow-400"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-dasharray="45, 100"
-                  stroke-linecap="round"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
                 <text
                   x="19"
                   y="21"
-                  class="text-[10px] fill-yellow-400 font-semibold"
+                  class="text-[8px] font-semibold"
+                  :fill="meter.fillColor"
                   text-anchor="middle">
-                  45%
+                  {{ meter.value }}%
                 </text>
               </svg>
-              <p class="text-sm text-gray-300">Volatility</p>
-            </div>
-
-            <!-- Meter 3 -->
-            <div class="flex flex-col items-center">
-              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                <path
-                  class="text-gray-700/20"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <path
-                  class="text-sky-400"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-dasharray="80, 100"
-                  stroke-linecap="round"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <text
-                  x="19"
-                  y="21"
-                  class="text-[10px] fill-sky-400 font-semibold"
-                  text-anchor="middle">
-                  80%
-                </text>
-              </svg>
-              <p class="text-sm text-gray-300">Sentiment</p>
-            </div>
-
-            <!-- Meter 4 -->
-            <div class="flex flex-col items-center">
-              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                <path
-                  class="text-gray-700/20"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <path
-                  class="text-red-400"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  stroke-dasharray="25, 100"
-                  stroke-linecap="round"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <text
-                  x="19"
-                  y="21"
-                  class="text-[10px] fill-red-400 font-semibold"
-                  text-anchor="middle">
-                  25%
-                </text>
-              </svg>
-              <p class="text-sm text-gray-300">Risk Index</p>
+              <p class="text-sm text-gray-300">{{ meter.label }}</p>
             </div>
           </div>
-
+          <p class="text-[11px] text-gray-300 my-2">
+            AI Quick Summary: {{ CFsummary }}
+          </p>
           <!-- Toggle Button -->
           <div
             class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
@@ -202,36 +168,35 @@
             :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
             <p class="pb-4 pt-4">Key Factors</p>
             <div
-              v-for="item in keyFactors"
+              v-for="item in CFexp"
               :key="item.title"
               class="grid grid-cols-4 gap-6 items-start justify-end mb-4 pb-4 border-b border-[#1C1C1C]">
-              <div class="grid grid-cols-1 gap-3 text-sm col-span-1">
-                <p class="text-end">{{ item.title }}</p>
+              <div class="grid grid-cols-1 gap-3 text-md col-span-1">
                 <p
-                  class="text-2xl text-end"
+                  class="text-end"
                   :class="{
                     'text-[#00BDA7]': item.sentiment === 'bullish',
                     'text-red-500': item.sentiment === 'bearish',
                     'text-gray-400': item.sentiment === 'neutral',
                   }">
-                  {{ item.value }}
+                  {{ item.name }}
                 </p>
               </div>
               <div
-                class="text-sm col-span-3"
+                class="text-md col-span-3"
                 :class="{
                   'text-[#00BDA7]': item.sentiment === 'bullish',
                   'text-red-500': item.sentiment === 'bearish',
                   'text-gray-400': item.sentiment === 'neutral',
                 }">
-                {{ item.description }}
+                {{ item.explanation }}
               </div>
             </div>
           </div>
         </div></UiCard
       >
     </div>
-    <div class="grid grid-cols-3 gap-4 mt-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
       <UiCard class="px-2 py-2 col-span-2">
         <!-- Tabs -->
         <div class="flex mb-4">
@@ -312,15 +277,67 @@
       </UiCard>
       <UiCard is-gradient class="border p-4">
         <div class="grid grid-cols-1 gap-2">
-          <div class="flex items-center gap-1">
-            <p>AI Sentiment Index</p>
-            <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
+          <div>
+            <div class="flex items-center gap-1">
+              <p>AI Sentiment Index</p>
+              <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
+            </div>
+            <p class="text-gray-400 text-sm">
+              Markets show selective risk-taking with modest equity declines,
+              sector rotation into energy and stable tech, amid mixed macro and
+              geopolitical signals.
+            </p>
           </div>
-          <p class="text-gray-400 text-sm">
-            Markets show selective risk-taking with modest equity declines,
-            sector rotation into energy and stable tech, amid mixed macro and
-            geopolitical signals.
-          </p>
+          <div class="h-96 flex flex-col items-center justify-center">
+            <svg
+              width="180"
+              height="180"
+              viewBox="0 0 40 40"
+              xmlns="http://www.w3.org/2000/svg"
+              preserveAspectRatio="xMidYMid meet"
+              class="mb-2 mx-auto">
+              <!-- background ring -->
+              <path
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="#323232"
+                stroke-width="3.8"
+                stroke-linecap="round" />
+
+              <!-- progress ring -->
+              <path
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="#10B981"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-dasharray="65 100" />
+              <!-- centered text -->
+              <text
+                x="18"
+                y="11"
+                text-anchor="middle"
+                font-family="Inter, Arial, sans-serif">
+                <tspan x="18.5" dy="1" font-size="2.8" fill="#10B981">
+                  Index
+                </tspan>
+                <tspan
+                  x="19"
+                  dy="8"
+                  font-size="8"
+                  font-weight="700"
+                  fill="#10B981">
+                  50
+                </tspan>
+                <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
+                  Cautious
+                </tspan>
+                <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
+                  Optimism
+                </tspan>
+              </text>
+            </svg>
+          </div>
         </div></UiCard
       >
     </div>
@@ -329,8 +346,8 @@
 <script setup>
 import { onMounted, watch, ref, nextTick } from "vue";
 import UiCard from "~/components/UiCard.vue";
-import { useTradingViewSymbols } from "~/composables/useTradingViewSymbols";
-
+import NewsList from "@/components/NewsList.vue";
+const { $api } = useNuxtApp();
 definePageMeta({
   title: "Dashboard",
   layout: "layout",
@@ -342,8 +359,11 @@ const activeTab = ref(tabs[0]);
 const showKeyFactors = ref(false);
 const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
 
-const { symbols } = useTradingViewSymbols();
-const selectedSymbol = ref(symbols.value[0].value);
+const symbols = ref([]);
+const selectedSymbol = ref(""); // initially empty
+const contextualFactors = ref([]);
+const CFsummary = ref("");
+const CFexp = ref([]);
 
 const intervalOptions = [
   { label: "1 Minute", value: "1" },
@@ -378,6 +398,50 @@ const keyFactors = [
     sentiment: "neutral", // text-gray-400
   },
 ];
+//Symbols fetching
+const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
+const pairs = resCurrency.data.data.currencyPairs || [];
+symbols.value = pairs.map((pair) => {
+  let label = pair;
+  if (!pair.includes("/") && pair.length === 6) {
+    label = pair.slice(0, 3) + "/" + pair.slice(3);
+  }
+  return { label, value: pair };
+});
+selectedSymbol.value = symbols.value[0]?.value || "";
+
+// Fetch contextual factors
+const fetchContextual = async () => {
+  const resContextual = await $api.post(`api/contextual-factors/analyze`, {
+    currencyPair: selectedSymbol.value,
+  });
+  contextualFactors.value = resContextual.data.data.analysis.factors || [];
+  CFsummary.value = resContextual.data.data.analysis.summary || "";
+  CFexp.value = resContextual.data.data.analysis.factors || [];
+};
+fetchContextual();
+// Map sentiment to color
+const sentimentColor = (sentiment) => {
+  switch (sentiment.toLowerCase()) {
+    case "bullish":
+      return "#10B981"; // emerald-400
+    case "bearish":
+      return "#F87171"; // red-400
+    case "neutral":
+      return "#EFEFEFFF"; // yellow-400
+    default:
+      return "#9CA3AF"; // gray-400
+  }
+};
+
+const meters = computed(() =>
+  contextualFactors.value.map((factor) => ({
+    label: factor.name,
+    value: factor.weight,
+    strokeColor: sentimentColor(factor.sentiment),
+    fillColor: sentimentColor(factor.sentiment), // use this for <text>
+  }))
+);
 
 let widget;
 let scriptLoaded = false;
@@ -412,19 +476,59 @@ async function initWidgetSafe(symbol, interval) {
     width: "100%",
     height: 500,
     symbol,
+    hide_top_toolbar: true,
     interval,
     timezone: "Etc/UTC",
     theme: "dark",
     style: "1",
     locale: "en",
     toolbar_bg: "#f1f3f6",
+    gridColor: "rgba(15,15,15,1)",
     allow_symbol_change: false,
     timeframes: [],
   });
 }
+const tickerContainer = ref(null);
+const tickerSymbols = symbols?.value.map((s) => ({
+  proName: `OANDA:${s.value}`,
+  title: s.value,
+}));
 
-onMounted(() => {
+const loadTickerTape = () => {
+  console.log("ticker ref:", tickerContainer.value);
+  if (!tickerContainer.value) return;
+
+  tickerContainer.value.innerHTML = "";
+
+  const script = document.createElement("script");
+  script.type = "text/javascript";
+  script.src =
+    "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
+  script.async = true;
+
+  const tickerSymbols = symbols.value.map((s) => ({
+    proName: `OANDA:${s.value}`,
+    title: s.label,
+  }));
+
+  script.innerHTML = JSON.stringify({
+    symbols: tickerSymbols,
+    showSymbolLogo: true,
+    colorTheme: "dark",
+    isTransparent: true,
+    displayMode: "adaptive",
+    locale: "en",
+  });
+
+  tickerContainer.value.appendChild(script);
+};
+
+onMounted(async () => {
   if (process.client) {
+    await nextTick();
+    loadTickerTape();
+
+    await loadTradingViewScript();
     initWidgetSafe(selectedSymbol.value, selectedInterval.value);
   }
 });
@@ -434,6 +538,9 @@ let updateTimeout;
 watch([selectedSymbol, selectedInterval], ([symbol, interval]) => {
   clearTimeout(updateTimeout);
   updateTimeout = setTimeout(() => initWidgetSafe(symbol, interval), 300);
+});
+watch(selectedSymbol, (newVal) => {
+  if (newVal) fetchContextual();
 });
 </script>
 
