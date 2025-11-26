@@ -15,6 +15,56 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
+    async register(payload) {
+      this.loading = true;
+      const config = useRuntimeConfig();
+
+      try {
+        const response = await $fetch(
+          `${config.public.apiBase}/api/auth/register`,
+          {
+            method: "POST",
+            body: payload,
+          }
+        );
+
+        const data = response.data;
+
+        if (!data || !data.accessToken) {
+          throw new Error("Invalid registration response");
+        }
+
+        this.token = data.accessToken;
+        this.refreshToken = data.refreshToken;
+        this.user = data.user;
+
+        const tokenCookie = useCookie("token", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+
+        const refreshCookie = useCookie("refreshToken", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 30,
+        });
+
+        const userCookie = useCookie("user", {
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7,
+        });
+
+        tokenCookie.value = data.accessToken;
+        refreshCookie.value = data.refreshToken;
+        userCookie.value = JSON.stringify(data.user);
+      } catch (error) {
+        const message = error?.data?.message || "Registration failed";
+        this.loading = false;
+        throw new Error(message);
+      } finally {
+        this.loading = false;
+      }
+    },
+
     async login(email, password) {
       this.loading = true;
       const config = useRuntimeConfig();
@@ -59,6 +109,28 @@ export const useAuthStore = defineStore("auth", {
       } catch (error) {
         const message = error?.data?.message || "Login failed";
         this.loading = false;
+        throw new Error(message);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async forgotPassword(email) {
+      this.loading = true;
+      const config = useRuntimeConfig();
+
+      try {
+        const response = await $fetch(
+          `${config.public.apiBase}/api/auth/forgot-password`,
+          {
+            method: "POST",
+            body: { email: email || null },
+          }
+        );
+
+        return response;
+      } catch (error) {
+        const message = error?.data?.message || "Request failed";
         throw new Error(message);
       } finally {
         this.loading = false;

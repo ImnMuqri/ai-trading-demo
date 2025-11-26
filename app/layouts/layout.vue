@@ -67,24 +67,31 @@
       </nav>
       <div class="p-3">
         <div
-          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm">
+          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm"
+          :class="isCollapsed ? 'hidden ' : 'block'">
           <p class="text-[12px] text-white mb-3">
             Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
           </p>
           <NuxtLink
             to="/settings/subscription"
-            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all transition-discrete duration-300 hover:scale-[1.02]"
             exact>
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
             <span class="text-[11px]">Upgrade to Ai Pro</span>
           </NuxtLink>
+        </div>
+        <div
+          v-if="isCollapsed"
+          class="w-fit p-2 flex justify-center border border-[#0D0D0D] rounded-xl bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7]">
+          <UiIcon icon="heroicons:bolt" class="w-5 h-5 text-white"></UiIcon>
         </div>
       </div>
       <!-- Logout, anchored bottom -->
       <div class="p-4 border-t border-[#1C1C1C] mt-auto">
         <button
           @click="handleLogout"
-          class="flex items-center gap-3 w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition">
+          class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition"
+          :class="!isCollapsed ? 'px-3' : 'px-1.5'">
           <UiIcon icon="solar:exit-linear" custom-class="w-5 h-5" />
           <span v-if="!isCollapsed">Logout</span>
         </button>
@@ -163,7 +170,7 @@ const inactiveClass = "text-[#BCBBBB] hover:bg-blue-50 hover:text-black";
 // computed classes for aside, prevents conflicting translate classes
 const asideClasses = computed(() => {
   const base =
-    "fixed top-0 left-0 h-full bg-[#0D0D0D] shadow-md border-r border-[#1C1C1C] flex flex-col z-50 transition-all duration-300 md:translate-x-0";
+    "fixed top-0 left-0 h-full bg-[#0D0D0D] shadow-md border-r border-[#1C1C1C] flex flex-col z-50 transition-all transition-discrete duration-300 md:translate-x-0";
   const width = isCollapsed.value ? "w-16" : "w-60";
   // on mobile and closed, hide it off-canvas
   const mobileTranslate =

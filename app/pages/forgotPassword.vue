@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen flex items-center justify-center overflow-hidden">
-    <div class="w-full max-w-sm px-6 mx-10 py-12 bg-white rounded-md">
-      <h1 class="text-2xl font-semibold text-center my-8 text-gray-800">
+    <div class="w-full max-w-[400px] px-6 mx-10 py-8 bg-white rounded-md">
+      <h1 class="text-2xl font-semibold text-center my-6 text-gray-800">
         Forgot your password?
       </h1>
 
-      <form @submit.prevent="handleLogin" class="text-gray-700">
+      <form @submit.prevent="handleForgotPassword" class="text-gray-700">
         <div class="mb-4">
           <label class="block mb-1 text-sm">Email</label>
           <input
@@ -32,46 +32,31 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue";
-import { useAuth } from "@/composables/auth";
+<script setup>
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/auth";
 import { showToast } from "~/composables/useToastMessage";
+const auth = useAuthStore();
 
-const { login, loading } = useAuth();
 const email = ref("");
-const password = ref("");
-const expanded = ref(false);
-const containerRef = ref(null);
 const isLoading = ref(false);
 
-const handleLogin = async () => {
+const handleForgotPassword = async () => {
+  if (!email.value) {
+    showToast("Please enter your email", "error");
+    return;
+  }
   isLoading.value = true;
   try {
-    await login(email.value, password.value);
-    navigateTo("/dashboard");
-    isLoading.value = false;
-    showToast("Successfully logged in", "success");
+    await auth.forgotPassword(email.value);
+    showToast("Password reset link sent to your email", "success");
   } catch (e) {
-    // alert("Invalid email or password");
+    console.log("Forgot password error:", e);
+    showToast(e?.data?.message || "Unable to send reset link", "error");
+  } finally {
     isLoading.value = false;
-    showToast("Invalid email or password", "error");
   }
 };
 </script>
 
-<style scoped>
-@keyframes slide {
-  0% {
-    left: 0;
-  }
-  50% {
-    left: 75%;
-  }
-  100% {
-    left: 0;
-  }
-}
-.animate-slide {
-  animation: slide 1s ease-in-out infinite;
-}
-</style>
+<style scoped></style>

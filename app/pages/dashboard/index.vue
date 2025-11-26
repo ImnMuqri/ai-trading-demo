@@ -24,7 +24,7 @@
       ></UiButton>
     </div>
 
-    <div class="flex gap-4 w-full h-full">
+    <div class="flex flex-col-reverse lg:flex-row gap-4 w-full h-full">
       <UiCard is-gradient class="p-4 w-full lg:w-[400px] rounded-lg"
         ><div class="flex gap-1 items-center">
           <p class="text-md">Signal & Insights</p>
@@ -55,7 +55,7 @@
           </div>
 
           <div
-            class="flex flex-col items-center justify-center gap-1 h-fit mt-10">
+            class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10">
             <div class="relative">
               <UiIcon
                 icon="icon:ai-icon"
@@ -64,7 +64,9 @@
                 Need more information?
               </p>
             </div>
-            <UiButton class="my-2">Request Signal</UiButton>
+            <UiButton @click="requestSignal" class="my-2"
+              >Request Signal</UiButton
+            >
           </div>
         </div>
       </UiCard>
@@ -107,9 +109,7 @@
           </div>
         </div>
         <p class="text-sm text-gray-300">
-          Gold is rising due to expected Fed rate cuts, geopolitical risks, and
-          central banks diversifying from the dollar, but a stronger dollar and
-          profit-taking may cause short-term dips.
+          {{ CFsummary }}
         </p>
         <div
           class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
@@ -146,9 +146,7 @@
               <p class="text-sm text-gray-300">{{ meter.label }}</p>
             </div>
           </div>
-          <p class="text-[11px] text-gray-300 my-2">
-            AI Quick Summary: {{ CFsummary }}
-          </p>
+
           <!-- Toggle Button -->
           <div
             class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
@@ -216,7 +214,7 @@
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="p-4 w-full">
+          <div class="px-4 w-full">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
@@ -244,7 +242,7 @@
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="p-4 w-full">
+          <div class="px-4 w-full">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
@@ -365,6 +363,8 @@ const contextualFactors = ref([]);
 const CFsummary = ref("");
 const CFexp = ref([]);
 
+const tradingAnalysis = ref(null);
+
 const intervalOptions = [
   { label: "1 Minute", value: "1" },
   { label: "5 Minutes", value: "5" },
@@ -375,29 +375,18 @@ const intervalOptions = [
   { label: "Monthly", value: "M" },
 ];
 
-const keyFactors = [
-  {
-    title: "Fed rate cuts",
-    value: "40%",
-    description:
-      "Expectations of additional Federal Reserve rate cuts this year, following the first cut and dovish signals, have boosted gold demand as lower rates reduce opportunity costs for holding non-yielding bullion.",
-    sentiment: "bullish", // text-[#00BDA7]
-  },
-  {
-    title: "Dollar strength rebound",
-    value: "25%",
-    description:
-      "A rebound in the US dollar reduces the appeal of gold, putting short-term pressure on prices.",
-    sentiment: "bearish", // text-red-500
-  },
-  {
-    title: "Geopolitical tension",
-    value: "35%",
-    description:
-      "Ongoing geopolitical risks support gold as a safe-haven asset, maintaining steady demand.",
-    sentiment: "neutral", // text-gray-400
-  },
-];
+const intervalMap = {
+  1: "M1",
+  5: "M5",
+  15: "M15",
+  30: "M30",
+  60: "H1",
+  240: "H4",
+  D: "D1",
+  W: "W1",
+  M: "MN1",
+};
+
 //Symbols fetching
 const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
 const pairs = resCurrency.data.data.currencyPairs || [];
@@ -443,6 +432,22 @@ const meters = computed(() =>
   }))
 );
 
+const requestSignal = async () => {
+  try {
+    // Map the selected interval to API format
+    const apiTimeframe = intervalMap[selectedInterval] || "M15"; // fallback to H1
+
+    const res = await $api.post(`api/ai/analyze-trading`, {
+      symbol: selectedSymbol.value,
+      timeframe: apiTimeframe,
+    });
+
+    const analysis = res.data || {};
+    tradingAnalysis.value = analysis;
+  } catch (error) {
+    console.error("Failed to analyze trading:", error);
+  }
+};
 let widget;
 let scriptLoaded = false;
 
@@ -495,7 +500,6 @@ const tickerSymbols = symbols?.value.map((s) => ({
 }));
 
 const loadTickerTape = () => {
-  console.log("ticker ref:", tickerContainer.value);
   if (!tickerContainer.value) return;
 
   tickerContainer.value.innerHTML = "";
