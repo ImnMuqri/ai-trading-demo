@@ -5,7 +5,8 @@
       v-if="isMobileMenuOpen"
       class="fixed inset-0 bg-black/50 z-40 md:hidden"
       @click="toggleMobileMenu"
-      aria-hidden="true"></div>
+      aria-hidden="true"
+    ></div>
 
     <!-- Sidebar -->
     <aside :class="asideClasses">
@@ -15,85 +16,151 @@
           @click="toggleSidebarOrMenu"
           class="text-gray-500 hover:text-blue-600 transition"
           :aria-expanded="isMobile ? isMobileMenuOpen : !isCollapsed"
-          aria-label="Toggle menu">
+          aria-label="Toggle menu"
+        >
           <UiIcon
             v-if="isMobile && isMobileMenuOpen"
             icon="meteor-icons:xmark"
-            custom-class="text-white w-[25px] h-[40px]" />
-
+            custom-class="text-white w-[25px] h-[40px]"
+          />
           <UiIcon
             v-else-if="isMobile && !isMobileMenuOpen"
             icon="stash:burger-classic-duotone"
-            custom-class="text-white w-[25px] h-[40px]" />
+            custom-class="text-white w-[25px] h-[40px]"
+          />
           <UiIcon
             v-else
             icon="stash:burger-classic-duotone"
-            custom-class="text-white w-[25px] h-[40px]" />
+            custom-class="text-white w-[25px] h-[40px]"
+          />
         </button>
 
-        <UiIcon
-          v-if="!isCollapsed"
-          icon="icon:tpt-logo"
-          custom-class="w-[180px] h-[40px]" />
+        <span
+          class="inline-block transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap"
+          :class="
+            !isCollapsed
+              ? 'opacity-100 translate-x-0 max-w-[180px]'
+              : 'opacity-0 -translate-x-4 max-w-0 '
+          "
+        >
+          <UiIcon icon="icon:tpt-logo" custom-class="w-[180px] h-[40px]" />
+        </span>
       </div>
 
-      <!-- Nav Links -->
-      <nav class="flex-1 p-3 space-y-2 pt-10 overflow-y-auto">
+      <nav class="flex-1 p-3 space-y-2 pt-10 overflow-hidden">
+        <!-- Dashboard -->
         <NuxtLink
           to="/dashboard"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
           :class="[
             isActive('/dashboard') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-center' : 'justify-start',
-          ]">
+            isCollapsed ? 'justify-start' : 'justify-start',
+          ]"
+        >
           <UiIcon
             icon="material-symbols:dashboard-outline-rounded"
-            custom-class="w-4 h-4" />
-          <span v-if="!isCollapsed" class="text-sm">Dashboard</span>
+            custom-class="w-4 h-4"
+          />
+
+          <!-- Smooth slide/fade text -->
+          <span
+            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            :class="
+              !isCollapsed
+                ? 'opacity-100 translate-x-0 max-w-[120px]'
+                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+            "
+          >
+            Dashboard
+          </span>
         </NuxtLink>
 
+        <!-- Daily Bias -->
         <NuxtLink
           to="/dailybias"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
           :class="[
             isActive('/dailybias') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-center' : 'justify-start',
-          ]">
+            isCollapsed ? 'justify-start' : 'justify-start',
+          ]"
+        >
           <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
-          <span v-if="!isCollapsed" class="whitespace-nowrap text-sm"
-            >Daily Bias</span
+
+          <!-- Smooth slide/fade text -->
+          <span
+            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            :class="
+              !isCollapsed
+                ? 'opacity-100 translate-x-0 max-w-[120px]'
+                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+            "
           >
+            Daily Bias
+          </span>
         </NuxtLink>
       </nav>
+
       <div class="p-3">
         <div
-          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm"
-          :class="isCollapsed ? 'hidden ' : 'block'">
+          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
+          :class="
+            isCollapsed
+              ? 'max-h-0 opacity-10 scale-y-0'
+              : 'max-h-[500px] opacity-100 scale-y-100'
+          "
+        >
           <p class="text-[12px] text-white mb-3">
             Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
           </p>
+
           <NuxtLink
             to="/settings/subscription"
-            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all transition-discrete duration-300 hover:scale-[1.02]"
-            exact>
+            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            exact
+          >
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
             <span class="text-[11px]">Upgrade to Ai Pro</span>
           </NuxtLink>
         </div>
-        <div
-          v-if="isCollapsed"
-          class="w-fit p-2 flex justify-center border border-[#0D0D0D] rounded-xl bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7]">
-          <UiIcon icon="heroicons:bolt" class="w-5 h-5 text-white"></UiIcon>
-        </div>
+        <NuxtLink to="/settings/subscription">
+          <div
+            class="flex justify-center border border-[#0D0D0D] rounded-xl bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] overflow-hidden transform transition-all duration-300 ease-out w-fit"
+            :class="
+              isCollapsed
+                ? 'max-h-[48px] opacity-100 scale-20 p-2'
+                : 'max-h-0 opacity-0 scale-10 p-0'
+            "
+          >
+            <UiIcon
+              icon="heroicons:bolt"
+              class="w-5 h-5 text-white"
+            ></UiIcon></div
+        ></NuxtLink>
       </div>
+
       <!-- Logout, anchored bottom -->
       <div class="p-4 border-t border-[#1C1C1C] mt-auto">
         <button
           @click="handleLogout"
           class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition"
-          :class="!isCollapsed ? 'px-3' : 'px-1.5'">
-          <UiIcon icon="solar:exit-linear" custom-class="w-5 h-5" />
-          <span v-if="!isCollapsed">Logout</span>
+        >
+          <div
+            class="flex items-center gap-3 transition-all duration-500"
+            :class="!isCollapsed ? 'translate-x-3' : 'translate-x-1.5'"
+          >
+            <UiIcon icon="solar:exit-linear" custom-class="w-5 h-5" />
+
+            <span
+              class="inline-block whitespace-nowrap transition-all duration-300 ease-in-out"
+              :class="
+                !isCollapsed
+                  ? 'opacity-100 translate-x-0 max-w-[200px]'
+                  : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+              "
+            >
+              Logout
+            </span>
+          </div>
         </button>
       </div>
     </aside>
@@ -101,7 +168,8 @@
     <!-- Main Content -->
     <main
       :style="mainStyle"
-      class="flex-1 p-6 overflow-y-auto transition-all duration-300">
+      class="flex-1 p-6 overflow-y-auto transition-all duration-300"
+    >
       <div class="flex justify-between items-start">
         <div>
           <div class="flex gap-2">
@@ -109,10 +177,12 @@
             <button
               class="md:hidden text-white"
               @click="toggleMobileMenu"
-              aria-label="Open mobile menu">
+              aria-label="Open mobile menu"
+            >
               <UiIcon
                 icon="stash:burger-classic-duotone"
-                custom-class="w-6 h-6" />
+                custom-class="w-6 h-6"
+              />
             </button>
             <h2 class="text-2xl font-semibold text-[#00BDA7]">Dashboard</h2>
           </div>
@@ -124,7 +194,8 @@
         <div class="flex gap-4 items-center">
           <UiIcon
             icon="solar:bell-line-duotone"
-            custom-class="text-white w-6 h-6" />
+            custom-class="text-white w-6 h-6"
+          />
           <div class="p-4 border bg-white rounded-full"></div>
         </div>
       </div>
