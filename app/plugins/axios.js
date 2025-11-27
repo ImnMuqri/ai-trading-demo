@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
+import { showToast } from "~/composables/useToastMessage";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
@@ -36,6 +37,13 @@ export default defineNuxtPlugin((nuxtApp) => {
         }
         console.log("Unauthorized, please login");
       }
+
+      if (error.response && error.response.status === 403) {
+        auth.logout();
+        showToast("Session timed out", "error");
+        return navigateTo("/login");
+      }
+
       return Promise.reject(error);
     }
   );
