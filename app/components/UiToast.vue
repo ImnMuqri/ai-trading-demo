@@ -12,7 +12,7 @@
       <span class="capitalize font-semibold text-md text-black/80">{{
         type
       }}</span>
-      <span class="text_gray text-[14px] font-light text-black/80">{{
+      <span class="text_gray text-[13px] font-light text-black/80">{{
         message
       }}</span>
     </div>
