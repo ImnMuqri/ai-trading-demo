@@ -63,7 +63,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = data.user;
         this.setCookies(data);
       } catch (err) {
-        throw new Error(err?.data?.message || "Registration failed");
+        throw new Error(err || "Registration failed");
       } finally {
         this.loading = false;
       }
@@ -110,7 +110,7 @@ export const useAuthStore = defineStore("auth", {
           }
         );
       } catch (err) {
-        throw new Error(err?.data?.message || "Request failed");
+        throw new Error(err || "Request failed");
       } finally {
         this.loading = false;
       }
