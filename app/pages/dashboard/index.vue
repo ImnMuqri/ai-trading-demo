@@ -53,9 +53,66 @@
               <p class="text-emerald-500">Cautious</p>
             </div>
           </div>
-
           <div
-            class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10">
+            v-if="tradingAnalysis"
+            class="h-fit grid grid-cols-1 gap-2 mt-4 border p-2.5 rounded-lg border-[#00BDA7]">
+            <div class="flex gap-1 items-center">
+              <UiIcon icon="hugeicons:ai-idea"></UiIcon>
+              <p class="text-sm">Trade Idea</p>
+            </div>
+            <!-- Trend -->
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Trend</p>
+              <p
+                :class="
+                  tradingAnalysis?.trend === 'Bullish'
+                    ? 'text-red-500'
+                    : 'text-emerald-500'
+                ">
+                {{ tradingAnalysis?.trend ?? "No Info" }}
+              </p>
+            </div>
+
+            <!-- Timeframe -->
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Timeframe</p>
+              <p class="text-emerald-500">
+                {{ tradingAnalysis?.timeframe ?? "No Info" }}
+              </p>
+            </div>
+
+            <!-- Entry Zone -->
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Entry Zone</p>
+              <p class="text-yellow-500">
+                {{ tradingAnalysis?.entryLower ?? "--" }}
+                to
+                {{ tradingAnalysis?.entryUpper ?? "--" }}
+              </p>
+            </div>
+
+            <!-- Risk Level -->
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Risk Level</p>
+              <p
+                :class="
+                  tradingAnalysis?.risk === 'High'
+                    ? 'text-red-500'
+                    : tradingAnalysis?.risk === 'Medium'
+                    ? 'text-yellow-500'
+                    : 'text-emerald-500'
+                ">
+                {{ tradingAnalysis?.risk ?? "No Info" }}
+              </p>
+            </div>
+          </div>
+          <div
+            class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
+            :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
             <div class="relative">
               <UiIcon
                 icon="icon:ai-icon"
@@ -64,8 +121,19 @@
                 Need more information?
               </p>
             </div>
-            <UiButton @click="requestSignal" class="my-2"
+            <UiButton
+              v-if="!tradingAnalysis"
+              @click="requestSignal"
+              class="my-2"
+              :isLoading="isRequestingSignal"
               >Request Signal</UiButton
+            >
+            <UiButton
+              v-if="tradingAnalysis"
+              @click="requestSignal"
+              class="my-2"
+              :isLoading="isRequestingSignal"
+              >Request Another Signal</UiButton
             >
           </div>
         </div>
@@ -281,11 +349,10 @@
               <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
             </div>
             <p class="text-gray-400 text-sm">
-              Markets show selective risk-taking with modest equity declines,
-              sector rotation into energy and stable tech, amid mixed macro and
-              geopolitical signals.
+              {{ SentimentIndex.explanation }}
             </p>
           </div>
+
           <div class="h-96 flex flex-col items-center justify-center">
             <svg
               width="180"
@@ -309,7 +376,8 @@
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                stroke-dasharray="65 100" />
+                :stroke-dasharray="`${SentimentIndex.percentage} 100`" />
+
               <!-- centered text -->
               <text
                 x="18"
@@ -320,24 +388,21 @@
                   Index
                 </tspan>
                 <tspan
-                  x="19"
+                  x="18"
                   dy="8"
                   font-size="8"
                   font-weight="700"
                   fill="#10B981">
-                  50
+                  {{ SentimentIndex.percentage }}
                 </tspan>
                 <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
-                  Cautious
-                </tspan>
-                <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
-                  Optimism
+                  Cautious Optimism
                 </tspan>
               </text>
             </svg>
           </div>
-        </div></UiCard
-      >
+        </div>
+      </UiCard>
     </div>
   </div>
 </template>
@@ -362,8 +427,13 @@ const selectedSymbol = ref(""); // initially empty
 const contextualFactors = ref([]);
 const CFsummary = ref("");
 const CFexp = ref([]);
+const SentimentIndex = ref({
+  percentage: 0,
+  explanation: "",
+});
 
 const tradingAnalysis = ref(null);
+const isRequestingSignal = ref(false);
 
 const intervalOptions = [
   { label: "1 Minute", value: "1" },
@@ -407,6 +477,12 @@ const fetchContextual = async () => {
   contextualFactors.value = resContextual.data.data.analysis.factors || [];
   CFsummary.value = resContextual.data.data.analysis.summary || "";
   CFexp.value = resContextual.data.data.analysis.factors || [];
+  SentimentIndex.value = {
+    percentage:
+      resContextual.data.data.analysis.sentimentIndex?.percentage || 0,
+    explanation:
+      resContextual.data.data.analysis.sentimentIndex?.explanation || null,
+  };
 };
 fetchContextual();
 // Map sentiment to color
@@ -433,6 +509,7 @@ const meters = computed(() =>
 );
 
 const requestSignal = async () => {
+  isRequestingSignal.value = true;
   try {
     // Map the selected interval to API format
     const apiTimeframe = intervalMap[selectedInterval] || "M15"; // fallback to H1
@@ -442,10 +519,19 @@ const requestSignal = async () => {
       timeframe: apiTimeframe,
     });
 
-    const analysis = res.data || {};
-    tradingAnalysis.value = analysis;
+    const analysis = res.data.data || {};
+    tradingAnalysis.value = {
+      trend: analysis.analysis.trend,
+      risk: analysis.analysis.riskLevel,
+      entryLower: analysis.analysis.entryZone?.lower,
+      entryUpper: analysis.analysis.entryZone?.upper,
+      timeframe: analysis.timeframe,
+      symbol: analysis.symbol,
+    };
+    isRequestingSignal.value = false;
   } catch (error) {
     console.error("Failed to analyze trading:", error);
+    isRequestingSignal.value = false;
   }
 };
 let widget;

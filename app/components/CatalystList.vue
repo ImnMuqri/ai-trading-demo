@@ -1,6 +1,6 @@
 <template>
   <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
-    <div v-for="(group, date) in groupedNews" :key="date">
+    <div v-if="!isLoading" v-for="(group, date) in groupedNews" :key="date">
       <!-- Date header -->
       <div class="flex items-center justify-between gap-2 pb-2">
         <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
@@ -46,6 +46,31 @@
         <p class="text-[11px] text-gray-400 mb-1">{{ news.impact }}</p>
       </div>
     </div>
+    <!-- Shimmer when loading -->
+    <div v-if="isLoading">
+      <div v-for="n in 3" :key="n" class="mb-3">
+        <!-- Date header shimmer -->
+        <div class="flex items-center justify-between gap-2 pb-2">
+          <p class="h-4 w-20 bg-gray-700 rounded animate-pulse"></p>
+          <span class="block h-[1px] w-full bg-gray-800"></span>
+        </div>
+
+        <!-- Shimmer news card -->
+        <div class="px-4 py-3 rounded-lg mb-3 bg-gray-800 animate-pulse">
+          <div class="flex items-center justify-between mb-2">
+            <span class="flex gap-2">
+              <div class="h-3 w-10 bg-gray-600 rounded"></div>
+              <div class="h-3 w-12 bg-gray-600 rounded"></div>
+            </span>
+            <div class="h-5 w-5 bg-gray-700 rounded-full"></div>
+          </div>
+
+          <div class="h-4 w-40 bg-gray-600 rounded mb-2"></div>
+          <div class="h-3 w-24 bg-gray-700 rounded mb-1"></div>
+          <div class="h-3 w-48 bg-gray-700 rounded"></div>
+        </div>
+      </div>
+    </div>
 
     <div v-if="newsList.length === 0" class="p-4 text-gray-500">
       No news available.
@@ -57,11 +82,35 @@
 import { ref, computed } from "vue";
 const { $api } = useNuxtApp();
 
-// const res = await $api.get(
-//   `api/forex-news?currency=${currency.value}&date=${dateFilter.value}`
-// );
+const newsList = ref([]);
+const isLoading = ref(false);
 
-const apiData = res.data.data || []; // fallback to empty array
+const fetchNews = async () => {
+  isLoading.value = true;
+  const res = await $api.get("api/economic-calendar");
+
+  const raw = res.data.data || [];
+
+  // Map backend fields into your existing UI fields
+  newsList.value = raw.map((item) => ({
+    country: item.country,
+    title: item.translated_name || item.report_name || "Untitled",
+    publishedAt: item.event_datetime,
+    severity: mapSeverity(item.impact_level),
+    impact: item.definition || item.short_definition || "No details available",
+  }));
+  isLoading.value = false;
+};
+
+// Convert backend impact_level into low, medium, high
+const mapSeverity = (level) => {
+  if (level === "1") return "high";
+  if (level === "2") return "medium";
+  return "low"; // 3 means low impact
+};
+
+await fetchNews();
+
 const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString(undefined, {
@@ -71,7 +120,6 @@ const formatTime = (dateString) => {
   });
 };
 
-// Group news by date
 const groupedNews = computed(() => {
   const groups = {};
   newsList.value.forEach((news) => {
@@ -86,19 +134,12 @@ const groupedNews = computed(() => {
   return groups;
 });
 
-// Border color based on severity
-function impactBorder(severity) {
-  switch (severity) {
-    case "low":
-      return "border border-[#00BDA7]";
-    case "medium":
-      return "border border-yellow-500";
-    case "high":
-      return "border border-red-500";
-    default:
-      return "border border-[#1C1C1C]";
-  }
-}
+const impactBorder = (severity) => {
+  if (severity === "low") return "border border-[#00BDA7]";
+  if (severity === "medium") return "border border-yellow-500";
+  if (severity === "high") return "border border-red-500";
+  return "border border-[#1C1C1C]";
+};
 </script>
 
 <style scoped>
