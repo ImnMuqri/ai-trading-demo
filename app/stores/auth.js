@@ -15,51 +15,55 @@ export const useAuthStore = defineStore("auth", {
   },
 
   actions: {
+    // Centralized headers
+    getHeaders(custom = {}) {
+      const headers = { "Content-Type": "application/json", ...custom };
+      if (this.token) headers.Authorization = `Bearer ${this.token}`;
+      return headers;
+    },
+
+    // Centralized cookie setter
+    setCookies({ token, refreshToken, user }) {
+      useCookie("token", { sameSite: "lax", maxAge: 60 * 60 * 24 * 7 }).value =
+        token;
+      useCookie("refreshToken", {
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 30,
+      }).value = refreshToken;
+      useCookie("user", { sameSite: "lax", maxAge: 60 * 60 * 24 * 7 }).value =
+        JSON.stringify(user);
+    },
+
+    // Centralized cookie remover
+    clearCookies() {
+      useCookie("token").value = null;
+      useCookie("refreshToken").value = null;
+      useCookie("user").value = null;
+    },
+
     async register(payload) {
       this.loading = true;
       const config = useRuntimeConfig();
 
       try {
-        const response = await $fetch(
+        const { data } = await $fetch(
           `${config.public.apiBase}/api/auth/register`,
           {
             method: "POST",
+            headers: this.getHeaders(),
             body: payload,
           }
         );
 
-        const data = response.data;
-
-        if (!data || !data.accessToken) {
+        if (!data?.accessToken)
           throw new Error("Invalid registration response");
-        }
 
         this.token = data.accessToken;
         this.refreshToken = data.refreshToken;
         this.user = data.user;
-
-        const tokenCookie = useCookie("token", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-
-        const refreshCookie = useCookie("refreshToken", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 30,
-        });
-
-        const userCookie = useCookie("user", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-
-        tokenCookie.value = data.accessToken;
-        refreshCookie.value = data.refreshToken;
-        userCookie.value = JSON.stringify(data.user);
-      } catch (error) {
-        const message = error?.data?.message || "Registration failed";
-        this.loading = false;
-        throw new Error(message);
+        this.setCookies(data);
+      } catch (err) {
+        throw new Error(err?.data?.message || "Registration failed");
       } finally {
         this.loading = false;
       }
@@ -70,47 +74,23 @@ export const useAuthStore = defineStore("auth", {
       const config = useRuntimeConfig();
 
       try {
-        const response = await $fetch(
+        const { data } = await $fetch(
           `${config.public.apiBase}/api/auth/login`,
           {
             method: "POST",
+            headers: this.getHeaders(),
             body: { email, password },
           }
         );
 
-        const data = response.data;
-
-        if (!data || !data.accessToken) {
-          throw new Error("Invalid login response");
-        }
+        if (!data?.accessToken) throw new Error("Invalid login response");
 
         this.token = data.accessToken;
         this.refreshToken = data.refreshToken;
         this.user = data.user;
-
-        const tokenCookie = useCookie("token", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-
-        const refreshCookie = useCookie("refreshToken", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 30,
-        });
-
-        const userCookie = useCookie("user", {
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7,
-        });
-
-        tokenCookie.value = data.accessToken;
-        refreshCookie.value = data.refreshToken;
-        userCookie.value = JSON.stringify(data.user);
-      } catch (error) {
-        // const message = error?.data?.message || "Login failed";
-        const message = error;
-        this.loading = false;
-        throw new Error(message);
+        this.setCookies(data);
+      } catch (err) {
+        throw new Error(err?.data?.message || "Login failed");
       } finally {
         this.loading = false;
       }
@@ -121,76 +101,75 @@ export const useAuthStore = defineStore("auth", {
       const config = useRuntimeConfig();
 
       try {
-        const response = await $fetch(
+        return await $fetch(
           `${config.public.apiBase}/api/auth/forgot-password`,
           {
             method: "POST",
-            body: { email: email || null },
+            headers: this.getHeaders(),
+            body: { email },
           }
         );
-
-        return response;
-      } catch (error) {
-        const message = error?.data?.message || "Request failed";
-        throw new Error(message);
+      } catch (err) {
+        throw new Error(err?.data?.message || "Request failed");
       } finally {
         this.loading = false;
       }
     },
 
     restoreSession() {
-      const tokenCookie = useCookie("token");
-      const refreshCookie = useCookie("refreshToken");
-      const userCookie = useCookie("user");
+      const token = useCookie("token").value;
+      const refreshToken = useCookie("refreshToken").value;
+      const userCookie = useCookie("user").value;
 
-      if (tokenCookie.value && userCookie.value) {
-        this.token = tokenCookie.value;
-        this.refreshToken = refreshCookie.value;
+      if (token && userCookie) {
+        this.token = token;
+        this.refreshToken = refreshToken;
 
         try {
           this.user =
-            typeof userCookie.value === "string"
-              ? JSON.parse(userCookie.value)
-              : userCookie.value;
-        } catch (error) {
-          useCookie("user").value = null;
+            typeof userCookie === "string"
+              ? JSON.parse(userCookie)
+              : userCookie;
+        } catch {
+          this.clearCookies();
           this.user = null;
         }
       }
     },
 
     async refreshTokens() {
-      if (this.isRefreshing) {
-        return;
-      }
-
+      if (this.isRefreshing) return;
+      const refreshToken = useCookie("refreshToken").value;
       const config = useRuntimeConfig();
-      const refreshCookie = useCookie("refreshToken");
 
-      if (!refreshCookie.value) {
-        this.logout();
+      if (!refreshToken) {
+        await this.logout();
         return;
       }
 
       this.isRefreshing = true;
 
       try {
-        const data = await $fetch(`${config.public.apiBase}/api/auth/refresh`, {
-          method: "POST",
-          body: { refreshToken: refreshCookie.value },
+        const { accessToken, refreshToken: newRefreshToken } = await $fetch(
+          `${config.public.apiBase}/api/auth/refresh`,
+          {
+            method: "POST",
+            headers: this.getHeaders(),
+            body: { refreshToken },
+          }
+        );
+
+        if (!accessToken) throw new Error("Invalid refresh response");
+
+        this.token = accessToken;
+        this.refreshToken = newRefreshToken;
+        this.setCookies({
+          token: accessToken,
+          refreshToken: newRefreshToken,
+          user: this.user,
         });
-
-        if (!data || !data.accessToken) {
-          throw new Error("Invalid refresh response");
-        }
-
-        this.token = data.accessToken;
-        this.refreshToken = data.refreshToken;
-
-        useCookie("token").value = data.accessToken;
-        useCookie("refreshToken").value = data.refreshToken;
-      } catch (error) {
-        this.logout();
+      } catch {
+        await this.logout();
       } finally {
         this.isRefreshing = false;
       }
@@ -202,19 +181,15 @@ export const useAuthStore = defineStore("auth", {
       try {
         await $fetch(`${config.public.apiBase}/api/auth/logout`, {
           method: "POST",
-          headers: { Authorization: "Bearer " + this.token },
+          headers: this.getHeaders(),
         });
-      } catch (error) {
-        console.warn("Failed to contact logout endpoint");
+      } catch {
+        console.warn("Logout endpoint unreachable, clearing session anyway");
       } finally {
         this.token = null;
         this.refreshToken = null;
         this.user = null;
-
-        useCookie("token").value = null;
-        useCookie("refreshToken").value = null;
-        useCookie("user").value = null;
-
+        this.clearCookies();
         navigateTo("/login");
       }
     },
