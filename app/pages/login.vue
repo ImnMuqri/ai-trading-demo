@@ -42,7 +42,7 @@
             Login
           </UiButton>
         </form>
-        {{ errorMessage }}
+
         <div class="flex gap-1 text-[12px] items-center justify-center pt-20">
           <p>Don't have an account?</p>
           <NuxtLink
@@ -70,7 +70,6 @@ const auth = useAuthStore();
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
-const errorMessage = ref("");
 
 const handleLogin = async () => {
   isLoading.value = true;
@@ -81,7 +80,6 @@ const handleLogin = async () => {
     showToast("Successfully logged in", "success");
     navigateTo("/dashboard");
   } catch (error) {
-    errorMessage.value = error.message;
     showToast(error.message || "Invalid email or password", "error");
   } finally {
     isLoading.value = false;
