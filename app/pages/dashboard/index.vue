@@ -232,11 +232,14 @@
           <div
             class="w-full overflow-hidden transition-all duration-500 ease-in-out"
             :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
-            <p class="pb-4 pt-4">Key Factors</p>
+            <div class="flex gap-1 items-center py-4 border-[#1C1C1C]">
+              <span class="text-[#00BDA7] text-md">Key Factors </span>
+              <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
+            </div>
             <div
-              v-for="item in CFexp"
+              v-for="(item, idx) in CFexp"
               :key="item.title"
-              class="grid grid-cols-4 gap-6 items-start justify-end mb-4 pb-4 border-b border-[#1C1C1C]">
+              class="grid grid-cols-4 gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
               <div class="grid grid-cols-1 gap-3 text-md col-span-1">
                 <p
                   class="text-end"
@@ -395,7 +398,7 @@
                   fill="#10B981">
                   {{ SentimentIndex.percentage }}
                 </tspan>
-                <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
+                <tspan x="18.4" dy="3.4" font-size="2.5" fill="#6B7280">
                   Cautious Optimism
                 </tspan>
               </text>
