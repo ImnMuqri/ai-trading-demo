@@ -90,7 +90,7 @@ export const useAuthStore = defineStore("auth", {
         this.user = data.user;
         this.setCookies(data);
       } catch (err) {
-        throw new Error(err?.data?.message || "Login failed");
+        throw new Error(err || "Login failed");
       } finally {
         this.loading = false;
       }
