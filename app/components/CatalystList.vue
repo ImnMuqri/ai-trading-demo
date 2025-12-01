@@ -1,11 +1,12 @@
 <template>
-  <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
+  <div class="max-h-[500px] overflow-y-auto grid gap-2 pr-2">
     <div v-if="!isLoading" v-for="(group, date) in groupedNews" :key="date">
       <!-- Date header -->
       <div class="flex items-center justify-between gap-2 pb-2">
         <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
         <span
-          class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+          class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
+        ></span>
       </div>
 
       <!-- News items for this date -->
@@ -15,7 +16,8 @@
         :class="[
           'px-4 py-3 rounded-lg transition mb-3',
           impactBorder(news.severity),
-        ]">
+        ]"
+      >
         <div class="flex items-center justify-between">
           <span class="flex gap-2">
             <p class="text-[12px] text-gray-400">{{ news.country }}</p>
@@ -24,10 +26,12 @@
             </p>
           </span>
           <div
-            class="border-[2px] border-gray-500 rounded-full p-1 cursor-pointer">
+            class="border-[2px] border-gray-500 rounded-full p-1 cursor-pointer"
+          >
             <UiIcon
               icon="meteor-icons:robot"
-              custom-class="h-3 w-3 text-[#00BDA7]"></UiIcon>
+              custom-class="h-3 w-3 text-[#00BDA7]"
+            ></UiIcon>
           </div>
         </div>
         <h3 class="text-md font-medium text-white mb-1">{{ news.title }}</h3>
@@ -39,7 +43,8 @@
               : news.severity === 'medium'
               ? 'text-yellow-500'
               : 'text-[#00BDA7]',
-          ]">
+          ]"
+        >
           Possible Impact:
         </p>
 

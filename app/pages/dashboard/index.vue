@@ -1,16 +1,19 @@
 <template>
   <div class="text-white">
     <div
-      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
+      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2"
+    >
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
           :options="symbols"
-          placeholder="Select Instrument" />
+          placeholder="Select Instrument"
+        />
         <UiSelect
           v-model="selectedInterval"
           :options="intervalOptions"
-          placeholder="Select Timeframe" />
+          placeholder="Select Timeframe"
+        />
       </div>
       <UiButton
         variant="outline"
@@ -20,7 +23,8 @@
         >Market History<template #icon-right
           ><UiIcon
             icon="heroicons-outline:calendar"
-            custom-class="w-5 h-5"></UiIcon></template
+            custom-class="w-5 h-5"
+          ></UiIcon></template
       ></UiButton>
     </div>
 
@@ -33,50 +37,58 @@
         <div class="grid grid-cols-1 h-fit">
           <div class="h-fit grid grid-cols-1 gap-2 mt-4">
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Trend</p>
               <p class="text-red-500">Bullish</p>
             </div>
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Volatility</p>
               <p class="text-yellow-500">Medium</p>
             </div>
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Volume Analysis</p>
               <p class="text-red-500">Decreasing</p>
             </div>
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Market Sentiment</p>
               <p class="text-emerald-500">Cautious</p>
             </div>
           </div>
           <div
             v-if="tradingAnalysis"
-            class="h-fit grid grid-cols-1 gap-2 mt-4 border p-2.5 rounded-lg border-[#00BDA7]">
+            class="h-fit grid grid-cols-1 gap-2 mt-4 border p-2.5 rounded-lg border-[#00BDA7]"
+          >
             <div class="flex gap-1 items-center">
               <UiIcon icon="hugeicons:ai-idea"></UiIcon>
               <p class="text-sm">Trade Idea</p>
             </div>
             <!-- Trend -->
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Trend</p>
               <p
                 :class="
                   tradingAnalysis?.trend === 'Bullish'
                     ? 'text-red-500'
                     : 'text-emerald-500'
-                ">
+                "
+              >
                 {{ tradingAnalysis?.trend ?? "No Info" }}
               </p>
             </div>
 
             <!-- Timeframe -->
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Timeframe</p>
               <p class="text-emerald-500">
                 {{ tradingAnalysis?.timeframe ?? "No Info" }}
@@ -85,7 +97,8 @@
 
             <!-- Entry Zone -->
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Entry Zone</p>
               <p class="text-yellow-500">
                 {{ tradingAnalysis?.entryLower ?? "--" }}
@@ -96,7 +109,8 @@
 
             <!-- Risk Level -->
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+            >
               <p class="text-[#BCBBBB]">Risk Level</p>
               <p
                 :class="
@@ -105,18 +119,21 @@
                     : tradingAnalysis?.risk === 'Medium'
                     ? 'text-yellow-500'
                     : 'text-emerald-500'
-                ">
+                "
+              >
                 {{ tradingAnalysis?.risk ?? "No Info" }}
               </p>
             </div>
           </div>
           <div
             class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
-            :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
+            :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'"
+          >
             <div class="relative">
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-28 w-48 text-[#00BDA7]"></UiIcon>
+                custom-class="h-28 w-48 text-[#00BDA7]"
+              ></UiIcon>
               <p class="absolute bottom-0 left-8 text-[11px] text-center">
                 Need more information?
               </p>
@@ -180,34 +197,40 @@
           {{ CFsummary }}
         </p>
         <div
-          class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
+          class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar"
+        >
           <div
-            class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
+            class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4"
+          >
             <div
               v-for="(meter, index) in meters"
               :key="index"
-              class="flex flex-col items-center">
+              class="flex flex-col items-center"
+            >
               <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
                 <path
                   class="text-gray-700/20"
                   stroke="currentColor"
                   stroke-width="3"
                   fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                />
                 <path
                   :stroke="meter.fillColor"
                   stroke-width="3"
                   :stroke-dasharray="`${meter.value}, 100`"
                   stroke-linecap="round"
                   fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                />
 
                 <text
                   x="19"
                   y="21"
                   class="text-[8px] font-semibold"
                   :fill="meter.fillColor"
-                  text-anchor="middle">
+                  text-anchor="middle"
+                >
                   {{ meter.value }}%
                 </text>
               </svg>
@@ -218,11 +241,13 @@
           <!-- Toggle Button -->
           <div
             class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
-            @click="showKeyFactors = !showKeyFactors">
+            @click="showKeyFactors = !showKeyFactors"
+          >
             <UiIcon
               :icon="
                 showKeyFactors ? 'mdi:eye-off-outline' : 'meteor-icons:robot'
-              "></UiIcon>
+              "
+            ></UiIcon>
             <p class="text-sm text-gray-400">
               {{ showKeyFactors ? "Hide details" : "See key takeaways" }}
             </p>
@@ -231,12 +256,14 @@
           <!-- Key Factors -->
           <div
             class="w-full overflow-hidden transition-all duration-500 ease-in-out"
-            :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
+            :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }"
+          >
             <p class="pb-4 pt-4">Key Factors</p>
             <div
               v-for="item in CFexp"
               :key="item.title"
-              class="grid grid-cols-4 gap-6 items-start justify-end mb-4 pb-4 border-b border-[#1C1C1C]">
+              class="grid grid-cols-4 gap-6 items-start justify-end mb-4 pb-4 border-b border-[#1C1C1C]"
+            >
               <div class="grid grid-cols-1 gap-3 text-md col-span-1">
                 <p
                   class="text-end"
@@ -244,7 +271,8 @@
                     'text-[#00BDA7]': item.sentiment === 'bullish',
                     'text-red-500': item.sentiment === 'bearish',
                     'text-gray-400': item.sentiment === 'neutral',
-                  }">
+                  }"
+                >
                   {{ item.name }}
                 </p>
               </div>
@@ -254,7 +282,8 @@
                   'text-[#00BDA7]': item.sentiment === 'bullish',
                   'text-red-500': item.sentiment === 'bearish',
                   'text-gray-400': item.sentiment === 'neutral',
-                }">
+                }"
+              >
                 {{ item.explanation }}
               </div>
             </div>
@@ -275,14 +304,15 @@
               activeTab === tab
                 ? 'border-b-2 border-emerald-500 text-emerald-600'
                 : 'text-gray-500 hover:text-gray-700',
-            ]">
+            ]"
+          >
             {{ tab }}
           </button>
         </div>
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="px-4 w-full">
+          <div class="px-4 w-full min-h-[500px]">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
@@ -310,14 +340,16 @@
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="px-4 w-full">
+          <div class="px-4 w-full min-h-[500px]">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
                 <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"
+                ></span>
                 <span
-                  class="relative inline-flex size-2 rounded-full bg-red-500"></span>
+                  class="relative inline-flex size-2 rounded-full bg-red-500"
+                ></span>
               </span>
               <UiIcon icon="material-symbols:info-outline-rounded" />
             </div>
@@ -328,7 +360,8 @@
                   <template #icon-left>
                     <UiIcon
                       icon="ic:baseline-search"
-                      custom-class="text-gray-300" />
+                      custom-class="text-gray-300"
+                    />
                   </template>
                 </UiInput>
               </div>
@@ -360,14 +393,16 @@
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
-              class="mb-2 mx-auto">
+              class="mb-2 mx-auto"
+            >
               <!-- background ring -->
               <path
                 d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#323232"
                 stroke-width="3.8"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
 
               <!-- progress ring -->
               <path
@@ -376,14 +411,16 @@
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                :stroke-dasharray="`${SentimentIndex.percentage} 100`" />
+                :stroke-dasharray="`${SentimentIndex.percentage} 100`"
+              />
 
               <!-- centered text -->
               <text
                 x="18"
                 y="11"
                 text-anchor="middle"
-                font-family="Inter, Arial, sans-serif">
+                font-family="Inter, Arial, sans-serif"
+              >
                 <tspan x="18.5" dy="1" font-size="2.8" fill="#10B981">
                   Index
                 </tspan>
@@ -392,7 +429,8 @@
                   dy="8"
                   font-size="8"
                   font-weight="700"
-                  fill="#10B981">
+                  fill="#10B981"
+                >
                   {{ SentimentIndex.percentage }}
                 </tspan>
                 <tspan x="18.5" dy="3.2" font-size="2.5" fill="#6B7280">
