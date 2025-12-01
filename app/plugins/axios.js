@@ -41,7 +41,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       if (error.response && error.response.status === 403) {
         auth.logout();
         showToast("Session timed out", "error");
-        return navigateTo("/login");
+        return 
       }
 
       return Promise.reject(error);
