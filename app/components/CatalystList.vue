@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
+  <div class="max-h-[500px] overflow-y-auto grid gap-2 pr-2">
     <div v-if="!isLoading" v-for="(group, date) in groupedNews" :key="date">
       <!-- Date header -->
       <div class="flex items-center justify-between gap-2 pb-2">
@@ -79,38 +79,48 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 const { $api } = useNuxtApp();
 
 const newsList = ref([]);
 const isLoading = ref(false);
 
-const fetchNews = async () => {
-  isLoading.value = true;
-  const res = await $api.get("api/economic-calendar");
-
-  const raw = res.data.data || [];
-
-  // Map backend fields into your existing UI fields
-  newsList.value = raw.map((item) => ({
-    country: item.country,
-    title: item.translated_name || item.report_name || "Untitled",
-    publishedAt: item.event_datetime,
-    severity: mapSeverity(item.impact_level),
-    impact: item.definition || item.short_definition || "No details available",
-  }));
-  isLoading.value = false;
-};
-
-// Convert backend impact_level into low, medium, high
+// Map backend impact level into readable values
 const mapSeverity = (level) => {
   if (level === "1") return "high";
   if (level === "2") return "medium";
-  return "low"; // 3 means low impact
+  return "low";
 };
 
-await fetchNews();
+// Fetch catalyst data
+const fetchNews = async () => {
+  isLoading.value = true;
 
+  try {
+    const res = await $api.get("api/economic-calendar");
+    const raw = res.data.data || [];
+
+    newsList.value = raw.map((item) => ({
+      country: item.country,
+      title: item.translated_name || item.report_name || "Untitled",
+      publishedAt: item.event_datetime,
+      severity: mapSeverity(item.impact_level),
+      impact:
+        item.definition || item.short_definition || "No details available",
+    }));
+  } catch (error) {
+    console.error("Failed to load catalyst data", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Auto run fetch on mount
+onMounted(() => {
+  fetchNews();
+});
+
+// Format to readable time
 const formatTime = (dateString) => {
   const date = new Date(dateString);
   return date.toLocaleTimeString(undefined, {
@@ -120,24 +130,32 @@ const formatTime = (dateString) => {
   });
 };
 
+// Group catalysts by date and sort them
 const groupedNews = computed(() => {
   const groups = {};
+
   newsList.value.forEach((news) => {
     const dateKey = new Date(news.publishedAt).toLocaleDateString(undefined, {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
+
     if (!groups[dateKey]) groups[dateKey] = [];
     groups[dateKey].push(news);
   });
-  return groups;
+
+  // Sort date groups from latest to oldest
+  return Object.fromEntries(
+    Object.entries(groups).sort(([a], [b]) => new Date(b) - new Date(a))
+  );
 });
 
+// Border colors based on severity
 const impactBorder = (severity) => {
-  if (severity === "low") return "border border-[#00BDA7]";
-  if (severity === "medium") return "border border-yellow-500";
   if (severity === "high") return "border border-red-500";
+  if (severity === "medium") return "border border-yellow-500";
+  if (severity === "low") return "border border-[#00BDA7]";
   return "border border-[#1C1C1C]";
 };
 </script>

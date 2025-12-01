@@ -266,7 +266,7 @@
       >
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-      <UiCard class="px-2 py-2 col-span-2">
+      <UiCard class="px-2 py-2 col-span-2 max-h-[600px] overflow-hidden">
         <!-- Tabs -->
         <div class="flex mb-4">
           <button
@@ -285,7 +285,7 @@
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="px-4 w-full">
+          <div class="px-4 w-full max-h-[500px]">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
@@ -313,7 +313,7 @@
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="px-4 w-full">
+          <div class="px-4 w-full max-h-[500px]">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
