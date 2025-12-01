@@ -107,7 +107,8 @@ export const useAuthStore = defineStore("auth", {
         refreshCookie.value = data.refreshToken;
         userCookie.value = JSON.stringify(data.user);
       } catch (error) {
-        const message = error?.data?.message || "Login failed";
+        // const message = error?.data?.message || "Login failed";
+        const message = error;
         this.loading = false;
         throw new Error(message);
       } finally {
