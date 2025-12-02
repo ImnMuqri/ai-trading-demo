@@ -1,7 +1,7 @@
 <template>
   <div
     class="flex items-center gap-3 h-20 px-4 pr-4 rounded-xl border-[1px] cursor-pointer"
-    :class="[borderClass, textClass]">
+    :class="[borderClass]">
     <div class="h-full py-[18px]">
       <UiIcon
         :icon="iconType"

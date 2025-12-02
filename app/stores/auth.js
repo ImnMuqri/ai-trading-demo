@@ -90,8 +90,13 @@ export const useAuthStore = defineStore("auth", {
         this.user = data.user;
         this.setCookies(data);
       } catch (err) {
-        throw new Error(err || "Login failed");
-      } finally {
+      const msg =
+      err?.data?.message ||       
+      err?.response?._data?.message ||
+      err?.message ||               
+      "Login failed";
+      throw new Error(msg);
+  } finally {
         this.loading = false;
       }
     },

@@ -617,6 +617,8 @@ const loadTickerTape = () => {
 };
 
 onMounted(async () => {
+  console.log('dashboard')
+
   if (process.client) {
     await nextTick();
     loadTickerTape();

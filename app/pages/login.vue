@@ -74,14 +74,25 @@ const isLoading = ref(false);
 const handleLogin = async () => {
   isLoading.value = true;
 
+  if (!email.value || !password.value) {
+    showToast("Please enter both email and password", "warning");
+    isLoading.value = false;
+    return;
+  }
+
   try {
     await auth.login(email.value, password.value);
 
+
+
     showToast("Successfully logged in", "success");
+
     navigateTo("/dashboard");
-  } catch (error) {
-    showToast(error.message || "Invalid email or password", "error");
-  } finally {
+
+  }   catch (err) {
+  showToast(err.message, "error");
+}
+ finally {
     isLoading.value = false;
   }
 };

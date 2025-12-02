@@ -1,18 +1,22 @@
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/auth"
 
-export default defineNuxtRouteMiddleware((to, from) => {
-  const auth = useAuthStore();
-  const token = useCookie("token");
+export default defineNuxtRouteMiddleware(() => {
+  const auth = useAuthStore()
 
-  if (!token.value) {
-    return navigateTo("/login");
+  if (!auth.token) {
+    return navigateTo("/login")
   }
 
-  // If token exists but user not set, restore user from cookies
-  if (!auth.user && token.value) {
-    const userCookie = useCookie("user");
+  if (!auth.user) {
+    const userCookie = useCookie("user")
     if (userCookie.value) {
-      auth.user = userCookie.value;
+      try {
+        auth.user = typeof userCookie.value === "string"
+          ? JSON.parse(userCookie.value)
+          : userCookie.value
+      } catch {
+        auth.user = null
+      }
     }
   }
-});
+})
