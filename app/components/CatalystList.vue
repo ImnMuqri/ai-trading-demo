@@ -1,5 +1,5 @@
 <template>
-  <div class="max-h-[500px] overflow-y-auto grid gap-2 pr-2">
+  <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2 py-2 mb-4">
     <div v-if="!isLoading" v-for="(group, date) in groupedNews" :key="date">
       <!-- Date header -->
       <div class="flex items-center justify-between gap-2 pb-2">

@@ -12,7 +12,7 @@
           :options="intervalOptions"
           placeholder="Select Timeframe" />
       </div>
-      <UiButton
+      <!-- <UiButton
         variant="outline"
         size="md"
         :is-loading="false"
@@ -21,10 +21,10 @@
           ><UiIcon
             icon="heroicons-outline:calendar"
             custom-class="w-5 h-5"></UiIcon></template
-      ></UiButton>
+      ></UiButton> -->
     </div>
 
-    <div class="flex flex-col-reverse lg:flex-row gap-4 w-full h-full">
+    <div class="flex flex-col-reverse lg:flex-row gap-6 lg:gap-4 w-full h-full">
       <UiCard is-gradient class="p-4 w-full lg:w-[400px] rounded-lg"
         ><div class="flex gap-1 items-center">
           <p class="text-md">Signal & Insights</p>
@@ -53,9 +53,7 @@
               <p class="text-emerald-500">Cautious</p>
             </div>
           </div>
-          <div
-            v-if="tradingAnalysis"
-            class="h-fit grid grid-cols-1 gap-2 mt-4 border p-2.5 rounded-lg border-[#00BDA7]">
+          <div v-if="tradingAnalysis" class="h-fit grid grid-cols-1 gap-2 mt-4">
             <div class="flex gap-1 items-center">
               <UiIcon icon="hugeicons:ai-idea"></UiIcon>
               <p class="text-sm">Trade Idea</p>
@@ -93,7 +91,20 @@
                 {{ tradingAnalysis?.entryUpper ?? "--" }}
               </p>
             </div>
-
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Stop Loss</p>
+              <p class="text-red-500">
+                {{ tradingAnalysis?.stopLoss ?? "No Info" }}
+              </p>
+            </div>
+            <div
+              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+              <p class="text-[#BCBBBB]">Stop Loss</p>
+              <p class="text-emerald-500">
+                {{ tradingAnalysis?.takeProfit ?? "No Info" }}
+              </p>
+            </div>
             <!-- Risk Level -->
             <div
               class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
@@ -156,7 +167,8 @@
     </div>
     <div class="flex flex-wrap w-full gap-4 mt-4">
       <UiCard class="flex flex-col gap-2 border px-4 pt-4 flex-1">
-        <div class="flex items-center justify-between">
+        <div
+          class="flex flex-wrap space-y-2 min-[450px]:space-y-0 items-center justify-between">
           <div class="flex gap-1 items-center">
             <span class="text-[#00BDA7] text-md">Contextual Factors </span>
             <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
@@ -265,8 +277,8 @@
         </div></UiCard
       >
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-      <UiCard class="px-2 py-2 col-span-2 max-h-[600px] overflow-hidden">
+    <div class="flex flex-col lg:flex-row gap-4 mt-4">
+      <UiCard class="px-2 py-2 max-h-[600px] w-full overflow-hidden">
         <!-- Tabs -->
         <div class="flex mb-4">
           <button
@@ -285,7 +297,7 @@
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="px-4 w-full max-h-[500px]">
+          <div class="px-4 w-full max-h-[600px]">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
@@ -313,7 +325,7 @@
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="px-4 w-full max-h-[500px]">
+          <div class="px-4 w-full max-h-[600px]">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
@@ -344,7 +356,7 @@
           </div>
         </div>
       </UiCard>
-      <UiCard is-gradient class="border p-4">
+      <UiCard is-gradient class="border p-4 w-[40%]">
         <div class="grid grid-cols-1 gap-2">
           <div>
             <div class="flex items-center gap-1">
@@ -356,17 +368,17 @@
             </p>
           </div>
 
-          <div class="h-96 flex flex-col items-center justify-center">
+          <div class="h-[450px] flex flex-col items-center justify-center">
             <svg
-              width="180"
-              height="180"
+              width="200"
+              height="200"
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
               class="mb-2 mx-auto">
               <!-- background ring -->
               <path
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#323232"
                 stroke-width="3.8"
@@ -374,7 +386,7 @@
 
               <!-- progress ring -->
               <path
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#10B981"
                 stroke-width="3"
@@ -383,22 +395,22 @@
 
               <!-- centered text -->
               <text
-                x="18"
+                x="20"
                 y="11"
                 text-anchor="middle"
                 font-family="Inter, Arial, sans-serif">
-                <tspan x="18.5" dy="1" font-size="2.8" fill="#10B981">
+                <tspan x="20.5" dy="1" font-size="2.8" fill="#10B981">
                   Index
                 </tspan>
                 <tspan
-                  x="18"
+                  x="20"
                   dy="8"
                   font-size="8"
                   font-weight="700"
                   fill="#10B981">
                   {{ SentimentIndex.percentage }}
                 </tspan>
-                <tspan x="18.4" dy="3.4" font-size="2.5" fill="#6B7280">
+                <tspan x="20.4" dy="3.4" font-size="2.5" fill="#6B7280">
                   Cautious Optimism
                 </tspan>
               </text>
@@ -528,6 +540,8 @@ const requestSignal = async () => {
       risk: analysis.analysis.riskLevel,
       entryLower: analysis.analysis.entryZone?.lower,
       entryUpper: analysis.analysis.entryZone?.upper,
+      stopLoss: analysis.analysis.stopLoss,
+      takeProfit: analysis.analysis.takeProfit,
       timeframe: analysis.timeframe,
       symbol: analysis.symbol,
     };
@@ -617,7 +631,7 @@ const loadTickerTape = () => {
 };
 
 onMounted(async () => {
-  console.log('dashboard')
+  console.log("dashboard");
 
   if (process.client) {
     await nextTick();

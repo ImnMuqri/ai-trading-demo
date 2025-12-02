@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2">
+    <div class="max-h-[400px] overflow-y-auto grid gap-2 pr-2 mb-4">
       <div v-if="!isLoading" v-for="(group, date) in groupedNews" :key="date">
         <div class="flex items-center justify-between gap-2 pb-2">
           <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
@@ -16,7 +16,7 @@
             :href="news.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-row gap-6 items-center mb-2">
+            class="flex flex-col lg:flex-row gap-6 items-center mb-2">
             <!-- Show image if available -->
             <img
               v-if="news.image"
@@ -24,7 +24,7 @@
               alt="news image"
               :class="[
                 'h-auto rounded-md mb-2 col-span-1',
-                index === 0 ? 'w-[350px]' : 'w-[200px]',
+                index === 0 ? 'w-full lg:w-[350px]' : 'w-full lg:w-[200px]',
               ]" />
             <div class="grid grid-cols-1 gap-2">
               <p class="text-[12px] text-gray-500 capitalize">

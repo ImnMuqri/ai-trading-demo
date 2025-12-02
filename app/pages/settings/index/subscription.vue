@@ -1,95 +1,49 @@
 <template>
   <div class="grid grid-cols-1 gap-4 text-white">
     <h1>Current Subscription</h1>
-    <div class="flex justify-around p-4 border border-[#00BDA7] rounded-md">
+
+    <!-- Current subscription info -->
+    <div
+      class="flex flex-col lg:flex-row justify-around p-4 border border-[#00BDA7] rounded-md">
       <div class="text-lg">
-        Basic Plan
+        {{ currentPlan.name }}
         <p class="text-[12px] text-gray-400">Current plan</p>
       </div>
       <div class="text-lg">
-        192
+        {{ currentPlan.storageUsed }}
         <p class="text-[12px] text-gray-400">Storage Used</p>
       </div>
       <div class="text-lg">
-        32
+        {{ currentPlan.requestRemaining }}
         <p class="text-[12px] text-gray-400">Request Remaining</p>
       </div>
       <div class="text-lg">
-        Sept 24, 2025
+        {{ currentPlan.nextBilling }}
         <p class="text-[12px] text-gray-400">Next Billing Date</p>
       </div>
     </div>
-    <div class="flex justify-around gap-4">
+
+    <!-- Subscription plans -->
+    <div class="flex flex-col lg:flex-row gap-4">
       <div
-        class="flex flex-col items-center gap-4 w-full h-[400px] p-6 border border-[#2D2D2D] rounded-md">
-        <div class="flex flex-col gap-1 items-center">
+        v-for="plan in subscriptionPlans"
+        :key="plan.id"
+        class="flex flex-col items-center gap-4 h-[400px] p-6 border border-[#2D2D2D] rounded-md">
+        <div class="flex flex-col gap-1 px-16 w-fit items-center">
           <UiIcon icon="lucide:coffee" custom-class="w-8 h-8"></UiIcon>
-          <p class="text-lg">Free</p>
-          <p class="text-[12px] text-gray-400">Limited Features</p>
+          <p class="text-lg">{{ plan.name }}</p>
+          <p class="text-[12px] text-gray-400">{{ plan.description }}</p>
+        </div>
+        <div class="h-fit w-full flex flex-col gap-2">
+          <p class="text-md">Request Limit: {{ plan.requestLimit }}</p>
+          <p class="text-md">{{ plan.price }} {{ plan.currency }}</p>
         </div>
         <div class="h-full w-full flex flex-col justify-between">
           <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">
-            <p>10 Analyses per month</p>
-            <p>5 reports generation</p>
-            <p>100MB Storage</p>
-            <p>Basic Analytics</p>
-            <p>Email Support</p>
+            <p v-for="feature in plan.features" :key="feature">{{ feature }}</p>
           </div>
-          <UiButton class="w-full">Get Started</UiButton>
-        </div>
-      </div>
-      <div
-        class="flex flex-col items-center gap-4 w-full h-full p-6 border border-[#2D2D2D] rounded-md">
-        <div class="flex flex-col gap-1 items-center">
-          <UiIcon icon="lucide:coffee" custom-class="w-8 h-8"></UiIcon>
-          <p class="text-lg">Free</p>
-          <p class="text-[12px] text-gray-400">Limited Features</p>
-        </div>
-        <div class="h-full w-full flex flex-col justify-between">
-          <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">
-            <p>10 Analyses per month</p>
-            <p>5 reports generation</p>
-            <p>100MB Storage</p>
-            <p>Basic Analytics</p>
-            <p>Email Support</p>
-          </div>
-          <UiButton class="w-full">Get Started</UiButton>
-        </div>
-      </div>
-      <div
-        class="flex flex-col items-center gap-4 w-full h-full p-6 border border-[#2D2D2D] rounded-md">
-        <div class="flex flex-col gap-1 items-center">
-          <UiIcon icon="lucide:coffee" custom-class="w-8 h-8"></UiIcon>
-          <p class="text-lg">Free</p>
-          <p class="text-[12px] text-gray-400">Limited Features</p>
-        </div>
-        <div class="h-full w-full flex flex-col justify-between">
-          <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">
-            <p>10 Analyses per month</p>
-            <p>5 reports generation</p>
-            <p>100MB Storage</p>
-            <p>Basic Analytics</p>
-            <p>Email Support</p>
-          </div>
-          <UiButton class="w-full">Get Started</UiButton>
-        </div>
-      </div>
-      <div
-        class="flex flex-col items-center gap-4 w-full h-full p-6 border border-[#2D2D2D] rounded-md">
-        <div class="flex flex-col gap-1 items-center">
-          <UiIcon icon="lucide:coffee" custom-class="w-8 h-8"></UiIcon>
-          <p class="text-lg">Free</p>
-          <p class="text-[12px] text-gray-400">Limited Features</p>
-        </div>
-        <div class="h-full w-full flex flex-col justify-between">
-          <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">
-            <p>10 Analyses per month</p>
-            <p>5 reports generation</p>
-            <p>100MB Storage</p>
-            <p>Basic Analytics</p>
-            <p>Email Support</p>
-          </div>
-          <UiButton class="w-full">Get Started</UiButton>
+          <UiButton v-if="plan.isActive" isDisabled variant="outline" class="w-full">Current Plan</UiButton>
+          <UiButton v-else class="w-full">Get Started</UiButton>
         </div>
       </div>
     </div>
@@ -97,11 +51,46 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from "vue";
+
 definePageMeta({
   title: "Subscriptions",
   layout: "layout",
   middleware: "auth",
 });
+
+const { $api } = useNuxtApp();
+const subscriptionPlans = ref([]);
+const currentPlan = ref({
+  name: "Basic Plan",
+  storageUsed: 192,
+  requestRemaining: 32,
+  nextBilling: "Sept 24, 2025",
+});
+
+const fetchPlans = async () => {
+  try {
+    const res = await $api.get("/api/subscription/plans");
+    if (res.data.success && res.data.data.subscriptionPlans) {
+      subscriptionPlans.value = res.data.data.subscriptionPlans.map((plan) => ({
+        id: plan.id,
+        name: plan.name,
+        description: plan.description,
+        requestLimit: plan.requestLimit || 0,
+        price: plan.price || 0,
+        currency: plan.currency || "No Data",
+        features: plan.features || [],
+        isActive: plan.isActive || false,
+      }));
+    }
+  } catch (error) {
+    console.error("Failed to fetch subscription plans:", error);
+  }
+};
+
+onMounted(() => {
+  fetchPlans();
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
