@@ -251,10 +251,10 @@
             <div
               v-for="(item, idx) in CFexp"
               :key="item.title"
-              class="grid grid-cols-4 gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
+              class="flex flex-col lg:grid grid-cols-4  gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
               <div class="grid grid-cols-1 gap-3 text-md col-span-1">
                 <p
-                  class="text-end"
+                  class="text-end font-semibold"
                   :class="{
                     'text-[#00BDA7]': item.sentiment === 'bullish',
                     'text-red-500': item.sentiment === 'bearish',
@@ -264,7 +264,7 @@
                 </p>
               </div>
               <div
-                class="text-md col-span-3"
+                class="text-sm lg:text-md col-span-3"
                 :class="{
                   'text-[#00BDA7]': item.sentiment === 'bullish',
                   'text-red-500': item.sentiment === 'bearish',
