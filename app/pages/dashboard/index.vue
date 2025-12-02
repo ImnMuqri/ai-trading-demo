@@ -25,129 +25,139 @@
     </div>
 
     <div class="flex flex-col-reverse lg:flex-row gap-6 lg:gap-4 w-full h-full">
-      <UiCard is-gradient class="p-4 w-full lg:w-[400px] rounded-lg"
-        ><div class="flex gap-1 items-center">
-          <p class="text-md">Signal & Insights</p>
-          <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
-        </div>
-        <div class="grid grid-cols-1 h-fit">
-          <div class="h-fit grid grid-cols-1 gap-2 mt-4">
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Trend</p>
-              <p class="text-red-500">Bullish</p>
-            </div>
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Volatility</p>
-              <p class="text-yellow-500">Medium</p>
-            </div>
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Volume Analysis</p>
-              <p class="text-red-500">Decreasing</p>
-            </div>
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Market Sentiment</p>
-              <p class="text-emerald-500">Cautious</p>
-            </div>
+      <UiCard
+        is-gradient
+        class="flex flex-col justify-between p-4 w-full lg:w-[400px] rounded-lg">
+        <div>
+          <div class="flex gap-1 items-center">
+            <p class="text-md">Signal & Insights</p>
+            <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
           </div>
-          <div v-if="tradingAnalysis" class="h-fit grid grid-cols-1 gap-2 mt-4">
-            <div class="flex gap-1 items-center">
-              <UiIcon icon="hugeicons:ai-idea"></UiIcon>
-              <p class="text-sm">Trade Idea</p>
-            </div>
-            <!-- Trend -->
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Trend</p>
-              <p
-                :class="
-                  tradingAnalysis?.trend === 'Bullish'
-                    ? 'text-red-500'
-                    : 'text-emerald-500'
-                ">
-                {{ tradingAnalysis?.trend ?? "No Info" }}
-              </p>
-            </div>
-
-            <!-- Timeframe -->
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Timeframe</p>
-              <p class="text-emerald-500">
-                {{ tradingAnalysis?.timeframe ?? "No Info" }}
-              </p>
-            </div>
-
-            <!-- Entry Zone -->
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Entry Zone</p>
-              <p class="text-yellow-500">
-                {{ tradingAnalysis?.entryLower ?? "--" }}
-                to
-                {{ tradingAnalysis?.entryUpper ?? "--" }}
-              </p>
+          <div class="grid grid-cols-1 h-fit">
+            <div class="h-fit grid grid-cols-1 gap-2 mt-4">
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Trend</p>
+                <p class="text-red-500">Bullish</p>
+              </div>
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Volatility</p>
+                <p class="text-yellow-500">Medium</p>
+              </div>
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Volume Analysis</p>
+                <p class="text-red-500">Decreasing</p>
+              </div>
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Market Sentiment</p>
+                <p class="text-emerald-500">Cautious</p>
+              </div>
             </div>
             <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Stop Loss</p>
-              <p class="text-red-500">
-                {{ tradingAnalysis?.stopLoss ?? "No Info" }}
-              </p>
-            </div>
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Take Profit</p>
-              <p class="text-emerald-500">
-                {{ tradingAnalysis?.takeProfit ?? "No Info" }}
-              </p>
-            </div>
-            <!-- Risk Level -->
-            <div
-              class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Risk Level</p>
-              <p
-                :class="
-                  tradingAnalysis?.risk === 'High'
-                    ? 'text-red-500'
-                    : tradingAnalysis?.risk === 'Medium'
-                    ? 'text-yellow-500'
-                    : 'text-emerald-500'
-                ">
-                {{ tradingAnalysis?.risk ?? "No Info" }}
-              </p>
-            </div>
-          </div>
-          <div
-            class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
-            :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
-            <div class="relative">
-              <UiIcon
-                icon="icon:ai-icon"
-                custom-class="h-28 w-48 text-[#00BDA7]"></UiIcon>
-              <p class="absolute bottom-0 left-8 text-[11px] text-center">
-                Need more information?
-              </p>
-            </div>
-            <UiButton
-              v-if="!tradingAnalysis"
-              @click="requestSignal"
-              class="my-2"
-              :isLoading="isRequestingSignal"
-              >Request Signal</UiButton
-            >
-            <UiButton
               v-if="tradingAnalysis"
-              @click="requestSignal"
-              class="my-2"
-              :isLoading="isRequestingSignal"
-              >Request Another Signal</UiButton
-            >
+              class="h-fit grid grid-cols-1 gap-2 mt-4">
+              <div class="flex gap-1 items-center">
+                <UiIcon icon="hugeicons:ai-idea"></UiIcon>
+                <p class="text-sm">Trade Idea</p>
+              </div>
+              <!-- Trend -->
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Trend</p>
+                <p
+                  :class="
+                    tradingAnalysis?.trend === 'Bullish'
+                      ? 'text-red-500'
+                      : 'text-emerald-500'
+                  ">
+                  {{ tradingAnalysis?.trend ?? "No Info" }}
+                </p>
+              </div>
+
+              <!-- Timeframe -->
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Timeframe</p>
+                <p class="text-emerald-500">
+                  {{ tradingAnalysis?.timeframe ?? "No Info" }}
+                </p>
+              </div>
+
+              <!-- Entry Zone -->
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Entry Zone</p>
+                <p class="text-yellow-500">
+                  {{ tradingAnalysis?.entryLower ?? "--" }}
+                  to
+                  {{ tradingAnalysis?.entryUpper ?? "--" }}
+                </p>
+              </div>
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Stop Loss</p>
+                <p class="text-red-500">
+                  {{ tradingAnalysis?.stopLoss ?? "No Info" }}
+                </p>
+              </div>
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Take Profit</p>
+                <p class="text-emerald-500">
+                  {{ tradingAnalysis?.takeProfit ?? "No Info" }}
+                </p>
+              </div>
+              <!-- Risk Level -->
+              <div
+                class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                <p class="text-[#BCBBBB]">Risk Level</p>
+                <p
+                  :class="
+                    tradingAnalysis?.risk === 'High'
+                      ? 'text-red-500'
+                      : tradingAnalysis?.risk === 'Medium'
+                      ? 'text-yellow-500'
+                      : 'text-emerald-500'
+                  ">
+                  {{ tradingAnalysis?.risk ?? "No Info" }}
+                </p>
+              </div>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
+              :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
+              <div v-if="!tradingAnalysis" class="relative">
+                <UiIcon
+                  icon="icon:ai-icon"
+                  custom-class="h-28 w-48 text-[#00BDA7]"></UiIcon>
+                <p class="absolute bottom-0 left-8 text-[11px] text-center">
+                  Need more information?
+                </p>
+              </div>
+              <UiButton
+                v-if="!tradingAnalysis"
+                @click="requestSignal"
+                class="my-2"
+                :isLoading="isRequestingSignal"
+                >Request Signal</UiButton
+              >
+            </div>
           </div>
         </div>
+        <UiCard
+          v-if="tradingAnalysis"
+          class="flex items-center justify-center text-[12px] text-gray-400 text-center bg-[#0D0D0D] p-1 cursor-pointer">
+          <UiIcon
+            icon="icon:ai-icon"
+            custom-class="h-8 w-8 text-[#00BDA7]"></UiIcon>
+          <p>See detailed analysis</p>
+          <UiIcon
+            icon="heroicons:chevron-right-16-solid"
+            custom-class="h-4 w-6 text-[#00BDA7]"></UiIcon>
+        </UiCard>
       </UiCard>
       <client-only class="w-full">
         <div class="grid grid-cols-1 gap-2">
