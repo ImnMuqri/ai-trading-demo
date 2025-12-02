@@ -356,7 +356,7 @@
           </div>
         </div>
       </UiCard>
-      <UiCard is-gradient class="border p-4 w-[40%]">
+      <UiCard is-gradient class="border p-4 w-full lg:w-[40%]">
         <div class="grid grid-cols-1 gap-2">
           <div>
             <div class="flex items-center gap-1">
