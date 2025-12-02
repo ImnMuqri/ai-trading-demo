@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center overflow-hidden">
     <div
-      class="w-full h-full max-w-[390px] px-8 mx-10 py-6 bg-white rounded-md">
+      class="w-full h-full max-w-[400px] px-8 lg:px-10 mx-5 lg:mx-10 py-6 bg-white rounded-md">
       <h1 class="text-2xl font-semibold text-center my-4 text-gray-800">
         Create an account
       </h1>

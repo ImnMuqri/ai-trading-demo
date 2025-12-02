@@ -1,7 +1,8 @@
 <template>
   <div class="min-h-screen flex items-center justify-center overflow-hidden">
     <transition name="fade-up">
-      <div class="w-full max-w-[390px] px-8 mx-10 pb-6 bg-white rounded-lg">
+      <div
+        class="w-full max-w-[400px] px-8 lg:px-10 mx-5 lg:mx-10 pb-6 bg-white rounded-lg">
         <div class="text-center my-2">
           <img
             src="~assets/icons/ai-icon.svg"
@@ -83,16 +84,12 @@ const handleLogin = async () => {
   try {
     await auth.login(email.value, password.value);
 
-
-
     showToast("Successfully logged in", "success");
 
     navigateTo("/dashboard");
-
-  }   catch (err) {
-  showToast(err.message, "error");
-}
- finally {
+  } catch (err) {
+    showToast(err.message, "error");
+  } finally {
     isLoading.value = false;
   }
 };

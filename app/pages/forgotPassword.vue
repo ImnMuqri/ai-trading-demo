@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-screen flex items-center justify-center overflow-hidden">
-    <div class="w-full max-w-[400px] px-6 mx-10 py-8 bg-white rounded-md">
+    <div class="w-full max-w-[400px] px-8 lg:px-10 mx-5 lg:mx-10 py-8 bg-white rounded-md">
       <h1 class="text-2xl font-semibold text-center my-6 text-gray-800">
         Forgot your password?
       </h1>
