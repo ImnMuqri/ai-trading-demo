@@ -35,7 +35,7 @@ export default defineNuxtPlugin((nuxtApp) => {
             return api.request(error.config);
           }
         }
-        console.log("Unauthorized, please login");
+        console.error("Unauthorized, please login");
       }
 
       if (error.response && error.response.status === 403) {

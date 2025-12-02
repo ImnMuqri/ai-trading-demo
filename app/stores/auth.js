@@ -24,14 +24,26 @@ export const useAuthStore = defineStore("auth", {
 
     // Centralized cookie setter
     setCookies({ token, refreshToken, user }) {
-      useCookie("token", { sameSite: "lax", maxAge: 60 * 60 * 24 * 7 }).value =
-        token;
-      useCookie("refreshToken", {
+      const tokenCookie = useCookie("token", { 
+        sameSite: "lax", 
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/"
+      });
+      const refreshTokenCookie = useCookie("refreshToken", {
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30,
-      }).value = refreshToken;
-      useCookie("user", { sameSite: "lax", maxAge: 60 * 60 * 24 * 7 }).value =
-        JSON.stringify(user);
+        path: "/" 
+      });
+      const userCookie = useCookie("user", { 
+        sameSite: "lax", 
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/" 
+      });
+
+      tokenCookie.value = token;
+      refreshTokenCookie.value = refreshToken;
+      userCookie.value = JSON.stringify(user);
+
     },
 
     // Centralized cookie remover
@@ -69,37 +81,43 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async login(email, password) {
-      this.loading = true;
-      const config = useRuntimeConfig();
+async login(email, password) {
+  this.loading = true;
+  const config = useRuntimeConfig();
 
-      try {
-        const { data } = await $fetch(
-          `${config.public.apiBase}/api/auth/login`,
-          {
-            method: "POST",
-            headers: this.getHeaders(),
-            body: { email, password },
-          }
-        );
+  try {
+    const { data } = await $fetch(
+      `${config.public.apiBase}/api/auth/login`,
+      {
+        method: "POST",
+        headers: this.getHeaders(),
+        body: { email, password },
+      }
+    );
 
-        if (!data?.accessToken) throw new Error("Invalid login response");
+    if (!data?.accessToken) throw new Error("Invalid login response");
 
-        this.token = data.accessToken;
-        this.refreshToken = data.refreshToken;
-        this.user = data.user;
-        this.setCookies(data);
-      } catch (err) {
-      const msg =
+    this.token = data.accessToken;
+    this.refreshToken = data.refreshToken;
+    this.user = data.user;
+    
+    this.setCookies({
+      token: data.accessToken,
+      refreshToken: data.refreshToken,
+      user: data.user
+    });
+
+  } catch (err) {
+    const msg =
       err?.data?.message ||       
       err?.response?._data?.message ||
       err?.message ||               
       "Login failed";
-      throw new Error(msg);
+    throw new Error(msg);
   } finally {
-        this.loading = false;
-      }
-    },
+    this.loading = false;
+  }
+},
 
     async forgotPassword(email) {
       this.loading = true;
@@ -122,20 +140,23 @@ export const useAuthStore = defineStore("auth", {
     },
 
     restoreSession() {
-      const token = useCookie("token").value;
-      const refreshToken = useCookie("refreshToken").value;
-      const userCookie = useCookie("user").value;
+      
+      const tokenCookie = useCookie("token");
+      const refreshTokenCookie = useCookie("refreshToken");
+      const userCookie = useCookie("user");
 
-      if (token && userCookie) {
-        this.token = token;
-        this.refreshToken = refreshToken;
+      if (tokenCookie.value && userCookie.value) {
+        this.token = tokenCookie.value;
+        this.refreshToken = refreshTokenCookie.value;
 
         try {
           this.user =
-            typeof userCookie === "string"
-              ? JSON.parse(userCookie)
-              : userCookie;
-        } catch {
+            typeof userCookie.value === "string"
+              ? JSON.parse(userCookie.value)
+              : userCookie.value;
+          
+        } catch (error) {
+          console.error("Fa", error);
           this.clearCookies();
           this.user = null;
         }
