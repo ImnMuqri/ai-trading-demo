@@ -194,7 +194,7 @@
         <div class="flex gap-4 items-center">
           <UiIcon
             icon="solar:bell-line-duotone"
-            custom-class="text-white w-6 h-6"
+            custom-class="text-white w-5 h-5"
           />
           <div class="p-4 border bg-white rounded-full"></div>
         </div>

@@ -100,7 +100,7 @@
             </div>
             <div
               class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-              <p class="text-[#BCBBBB]">Stop Loss</p>
+              <p class="text-[#BCBBBB]">Take Profit</p>
               <p class="text-emerald-500">
                 {{ tradingAnalysis?.takeProfit ?? "No Info" }}
               </p>
@@ -251,7 +251,7 @@
             <div
               v-for="(item, idx) in CFexp"
               :key="item.title"
-              class="flex flex-col lg:grid grid-cols-4  gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
+              class="flex flex-col lg:grid grid-cols-4 gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
               <div class="grid grid-cols-1 gap-3 text-md col-span-1">
                 <p
                   class="text-end font-semibold"
