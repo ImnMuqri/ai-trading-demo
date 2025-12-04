@@ -149,6 +149,7 @@
         </div>
         <UiCard
           v-if="tradingAnalysis"
+          @click="openModal"
           class="flex items-center justify-center text-[12px] text-gray-400 text-center bg-[#0D0D0D] p-1 cursor-pointer">
           <UiIcon
             icon="icon:ai-icon"
@@ -429,6 +430,200 @@
         </div>
       </UiCard>
     </div>
+
+    <UiModal
+      :show="openDetailedAnalysis"
+      :title="analysisData?.symbol"
+      description="Here's a detailed analysis of the trading signal."
+      :isGradient="true"
+      width="max-w-[800px]"
+      @close="openDetailedAnalysis = false">
+      <template #body>
+        <div class="text-gray-300">
+          <div
+            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
+            <div
+              class="flex flex-col gap-1 items-center justify-center text-sm">
+              <p>Risk Level</p>
+              <p class="font-semibold">{{ analysisData.analysis.riskLevel }}</p>
+            </div>
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Risk Reward</p>
+              <p class="font-semibold">
+                {{ analysisData.analysis.riskRewardRatio }}
+              </p>
+            </div>
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Confidence Level</p>
+              <p class="font-semibold">
+                {{ formatScore(analysisData.analysis.confidenceLevel) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 text-sm">
+            <div
+              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2">
+              <div class="flex items-center gap-1">
+                <UiIcon
+                  icon="hugeicons:ai-idea"
+                  custom-class="h-4 w-4"></UiIcon>
+                <h3 class="text-lg font-semibold">AI Analysis</h3>
+              </div>
+              <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-1">
+                  <p>Validation Criteria</p>
+                  <p>
+                    {{ analysisData.analysis.validationCriteria }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Invalidation Criteria</p>
+                  <p>
+                    {{ analysisData.analysis.invalidationCriteria }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Overall Trend Bias</p>
+                  <p>
+                    {{ analysisData.analysis.overallTrendBias }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Market Structure</p>
+                  <p>
+                    {{ analysisData.analysis.marketStructure }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Price Action Analysis</p>
+                  <p>
+                    {{ analysisData.analysis.priceActionAnalysis }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Indicator Analysis</p>
+                  <p>
+                    {{ analysisData.analysis.indicatorAnalysis }}
+                  </p>
+                </div>
+
+                <div class="flex flex-col gap-1">
+                  <p>Additional Tips</p>
+                  <p>
+                    {{ analysisData.analysis.additionalTips }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Market Structure</p>
+                  <p>
+                    {{ analysisData.analysis.analysisSummary }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <UiIcon
+                    icon="hugeicons:book-open-01"
+                    custom-class="h-3.5 w-3.5"></UiIcon>
+                  <p>Key Insight</p>
+                </div>
+                <div class="flex flex-col gap-2 mt-2">
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Trend</p>
+                    <p
+                      :class="
+                        analysisData?.analysis.trend == 'Bullish'
+                          ? 'text-emerald-500'
+                          : 'text-red-500'
+                      ">
+                      {{ analysisData?.analysis.trend ?? "No Info" }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Volatility</p>
+                    <p class="text-emerald-500">
+                      {{ analysisData?.analysis.volatility ?? "No Info" }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex flex-col justify-between gap-2 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB] uppercase">Volume Analysis</p>
+                    <p>
+                      {{ analysisData.analysis.volumeAnalysis }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex flex-col justify-between gap-2 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB] uppercase">Market Sentiment</p>
+                    <p>
+                      {{ analysisData.analysis.marketSentiment }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center gap-1">
+                  <UiIcon
+                    icon="hugeicons:ai-idea"
+                    custom-class="h-3.5 w-3.5"></UiIcon>
+                  <p>Trade Idea</p>
+                </div>
+                <div class="flex flex-col gap-2 mt-2">
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Entry Zone</p>
+                    <p class="text-yellow-500">
+                      {{ analysisData?.analysis.entryZone.upper ?? "No Info" }}-
+                      {{ analysisData?.analysis.entryZone.lower ?? "No Info" }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Stop Loss</p>
+                    <p class="text-red-500">
+                      {{ analysisData?.analysis.stopLoss ?? "No Info" }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Take Profit</p>
+                    <p class="text-emerald-500">
+                      {{ analysisData.analysis.takeProfit }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Take Profit 1</p>
+                    <p class="text-emerald-500">
+                      {{ analysisData.analysis.takeProfit1 }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Take Profit 2</p>
+                    <p class="text-emerald-500">
+                      {{ analysisData.analysis.takeProfit2 }}
+                    </p>
+                  </div>
+                  <div
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    <p class="text-[#BCBBBB]">Take Profit 3</p>
+                    <p class="text-emerald-500">
+                      {{ analysisData.analysis.takeProfit3 }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>
 <script setup>
@@ -441,6 +636,9 @@ definePageMeta({
   layout: "layout",
   middleware: "auth",
 });
+
+const openDetailedAnalysis = ref(false);
+const analysisData = ref(null);
 
 const tabs = ["Live News", "Upcoming Catalysts"];
 const activeTab = ref(tabs[0]);
@@ -482,6 +680,10 @@ const intervalMap = {
   M: "MN1",
 };
 
+const formatScore = (score) => `${Math.round(score * 100)}%`;
+const openModal = () => {
+  openDetailedAnalysis.value = true;
+};
 //Symbols fetching
 const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
 const pairs = resCurrency.data.data.currencyPairs || [];
@@ -555,6 +757,7 @@ const requestSignal = async () => {
       timeframe: analysis.timeframe,
       symbol: analysis.symbol,
     };
+    analysisData.value = analysis;
     isRequestingSignal.value = false;
   } catch (error) {
     console.error("Failed to analyze trading:", error);
