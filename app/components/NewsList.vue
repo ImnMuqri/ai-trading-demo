@@ -45,16 +45,20 @@
 
           <div
             class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1">
-            <UiIcon
-              icon="icon:ai-icon"
-              custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
-
-            <span class="flex gap-1 text-sm"
-              >See analysis
+            <div
+              @click="newAnalysis(news.id)"
+              class="flex gap-1 items-center cursor-pointer">
               <UiIcon
-                icon="ic:round-chevron-right"
-                custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
-            ></span>
+                icon="icon:ai-icon"
+                custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+
+              <span class="flex gap-1 text-sm"
+                >See analysis
+                <UiIcon
+                  icon="ic:round-chevron-right"
+                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
+              ></span>
+            </div>
           </div>
         </div>
       </div>
@@ -113,6 +117,11 @@
         View Recent Headline
       </div>
     </div>
+    <UiModal v-model="openAnalysisModal" title="AI Analysis">
+      <div class="p-4">
+        <p class="text-gray-400">Loading analysis...</p>
+      </div>
+    </UiModal>
   </div>
 </template>
 
@@ -124,6 +133,7 @@ const currency = ref("EUR USD");
 const dateFilter = ref("2025 11 16");
 
 const isLoading = ref(false);
+const openAnalysisModal = ref(false);
 const newsList = ref([]);
 
 // Fetch news with arrow function
@@ -135,6 +145,7 @@ const fetchNews = async () => {
     const raw = response.data.data || [];
 
     newsList.value = raw.map((item) => ({
+      id: item.id,
       publishedAt: item.date,
       title: item.title,
       text: item.text,
@@ -148,6 +159,20 @@ const fetchNews = async () => {
     console.error("Failed to load news", error);
   } finally {
     isLoading.value = false;
+  }
+};
+const newAnalysis = async (economicCalendarId) => {
+  openAnalysisModal.value = true;
+  try {
+    const response = await $api.post("api/economic-calendar-predictions", {
+      economicCalendarId,
+    });
+    const raw = response.data.data || [];
+    console.log("Analysis data:", raw);
+  } catch (error) {
+    console.error("Failed to load news", error);
+  } finally {
+    openAnalysisModal.value = false;
   }
 };
 

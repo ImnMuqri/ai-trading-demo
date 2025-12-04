@@ -13,7 +13,7 @@
         v-for="(news, index) in group"
         :key="index"
         :class="[
-          'px-4 py-3 rounded-lg transition mb-3',
+          'pl-4 pb-3  rounded-lg transition mb-3',
           impactBorder(news.severity),
         ]">
         <div class="flex items-center justify-between">
@@ -23,11 +23,10 @@
               {{ formatTime(news.publishedAt) }}
             </p>
           </span>
-          <div
-            class="border-[2px] border-gray-500 rounded-full p-1 cursor-pointer">
+          <div @click="catalystAnalysis(news.id)" class="cursor-pointer">
             <UiIcon
-              icon="meteor-icons:robot"
-              custom-class="h-3 w-3 text-[#00BDA7]"></UiIcon>
+              icon="icon:ai-icon"
+              custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
           </div>
         </div>
         <h3 class="text-md font-medium text-white mb-1">{{ news.title }}</h3>
@@ -75,6 +74,79 @@
     <div v-if="newsList.length === 0" class="p-4 text-gray-500">
       No news available.
     </div>
+    <UiModal
+      v-if="analysisData"
+      :show="openAnalysisModal"
+      :title="analysisData?.economicEvent.report_name"
+      :description="analysisData?.economicEvent.country"
+      :isGradient="true"
+      width="max-w-[800px]"
+      @close="openAnalysisModal = false">
+      <template #body>
+        <div class="text-gray-300">
+          <div
+            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
+            <div
+              class="flex flex-col gap-1 items-center justify-center text-sm">
+              <p>Actual</p>
+              <p class="font-semibold">Pending</p>
+            </div>
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Forecast</p>
+              <p class="font-semibold">
+                {{ analysisData.prediction.predictedActual }}
+              </p>
+            </div>
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Predicted Actual</p>
+              <p class="font-semibold">
+                {{ analysisData.prediction.predictedActual }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 text-sm">
+            <div
+              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2">
+              <div class="flex items-center gap-1">
+                <UiIcon
+                  icon="hugeicons:ai-idea"
+                  custom-class="h-4 w-4"></UiIcon>
+                <h3 class="text-lg font-semibold">AI Analysis</h3>
+              </div>
+              <div class="flex gap-4">
+                <div class="flex flex-col gap-1">
+                  <p>Predicted Actual</p>
+                  <p class="font-semibold text-lg text-[#00BDA7]">
+                    {{ analysisData.prediction.predictedActual }}
+                  </p>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <p>Confidence Score</p>
+                  <p class="font-semibold text-lg text-[#00BDA7]">
+                    {{ formatScore(analysisData.prediction.confidenceScore) }}
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p class="font-semibold">Possible Impact</p>
+                <p>{{ analysisData.prediction.impact }}</p>
+              </div>
+            </div>
+            <p class="font-semibold">Event Details</p>
+            <p>{{ analysisData.prediction.analysis.eventDetails }}</p>
+            <p class="font-semibold">Event Significance</p>
+            <p>{{ analysisData.prediction.analysis.eventSignificance }}</p>
+            <p class="font-semibold">Market Analysis</p>
+            <p>{{ analysisData.prediction.analysis.marketAnalysis }}</p>
+            <p class="font-semibold">Market Expectations</p>
+            <p>{{ analysisData.prediction.analysis.marketExpectations }}</p>
+            <p class="font-semibold">Potential Risk</p>
+            <p>{{ analysisData.prediction.analysis.potentialRisks }}</p>
+          </div>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>
 
@@ -83,7 +155,9 @@ import { ref, computed, onMounted } from "vue";
 const { $api } = useNuxtApp();
 
 const newsList = ref([]);
+const analysisData = ref(null);
 const isLoading = ref(false);
+const openAnalysisModal = ref(false);
 
 // Map backend impact level into readable values
 const mapSeverity = (level) => {
@@ -92,6 +166,7 @@ const mapSeverity = (level) => {
   return "low";
 };
 
+const formatScore = (score) => `${Math.round(score * 100)}%`;
 // Fetch catalyst data
 const fetchNews = async () => {
   isLoading.value = true;
@@ -101,6 +176,7 @@ const fetchNews = async () => {
     const raw = res.data.data || [];
 
     newsList.value = raw.map((item) => ({
+      id: item.id,
       country: item.country,
       title: item.translated_name || item.report_name || "Untitled",
       publishedAt: item.event_datetime,
@@ -115,6 +191,19 @@ const fetchNews = async () => {
   }
 };
 
+const catalystAnalysis = async (economicCalendarId) => {
+  openAnalysisModal.value = true;
+  try {
+    const response = await $api.post("api/economic-calendar-predictions", {
+      economicCalendarId,
+    });
+    const raw = response.data.data || [];
+    analysisData.value = raw;
+    console.log("Analysis data:", raw);
+  } catch (error) {
+    console.error("Failed to load news", error);
+  }
+};
 // Auto run fetch on mount
 onMounted(() => {
   fetchNews();
