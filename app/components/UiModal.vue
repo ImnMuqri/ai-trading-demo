@@ -40,7 +40,7 @@
 
         <!-- Content -->
         <section
-          class="max-h-[60vh] overflow-y-auto hide-scrollbar py-2 opacity-100"
+          class="max-h-[70vh] overflow-y-auto hide-scrollbar py-2 opacity-100"
           :class="{ 'opacity-50': loading }">
           <slot name="body"></slot>
         </section>

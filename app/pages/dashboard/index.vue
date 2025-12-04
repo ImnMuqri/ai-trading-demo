@@ -70,8 +70,8 @@
                 <p
                   :class="
                     tradingAnalysis?.trend === 'Bullish'
-                      ? 'text-red-500'
-                      : 'text-emerald-500'
+                      ? 'text-emerald-500'
+                      : 'text-red-500'
                   ">
                   {{ tradingAnalysis?.trend ?? "No Info" }}
                 </p>
@@ -472,50 +472,50 @@
               </div>
               <div class="flex flex-col gap-4">
                 <div class="flex flex-col gap-1">
-                  <p>Validation Criteria</p>
+                  <p class="font-semibold">Validation Criteria</p>
                   <p>
                     {{ analysisData.analysis.validationCriteria }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Invalidation Criteria</p>
+                  <p class="font-semibold">Invalidation Criteria</p>
                   <p>
                     {{ analysisData.analysis.invalidationCriteria }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Overall Trend Bias</p>
+                  <p class="font-semibold">Overall Trend Bias</p>
                   <p>
                     {{ analysisData.analysis.overallTrendBias }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Market Structure</p>
+                  <p class="font-semibold">Market Structure</p>
                   <p>
                     {{ analysisData.analysis.marketStructure }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Price Action Analysis</p>
+                  <p class="font-semibold">Price Action Analysis</p>
                   <p>
                     {{ analysisData.analysis.priceActionAnalysis }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Indicator Analysis</p>
+                  <p class="font-semibold">Indicator Analysis</p>
                   <p>
                     {{ analysisData.analysis.indicatorAnalysis }}
                   </p>
                 </div>
 
                 <div class="flex flex-col gap-1">
-                  <p>Additional Tips</p>
+                  <p class="font-semibold">Additional Tips</p>
                   <p>
                     {{ analysisData.analysis.additionalTips }}
                   </p>
                 </div>
                 <div class="flex flex-col gap-1">
-                  <p>Market Structure</p>
+                  <p class="font-semibold">Market Structure</p>
                   <p>
                     {{ analysisData.analysis.analysisSummary }}
                   </p>
@@ -551,14 +551,14 @@
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-2 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                     <p class="text-[#BCBBBB] uppercase">Volume Analysis</p>
                     <p>
                       {{ analysisData.analysis.volumeAnalysis }}
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-2 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                     <p class="text-[#BCBBBB] uppercase">Market Sentiment</p>
                     <p>
                       {{ analysisData.analysis.marketSentiment }}
