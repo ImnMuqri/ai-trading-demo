@@ -22,7 +22,7 @@
   </div>
 
   <div
-    class="flex flex-col md:flex-row border-l border-r border-[#2D2D2D] bg-[#111111] h-[70%] overflow-hidden">
+    class="flex flex-col md:flex-row border-b border-l border-r border-[#2D2D2D] bg-[#111111] h-[70%] overflow-hidden">
     <!-- Sidebar for desktop -->
     <aside class="hidden md:block w-64 p-6 border-r border-[#2D2D2D]">
       <nav class="flex flex-col gap-2 text-sm">
@@ -43,11 +43,6 @@
     <main class="flex-1 px-8 py-6 overflow-y-auto">
       <NuxtPage />
     </main>
-  </div>
-
-  <div
-    class="flex justify-end py-4 px-4 rounded-b-md border border-[#2D2D2D] bg-[#111111] text-[#008E7E]">
-    <UiButton>Save</UiButton>
   </div>
 </template>
 

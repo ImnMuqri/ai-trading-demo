@@ -1,18 +1,18 @@
 <template>
   <div
-    class="flex items-center gap-3 h-20 px-4 pr-4 rounded-xl border-[1px] cursor-pointer"
+    class="flex items-center gap-3 h-18 px-4 pr-4 rounded-xl border-[1px] cursor-pointer"
     :class="[borderClass]">
-    <div class="h-full py-[18px]">
+    <div class="h-full py-[16px]">
       <UiIcon
         :icon="iconType"
         custom-class="w-6 h-6"
         :class="iconClass"></UiIcon>
     </div>
     <div class="flex-1 grid">
-      <span class="capitalize font-semibold text-md text-black/80">{{
+      <span class="capitalize font-semibold text-md text-white/80">{{
         type
       }}</span>
-      <span class="text_gray text-[13px] font-light text-black/80">{{
+      <span class="text_gray text-[13px] font-light text-white/80">{{
         message
       }}</span>
     </div>
@@ -49,13 +49,13 @@ const closeToast = () => {
 const borderClass = computed(() => {
   switch (props.type) {
     case "success":
-      return "border-green-500 bg-emerald-50";
+      return "border-green-900 bg-emerald-700";
     case "error":
-      return "border-red-500 bg-red-50";
+      return "border-red-900 bg-red-700";
     case "warning":
-      return "border-yellow-500 bg-yellow-50";
+      return "border-yellow-900 bg-yellow-700";
     default:
-      return "border-blue-500 bg-blue-50";
+      return "border-blue-900 bg-blue-700";
   }
 });
 // const textClass = computed(() => {

@@ -24,6 +24,7 @@
         v-model="inputValue"
         :placeholder="placeholder"
         :disabled="isDisabled"
+        :readonly="isReadonly"
         :class="[
           'w-full rounded-lg text-white text-sm   transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
           isDisabled
@@ -59,6 +60,7 @@ const props = defineProps({
   },
   error: String,
   isDisabled: Boolean,
+  isReadonly: Boolean,
   customClass: String, // new prop for custom classes
   dark: Boolean,
 });

@@ -13,6 +13,7 @@
               label="Name"
               v-model="name"
               placeholder="Enter your name"
+              :isDisabled="isLoading"
               type="text" />
           </div>
           <div>
@@ -20,6 +21,7 @@
               label="Email"
               v-model="email"
               placeholder="Enter your email"
+              :isDisabled="isLoading"
               type="email" />
           </div>
           <div>
@@ -27,6 +29,7 @@
               label="Password"
               v-model="password"
               placeholder="Enter your password"
+              :isDisabled="isLoading"
               type="password" />
           </div>
           <div>
@@ -34,6 +37,7 @@
               label="Country"
               v-model="country"
               placeholder="Malaysia"
+              :isDisabled="isLoading"
               type="text" />
           </div>
           <div>
@@ -41,6 +45,7 @@
               label="Phone"
               v-model="phone"
               placeholder="+1234567890"
+              :isDisabled="isLoading"
               type="tel" />
           </div>
           <div>
@@ -48,6 +53,7 @@
               label="Referred By"
               v-model="referredBy"
               placeholder="Referral code or email"
+              :isDisabled="isLoading"
               type="text" />
           </div>
         </div>

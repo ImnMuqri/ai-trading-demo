@@ -39,9 +39,15 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
 
       if (error.response && error.response.status === 403) {
-        auth.logout();
-        showToast("Session timed out", "error");
-        return 
+        if (auth.refreshToken) {
+          await auth.refreshTokens();
+          if (auth.token) {
+            error.config.headers.Authorization = `Bearer ${auth.token}`;
+            return api.request(error.config);
+          }
+        }
+        // showToast("Session timed out", "error");
+        return;
       }
 
       return Promise.reject(error);

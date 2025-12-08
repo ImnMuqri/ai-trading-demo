@@ -16,7 +16,7 @@
             :href="news.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-col lg:flex-row gap-6 items-center mb-2">
+            class="flex flex-col md:flex-row gap-6 items-center mb-2">
             <!-- Show image if available -->
             <img
               v-if="news.image"
@@ -24,7 +24,7 @@
               alt="news image"
               :class="[
                 'h-auto rounded-md mb-2 col-span-1',
-                index === 0 ? 'w-full lg:w-[350px]' : 'w-full lg:w-[200px]',
+                index === 0 ? 'w-full md:w-[20vw]' : 'w-full md:w-[10vw]',
               ]" />
             <div class="grid grid-cols-1 gap-2">
               <p class="text-[12px] text-gray-500 capitalize">
@@ -117,10 +117,48 @@
         View Recent Headline
       </div>
     </div>
-    <UiModal v-model="openAnalysisModal" title="AI Analysis">
-      <div class="p-4">
-        <p class="text-gray-400">Loading analysis...</p>
-      </div>
+    <!-- :title="analysisData?.economicEvent.report_name"
+      :description="analysisData?.economicEvent.country" -->
+    <UiModal
+      v-if="analysisData"
+      :show="openAnalysisModal"
+      :isGradient="true"
+      width="max-w-[800px]"
+      :isLoading="isAnalysing"
+      @close="openAnalysisModal = false">
+      <template #body>
+        <div class="text-gray-300">
+          <div
+            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Sentiment</p>
+              <p class="font-semibold">
+                {{ analysisData.analysis.sentiment }}
+              </p>
+            </div>
+            <div class="flex flex-col gap-1 items-center justify-center">
+              <p>Predicted Actual</p>
+              <p class="font-semibold">
+                {{ analysisData.analysis.impact }}
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-2 mt-4">
+            <div>
+              <p class="font-semibold">Ai Summary</p>
+              <p class="text-sm">
+                {{ analysisData.analysis.summary }}
+              </p>
+            </div>
+            <div>
+              <p class="font-semibold">Trading Tips</p>
+              <p class="text-sm">
+                {{ analysisData.analysis.tradingSignal }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </template>
     </UiModal>
   </div>
 </template>
@@ -133,10 +171,32 @@ const currency = ref("EUR USD");
 const dateFilter = ref("2025 11 16");
 
 const isLoading = ref(false);
+const isAnalysing = ref(false);
+const analysisData = ref(null);
 const openAnalysisModal = ref(false);
 const newsList = ref([]);
 
-// Fetch news with arrow function
+// Format time
+const formatTime = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const difference = now - date;
+  const minutes = Math.floor(difference / 60000);
+
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes} minutes ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hours ago`;
+
+  return date.toLocaleTimeString(undefined, {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+// Fetch news
 const fetchNews = async () => {
   isLoading.value = true;
 
@@ -161,25 +221,24 @@ const fetchNews = async () => {
     isLoading.value = false;
   }
 };
-const newAnalysis = async (economicCalendarId) => {
+const newAnalysis = async (newsId) => {
   openAnalysisModal.value = true;
+  isAnalysing.value = true;
   try {
-    const response = await $api.post("api/economic-calendar-predictions", {
-      economicCalendarId,
+    const response = await $api.post("/api/ai/analyze-news", {
+      newsId: newsId,
     });
+
     const raw = response.data.data || [];
-    console.log("Analysis data:", raw);
+    analysisData.value = raw;
+    isAnalysing.value = false;
+    return;
   } catch (error) {
-    console.error("Failed to load news", error);
-  } finally {
-    openAnalysisModal.value = false;
+    console.error("Analyze news route failed", error);
+    isAnalysing.value = false;
+    return null;
   }
 };
-
-// Run fetch on mount
-onMounted(() => {
-  fetchNews();
-});
 
 // Group news by date
 const groupedNews = computed(() => {
@@ -209,25 +268,10 @@ const groupedNews = computed(() => {
   );
 });
 
-// Format time
-const formatTime = (dateString) => {
-  const date = new Date(dateString);
-  const now = new Date();
-
-  const difference = now - date;
-  const minutes = Math.floor(difference / 60000);
-
-  if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes} minutes ago`;
-
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours} hours ago`;
-
-  return date.toLocaleTimeString(undefined, {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
+// Run fetch on mount
+onMounted(() => {
+  fetchNews();
+});
 </script>
 
 <style scoped>

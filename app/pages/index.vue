@@ -3,10 +3,10 @@
     class="relative flex flex-col items-center justify-center min-h-screen text-center overflow-hidden">
     <!-- Glowing floating spheres -->
 
-    <div class="flex relative gap-4 w-[55%] px-6">
+    <div class="flex relative gap-4 w-full md:w-[55%] px-8 md:px-6">
       <div class="">
         <div class="mb-4 grid grid-cols-1 gap-4">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center justify-center md:justify-start gap-2">
             <div class="text-sky-500 text-[12px] capitalize">
               powered by TrueProTech
             </div>
@@ -17,12 +17,12 @@
                 class="relative inline-flex size-2 rounded-full bg-sky-400"></span
             ></span>
           </div>
-          <h1 class="text-4xl font-bold text-white text-left">
+          <h1 class="text-xl md:text-4xl font-bold text-white md:text-left">
             Welcome to AI Trading App
           </h1>
         </div>
 
-        <p class="text-gray-200 mb-2 text-left">
+        <p class="text-gray-200 mb-2 md:text-left">
           A modern app built with trusted technologies to help you trade
           smarter.
         </p>
@@ -34,20 +34,6 @@
           </NuxtLink>
         </div>
       </div>
-      <!-- <div class="notif-stack flex-1">
-        <div
-          v-for="(notif, index) in notifications"
-          :key="notif.id"
-          class="notif-card !w-[350px]"
-          :class="
-            notif.id % 2 === 0
-              ? 'bg-gradient-to-br from-black to-red-600'
-              : 'bg-gradient-to-br from-black to-teal-600'
-          "
-          :style="getCardStyle(index)">
-          {{ notif.text }}
-        </div>
-      </div> -->
     </div>
   </section>
 </template>
@@ -66,39 +52,7 @@ const notifications = ref([
 ]);
 
 const cardCount = notifications.value.length;
-const visibleCount = 4;
 const frontIndex = ref(0);
-
-const scaleMap = [1, 0.95, 0.9, 0.85, 0.8];
-const opacityMap = [1, 0.0, 0.0, 0.0, 0];
-const yMap = [0, 15, 30, 45, 60, 80]; // extra buffer for disappearing cards
-
-const getCardStyle = (index) => {
-  let pos = (index - frontIndex.value + cardCount) % cardCount;
-
-  // Use extra buffer for smooth cycling
-  if (pos >= visibleCount) {
-    // position it slightly below the last visible card
-    return {
-      transform: `translateY(${yMap[yMap.length - 1] + 40}px) scale(${
-        scaleMap[scaleMap.length - 1]
-      })`,
-      opacity: 0,
-      zIndex: 0,
-      backdropFilter: `blur(0px)`,
-      transition: "all 1s ease-in-out",
-    };
-  }
-
-  const blurAmount = pos * 2;
-  return {
-    transform: `translateY(${yMap[pos]}px) scale(${scaleMap[pos]})`,
-    opacity: opacityMap[pos],
-    zIndex: visibleCount - pos,
-    backdropFilter: `blur(${blurAmount}px)`,
-    transition: "all 1s ease-in-out",
-  };
-};
 
 // smoother interval cycling
 onMounted(() => {

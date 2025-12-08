@@ -24,26 +24,25 @@ export const useAuthStore = defineStore("auth", {
 
     // Centralized cookie setter
     setCookies({ token, refreshToken, user }) {
-      const tokenCookie = useCookie("token", { 
-        sameSite: "lax", 
+      const tokenCookie = useCookie("token", {
+        sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7,
-        path: "/"
+        path: "/",
       });
       const refreshTokenCookie = useCookie("refreshToken", {
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30,
-        path: "/" 
+        path: "/",
       });
-      const userCookie = useCookie("user", { 
-        sameSite: "lax", 
+      const userCookie = useCookie("user", {
+        sameSite: "lax",
         maxAge: 60 * 60 * 24 * 7,
-        path: "/" 
+        path: "/",
       });
 
       tokenCookie.value = token;
       refreshTokenCookie.value = refreshToken;
       userCookie.value = JSON.stringify(user);
-
     },
 
     // Centralized cookie remover
@@ -81,43 +80,42 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-async login(email, password) {
-  this.loading = true;
-  const config = useRuntimeConfig();
+    async login(email, password) {
+      this.loading = true;
+      const config = useRuntimeConfig();
 
-  try {
-    const { data } = await $fetch(
-      `${config.public.apiBase}/api/auth/login`,
-      {
-        method: "POST",
-        headers: this.getHeaders(),
-        body: { email, password },
+      try {
+        const { data } = await $fetch(
+          `${config.public.apiBase}/api/auth/login`,
+          {
+            method: "POST",
+            headers: this.getHeaders(),
+            body: { email, password },
+          }
+        );
+
+        if (!data?.accessToken) throw new Error("Invalid login response");
+
+        this.token = data.accessToken;
+        this.refreshToken = data.refreshToken;
+        this.user = data.user;
+
+        this.setCookies({
+          token: data.accessToken,
+          refreshToken: data.refreshToken,
+          user: data.user,
+        });
+      } catch (err) {
+        const msg =
+          err?.data?.message ||
+          err?.response?._data?.message ||
+          err?.message ||
+          "Login failed";
+        throw new Error(msg);
+      } finally {
+        this.loading = false;
       }
-    );
-
-    if (!data?.accessToken) throw new Error("Invalid login response");
-
-    this.token = data.accessToken;
-    this.refreshToken = data.refreshToken;
-    this.user = data.user;
-    
-    this.setCookies({
-      token: data.accessToken,
-      refreshToken: data.refreshToken,
-      user: data.user
-    });
-
-  } catch (err) {
-    const msg =
-      err?.data?.message ||       
-      err?.response?._data?.message ||
-      err?.message ||               
-      "Login failed";
-    throw new Error(msg);
-  } finally {
-    this.loading = false;
-  }
-},
+    },
 
     async forgotPassword(email) {
       this.loading = true;
@@ -140,7 +138,6 @@ async login(email, password) {
     },
 
     restoreSession() {
-      
       const tokenCookie = useCookie("token");
       const refreshTokenCookie = useCookie("refreshToken");
       const userCookie = useCookie("user");
@@ -154,7 +151,6 @@ async login(email, password) {
             typeof userCookie.value === "string"
               ? JSON.parse(userCookie.value)
               : userCookie.value;
-          
         } catch (error) {
           console.error("Fa", error);
           this.clearCookies();
@@ -177,7 +173,7 @@ async login(email, password) {
 
       try {
         const { accessToken, refreshToken: newRefreshToken } = await $fetch(
-          `${config.public.apiBase}/api/auth/refresh`,
+          `${config.public.apiBase}/api/auth/refresh-token`,
           {
             method: "POST",
             headers: this.getHeaders(),

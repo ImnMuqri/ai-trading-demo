@@ -18,7 +18,7 @@
         <!-- Loading Overlay -->
 
         <div
-          v-if="loading"
+          v-if="isLoading"
           class="absolute inset-0 bg-black/80 flex items-center justify-center rounded-lg z-50">
           <div class="relative flex flex-col items-center">
             <UiIcon
@@ -41,7 +41,7 @@
         <!-- Content -->
         <section
           class="max-h-[70vh] overflow-y-auto hide-scrollbar py-2 opacity-100"
-          :class="{ 'opacity-50': loading }">
+          :class="{ 'opacity-50': isLoading }">
           <slot name="body"></slot>
         </section>
 
@@ -51,13 +51,13 @@
             <button
               class="w-full py-3 rounded-md bg-emerald-600 text-white font-semibold hover:bg-emerald-500"
               @click="confirm"
-              :disabled="loading">
+              :disabled="isLoading">
               I am sure
             </button>
             <button
               class="w-full py-3 rounded-md bg-gray-700 text-gray-200 font-medium hover:bg-gray-600"
               @click="close"
-              :disabled="loading">
+              :disabled="isLoading">
               I change my mind
             </button>
           </div>
@@ -66,7 +66,7 @@
             <button
               class="w-full py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-500"
               @click="close"
-              :disabled="loading">
+              :disabled="isLoading">
               Return
             </button>
           </div>
@@ -75,7 +75,7 @@
             <button
               class="w-full py-3 rounded-md bg-red-600 text-white font-semibold hover:bg-red-500"
               @click="close"
-              :disabled="loading">
+              :disabled="isLoading">
               Return
             </button>
           </div>
@@ -84,7 +84,7 @@
             <button
               class="w-full py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-500"
               @click="save"
-              :disabled="loading">
+              :disabled="isLoading">
               Save
             </button>
           </div>
@@ -98,8 +98,8 @@
         <button
           class="absolute top-2 right-2 bg-gray-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm hover:bg-red-500"
           @click="close"
-          :disabled="loading">
-          x
+          :disabled="isLoading">
+          <UiIcon icon="hugeicons:cancel-01"></UiIcon>
         </button>
       </div>
     </div>
@@ -111,7 +111,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 
 const props = defineProps({
   show: Boolean,
-  loading: {
+  isLoading: {
     type: Boolean,
     default: false,
   },
@@ -141,7 +141,7 @@ const lockScroll = () => (document.body.style.overflow = "hidden");
 const unlockScroll = () => (document.body.style.overflow = "");
 
 const close = () => {
-  if (props.loading) return; // prevent closing while loading
+  if (props.isLoading) return; // prevent closing while loading
   isClosing.value = true;
   setTimeout(() => {
     emit("close");
@@ -150,8 +150,8 @@ const close = () => {
   }, 150);
 };
 
-const confirm = () => !props.loading && emit("confirm");
-const save = () => !props.loading && emit("save");
+const confirm = () => !props.isLoading && emit("confirm");
+const save = () => !props.isLoading && emit("save");
 
 onMounted(() => {
   if (props.show) lockScroll();

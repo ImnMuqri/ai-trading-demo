@@ -9,7 +9,6 @@ export const showToast = (message, type = "info") => {
   const { $toast } = useNuxtApp();
   if (!$toast) {
     console.error("Toast plugin not found");
-    console.log(useNuxtApp());
 
     return;
   }

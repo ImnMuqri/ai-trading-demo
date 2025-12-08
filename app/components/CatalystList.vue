@@ -80,6 +80,7 @@
       :title="analysisData?.economicEvent.report_name"
       :description="analysisData?.economicEvent.country"
       :isGradient="true"
+      :isLoading="isAnalysing"
       width="max-w-[800px]"
       @close="openAnalysisModal = false">
       <template #body>
@@ -157,6 +158,7 @@ const { $api } = useNuxtApp();
 const newsList = ref([]);
 const analysisData = ref(null);
 const isLoading = ref(false);
+const isAnalysing = ref(false);
 const openAnalysisModal = ref(false);
 
 // Map backend impact level into readable values
@@ -193,15 +195,17 @@ const fetchNews = async () => {
 
 const catalystAnalysis = async (economicCalendarId) => {
   openAnalysisModal.value = true;
+  isAnalysing.value = true;
   try {
     const response = await $api.post("api/economic-calendar-predictions", {
       economicCalendarId,
     });
     const raw = response.data.data || [];
     analysisData.value = raw;
-    console.log("Analysis data:", raw);
+    isAnalysing.value = false;
   } catch (error) {
     console.error("Failed to load news", error);
+    isAnalysing.value = false;
   }
 };
 // Auto run fetch on mount
