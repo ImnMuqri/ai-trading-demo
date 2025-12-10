@@ -11,25 +11,19 @@
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe" />
-      </div>
-      <!-- <UiButton
-        variant="outline"
-        size="md"
-        :is-loading="false"
-        class="py-[10px]"
-        >Market History<template #icon-right
-          ><UiIcon
-            icon="heroicons-outline:calendar"
-            custom-class="w-5 h-5"></UiIcon></template
-      ></UiButton> -->
-    </div>
+          <UiButton @click="refreshTokenManually" 
+          >
+          Refresh Token
+        </UiButton>
 
+      </div>
+    </div>
     <div class="flex flex-col-reverse lg:flex-row gap-6 lg:gap-4 w-full h-full">
+      <!-- @set-analysis-data="analysisData = $event" -->
       <RequestSignal
         :symbol="selectedSymbol"
         :interval="selectedInterval"
-        @open-analysis-modal="openDetailedAnalysis = true"
-        @set-analysis-data="analysisData = $event" />
+        @open-analysis-modal="openDetailedAnalysis = true" />
       <client-only class="w-full">
         <div class="grid grid-cols-1 gap-2">
           <UiCard class="px-2">
@@ -47,116 +41,9 @@
       </client-only>
     </div>
     <div class="flex flex-wrap w-full gap-4 mt-4">
-      <UiCard class="flex flex-col gap-2 border px-4 pt-4 flex-1">
-        <div
-          class="flex flex-wrap space-y-2 min-[450px]:space-y-0 items-center justify-between">
-          <div class="flex gap-1 items-center">
-            <span class="text-[#00BDA7] text-md">Contextual Factors </span>
-            <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
-          </div>
-          <div class="flex gap-4">
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-              <span class="text-[12px]">Bullish</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 rounded-full bg-red-500"></div>
-              <span class="text-[12px]">Bearish</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 rounded-full bg-white"></div>
-              <span class="text-[12px]">Neutral</span>
-            </div>
-          </div>
-        </div>
-        <p class="text-sm text-gray-300">
-          {{ CFsummary }}
-        </p>
-        <div
-          class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
-          <div
-            class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
-            <div
-              v-for="(meter, index) in meters"
-              :key="index"
-              class="flex flex-col items-center">
-              <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-                <path
-                  class="text-gray-700/20"
-                  stroke="currentColor"
-                  stroke-width="3"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-                <path
-                  :stroke="meter.fillColor"
-                  stroke-width="3"
-                  :stroke-dasharray="`${meter.value}, 100`"
-                  stroke-linecap="round"
-                  fill="none"
-                  d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-
-                <text
-                  x="19"
-                  y="21"
-                  class="text-[8px] font-semibold"
-                  :fill="meter.fillColor"
-                  text-anchor="middle">
-                  {{ meter.value }}%
-                </text>
-              </svg>
-              <p class="text-sm text-gray-300">{{ meter.label }}</p>
-            </div>
-          </div>
-
-          <!-- Toggle Button -->
-          <div
-            class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
-            @click="showKeyFactors = !showKeyFactors">
-            <UiIcon
-              :icon="
-                showKeyFactors ? 'mdi:eye-off-outline' : 'meteor-icons:robot'
-              "></UiIcon>
-            <p class="text-sm text-gray-400">
-              {{ showKeyFactors ? "Hide details" : "See key takeaways" }}
-            </p>
-          </div>
-
-          <!-- Key Factors -->
-          <div
-            class="w-full overflow-hidden transition-all duration-500 ease-in-out"
-            :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
-            <div class="flex gap-1 items-center py-4 border-[#1C1C1C]">
-              <span class="text-[#00BDA7] text-md">Key Factors </span>
-              <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
-            </div>
-            <div
-              v-for="(item, idx) in CFexp"
-              :key="item.title"
-              class="flex flex-col lg:grid grid-cols-4 gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
-              <div class="grid grid-cols-1 gap-3 text-md col-span-1">
-                <p
-                  class="text-end font-semibold"
-                  :class="{
-                    'text-[#00BDA7]': item.sentiment === 'bullish',
-                    'text-red-500': item.sentiment === 'bearish',
-                    'text-gray-400': item.sentiment === 'neutral',
-                  }">
-                  {{ item.name }}
-                </p>
-              </div>
-              <div
-                class="text-sm lg:text-md col-span-3"
-                :class="{
-                  'text-[#00BDA7]': item.sentiment === 'bullish',
-                  'text-red-500': item.sentiment === 'bearish',
-                  'text-gray-400': item.sentiment === 'neutral',
-                }">
-                {{ item.explanation }}
-              </div>
-            </div>
-          </div>
-        </div></UiCard
-      >
+      <ContextualFactors
+        :selectedSymbol="selectedSymbol"
+        @sentimentIndex="SentimentIndex" />
     </div>
     <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <UiCard class="px-2 py-2 max-h-[600px] w-full overflow-hidden">
@@ -245,7 +132,7 @@
               <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
             </div>
             <p class="text-gray-400 text-sm">
-              {{ SentimentIndex.explanation }}
+              {{ sentimentIndex.explanation }}
             </p>
           </div>
 
@@ -272,7 +159,7 @@
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                :stroke-dasharray="`${SentimentIndex.percentage} 100`" />
+                :stroke-dasharray="`${sentimentIndex.percentage} 100`" />
 
               <!-- centered text -->
               <text
@@ -289,7 +176,7 @@
                   font-size="8"
                   font-weight="700"
                   fill="#10B981">
-                  {{ SentimentIndex.percentage }}
+                  {{ sentimentIndex.percentage }}
                 </tspan>
                 <tspan x="20.4" dy="3.4" font-size="2.5" fill="#6B7280">
                   Cautious Optimism
@@ -304,27 +191,27 @@
 </template>
 <script setup>
 import { onMounted, watch, ref, nextTick } from "vue";
+import { useAuthStore } from "@/stores/auth";
+
+const auth = useAuthStore();
 const { $api } = useNuxtApp();
 definePageMeta({
   title: "Dashboard",
   layout: "layout",
-  middleware: "auth",
+  middleware: "auth-client",
 });
 
 const openDetailedAnalysis = ref(false);
-const analysisData = ref(null);
 
 const tabs = ["Live News", "Upcoming Catalysts"];
 const activeTab = ref(tabs[0]);
-const showKeyFactors = ref(false);
+
 const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
 
 const symbols = ref([]);
 const selectedSymbol = ref(""); // initially empty
-const contextualFactors = ref([]);
-const CFsummary = ref("");
-const CFexp = ref([]);
-const SentimentIndex = ref({
+
+const sentimentIndex = ref({
   percentage: 0,
   explanation: "",
 });
@@ -339,56 +226,40 @@ const intervalOptions = [
   { label: "Monthly", value: "M" },
 ];
 
+const SentimentIndex = (value) => {
+  sentimentIndex.value = value;
+};
+
 //Symbols fetching
-const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
-const pairs = resCurrency.data.data.currencyPairs || [];
-symbols.value = pairs.map((pair) => {
-  let label = pair;
-  if (!pair.includes("/") && pair.length === 6) {
-    label = pair.slice(0, 3) + "/" + pair.slice(3);
-  }
-  return { label, value: pair };
-});
-selectedSymbol.value = symbols.value[0]?.value || "";
+// const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
+// const pairs = resCurrency.data.data.currencyPairs || [];
+// symbols.value = pairs.map((pair) => {
+//   let label = pair;
+//   if (!pair.includes("/") && pair.length === 6) {
+//     label = pair.slice(0, 3) + "/" + pair.slice(3);
+//   }
+//   return { label, value: pair };
+// });
+// selectedSymbol.value = symbols.value[0]?.value || "";
 
-// Fetch contextual factors
-const fetchContextual = async () => {
-  const resContextual = await $api.post(`api/contextual-factors/analyze`, {
-    currencyPair: selectedSymbol.value,
-  });
-  contextualFactors.value = resContextual.data.data.analysis.factors || [];
-  CFsummary.value = resContextual.data.data.analysis.summary || "";
-  CFexp.value = resContextual.data.data.analysis.factors || [];
-  SentimentIndex.value = {
-    percentage:
-      resContextual.data.data.analysis.sentimentIndex?.percentage || 0,
-    explanation:
-      resContextual.data.data.analysis.sentimentIndex?.explanation || null,
-  };
-};
-fetchContextual();
-// Map sentiment to color
-const sentimentColor = (sentiment) => {
-  switch (sentiment.toLowerCase()) {
-    case "bullish":
-      return "#10B981"; // emerald-400
-    case "bearish":
-      return "#F87171"; // red-400
-    case "neutral":
-      return "#EFEFEFFF"; // yellow-400
-    default:
-      return "#9CA3AF"; // gray-400
+const fetchSymbols = async () => {
+  try {
+    const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
+    const pairs = resCurrency.data.data.currencyPairs || [];
+    
+    symbols.value = pairs.map((pair) => {
+      let label = pair;
+      if (!pair.includes("/") && pair.length === 6) {
+        label = pair.slice(0, 3) + "/" + pair.slice(3);
+      }
+      return { label, value: pair };
+    });
+    
+    selectedSymbol.value = symbols.value[0]?.value || "";
+  } catch (error) {
+    console.error('[Dashboard] Error fetching symbols:', error);
   }
-};
-
-const meters = computed(() =>
-  contextualFactors.value.map((factor) => ({
-    label: factor.name,
-    value: factor.weight,
-    strokeColor: sentimentColor(factor.sentiment),
-    fillColor: sentimentColor(factor.sentiment), // use this for <text>
-  }))
-);
+}
 
 let widget;
 let scriptLoaded = false;
@@ -437,6 +308,22 @@ async function initWidgetSafe(symbol, interval) {
 }
 const tickerContainer = ref(null);
 
+
+async function refreshTokenManually() {
+  try {
+    const success = await auth.refreshTokens();
+    if (success) {
+      console.log("Token refreshed manually");
+    } else {
+      console.log("Failed to refresh token manually");
+    }
+  } catch (error) {
+    console.error("Error refreshing token manually:", error);
+  }
+}
+
+
+
 const loadTickerTape = () => {
   if (!tickerContainer.value) return;
 
@@ -465,24 +352,39 @@ const loadTickerTape = () => {
   tickerContainer.value.appendChild(script);
 };
 
+// onMounted(async () => {
+//   if (process.client) {
+//     await nextTick();
+//     loadTickerTape();
+
+//     await loadTradingViewScript();
+//     initWidgetSafe(selectedSymbol.value, selectedInterval.value);
+//   }
+// });
+
 onMounted(async () => {
   if (process.client) {
+    await fetchSymbols();
+    
     await nextTick();
     loadTickerTape();
 
     await loadTradingViewScript();
-    initWidgetSafe(selectedSymbol.value, selectedInterval.value);
+    if (selectedSymbol.value) {
+      initWidgetSafe(selectedSymbol.value, selectedInterval.value);
+    }
   }
 });
 
 // Watch the selected symbol and interval but **debounce it** to avoid multiple recreations
 let updateTimeout;
+
 watch([selectedSymbol, selectedInterval], ([symbol, interval]) => {
   clearTimeout(updateTimeout);
   updateTimeout = setTimeout(() => initWidgetSafe(symbol, interval), 300);
 });
 watch(selectedSymbol, (newVal) => {
-  if (newVal) fetchContextual();
+  if (newVal) fetchSymbols();
 });
 </script>
 

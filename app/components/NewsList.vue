@@ -117,13 +117,14 @@
         View Recent Headline
       </div>
     </div>
-    <!-- :title="analysisData?.economicEvent.report_name"
-      :description="analysisData?.economicEvent.country" -->
+
     <UiModal
       v-if="analysisData"
       :show="openAnalysisModal"
       :isGradient="true"
-      width="max-w-[800px]"
+      width="max-w-[600px]"
+      :title="analysisData?.newsTitle"
+      :description="analysisData?.newsText"
       :isLoading="isAnalysing"
       @close="openAnalysisModal = false">
       <template #body>

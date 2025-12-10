@@ -1,62 +1,100 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
-import { showToast } from "~/composables/useToastMessage";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const config = useRuntimeConfig();
+
   const api = axios.create({
-    baseURL: config.public.apiBase,
-    timeout: 15000,
+    baseURL: useRuntimeConfig().public.apiBase,
+    headers: { "Content-Type": "application/json" },
   });
 
-  // Add token from Pinia store
   api.interceptors.request.use(
-    (config) => {
+    async (config) => {
+      if (process.server) {
+        return config;
+      }
+
+      
       const auth = useAuthStore();
+
+      if (auth.token) {
+        await auth.ensureValidToken();
+      }
+
       if (auth.token) {
         config.headers.Authorization = `Bearer ${auth.token}`;
+
+        try {
+          const exp = JSON.parse(atob(auth.token.split(".")[1])).exp;
+          const now = Math.floor(Date.now() / 1000);
+          console.log(
+            "[Axios] Token expires in:",
+            exp - now,
+            "seconds"
+          );
+        } catch (e) {
+          console.error("[Axios] Error parsing token:", e);
+        }
+      } else {
+        console.log("[Axios] No token available for request");
       }
+
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => {
+      console.error("[Axios] Request error", error);
+      return Promise.reject(error);
+    }
   );
 
   api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      return response;
+    },
     async (error) => {
-      const auth = useAuthStore();
+      const originalRequest = error.config;
+      
+      console.warn(
+        "[Axios] Response error:",
+        originalRequest?.url,
+        error.response?.status
+      );
 
-      if (error.response && error.response.status === 401) {
-        // Try refreshing token if available
-        if (auth.refreshToken) {
-          await auth.refreshTokens();
-          if (auth.token) {
-            error.config.headers.Authorization = `Bearer ${auth.token}`;
-            return api.request(error.config);
-          }
-        }
-        console.error("Unauthorized, please login");
+      if (process.server) {
+        return Promise.reject(error);
       }
 
-      if (error.response && error.response.status === 403) {
+      // Handle 401 with token refresh logic
+      if (
+        error.response?.status === 401 &&
+        !originalRequest._retry
+      ) {
+        console.log("[Axios] 401 detected, attempting token refresh");
+        originalRequest._retry = true;
+
+        const auth = useAuthStore();
+        
         if (auth.refreshToken) {
-          await auth.refreshTokens();
-          if (auth.token) {
-            error.config.headers.Authorization = `Bearer ${auth.token}`;
-            return api.request(error.config);
+          const success = await auth.refreshTokens();
+
+          if (success && auth.token) {
+            console.log("[Axios] Token refreshed, retrying request");
+            originalRequest.headers.Authorization = `Bearer ${auth.token}`;
+            return api.request(originalRequest);
           }
         }
-        // showToast("Session timed out", "error");
-        return;
+
+        console.log("[Axios] Token refresh failed or no refresh token");
+        auth.logout();
+        
+        if (typeof window !== 'undefined') {
+          window.location.href = '/login';
+        }
       }
 
       return Promise.reject(error);
     }
   );
 
-  return {
-    provide: {
-      api,
-    },
-  };
+  nuxtApp.provide("api", api);
 });

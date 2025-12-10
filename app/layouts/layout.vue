@@ -79,6 +79,7 @@
         <NuxtLink
           to="/dailybias"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+          @click="console.log('daily bias clicked')"
           :class="[
             isActive('/dailybias') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',

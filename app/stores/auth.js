@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useCookie, useRuntimeConfig } from "#app";
+import { useRuntimeConfig } from "#app";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -12,208 +12,190 @@ export const useAuthStore = defineStore("auth", {
 
   getters: {
     isAuthenticated: (state) => Boolean(state.token),
+    
+    isTokenExpired: (state) => {
+      if (!state.token) return true;
+      
+      try {
+        const payload = JSON.parse(atob(state.token.split(".")[1]));
+        const exp = payload.exp * 1000;
+        const now = Date.now();
+        const buffer = 60 * 1000; // 1 minute buffer
+        
+        return exp - now < buffer;
+      } catch (e) {
+        console.error("[AuthStore] Error checking token expiry", e);
+        return true;
+      }
+    },
   },
 
   actions: {
-    // Centralized headers
     getHeaders(custom = {}) {
       const headers = { "Content-Type": "application/json", ...custom };
       if (this.token) headers.Authorization = `Bearer ${this.token}`;
+      console.log("[AuthStore] getHeaders called, headers:", headers);
       return headers;
     },
 
-    // Centralized cookie setter
-    setCookies({ token, refreshToken, user }) {
-      const tokenCookie = useCookie("token", {
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-      });
-      const refreshTokenCookie = useCookie("refreshToken", {
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 30,
-        path: "/",
-      });
-      const userCookie = useCookie("user", {
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7,
-        path: "/",
-      });
-
-      tokenCookie.value = token;
-      refreshTokenCookie.value = refreshToken;
-      userCookie.value = JSON.stringify(user);
-    },
-
-    // Centralized cookie remover
-    clearCookies() {
-      useCookie("token").value = null;
-      useCookie("refreshToken").value = null;
-      useCookie("user").value = null;
-    },
-
-    async register(payload) {
-      this.loading = true;
-      const config = useRuntimeConfig();
+    async restoreSession() {
+      console.log("[AuthStore] restoreSession called");
+      if (!process.client) return;
 
       try {
-        const { data } = await $fetch(
-          `${config.public.apiBase}/api/auth/register`,
-          {
-            method: "POST",
-            headers: this.getHeaders(),
-            body: payload,
-          }
-        );
+        const token = localStorage.getItem("auth_token");
+        const refreshToken = localStorage.getItem("auth_refresh");
+        const user = localStorage.getItem("auth_user");
 
-        if (!data?.accessToken)
-          throw new Error("Invalid registration response");
+        if (token) this.token = token;
+        if (refreshToken) this.refreshToken = refreshToken;
+        if (user) this.user = JSON.parse(user);
 
-        this.token = data.accessToken;
-        this.refreshToken = data.refreshToken;
-        this.user = data.user;
-        this.setCookies(data);
-      } catch (err) {
-        throw new Error(err || "Registration failed");
-      } finally {
-        this.loading = false;
+        console.log("[AuthStore] token restored:", this.token);
+        console.log("[AuthStore] refreshToken restored:", this.refreshToken);
+        console.log("[AuthStore] user restored:", this.user);
+
+        // Auto-refresh if token is expired
+        if (this.isTokenExpired && this.refreshToken) {
+          console.log("[AuthStore] Token expired, refreshing automatically");
+          await this.refreshTokens();
+        }
+      } catch (e) {
+        console.warn("[AuthStore] restoreSession failed", e);
+      }
+    },
+
+    setTokens({ token, refreshToken, user }) {
+      console.log("[AuthStore] setTokens called", {
+        token,
+        refreshToken,
+        user,
+      });
+      this.token = token;
+      this.refreshToken = refreshToken;
+      this.user = user;
+
+      if (!process.client) return;
+
+      localStorage.setItem("auth_token", token);
+      console.log("[AuthStore] refreshtoken saved to localStorage", refreshToken);
+      localStorage.setItem("auth_refresh", refreshToken);
+      localStorage.setItem("auth_user", JSON.stringify(user));
+      console.log("[AuthStore] tokens saved to localStorage");
+    },
+
+    clearTokens() {
+      console.log("[AuthStore] clearTokens called");
+      this.token = null;
+      this.refreshToken = null;
+      this.user = null;
+
+      if (!process.client) return;
+
+      try {
+        localStorage.removeItem("auth_token");
+        localStorage.removeItem("auth_refresh");
+        localStorage.removeItem("auth_user");
+        console.log("[AuthStore] tokens removed from localStorage");
+      } catch (e) {
+        console.warn("[AuthStore] clearTokens localStorage failed", e);
       }
     },
 
     async login(email, password) {
+      console.log("[AuthStore] login called", { email });
       this.loading = true;
       const config = useRuntimeConfig();
 
       try {
         const { data } = await $fetch(
           `${config.public.apiBase}/api/auth/login`,
-          {
-            method: "POST",
-            headers: this.getHeaders(),
-            body: { email, password },
-          }
+          { method: "POST", body: { email, password } }
         );
 
-        if (!data?.accessToken) throw new Error("Invalid login response");
+        console.log("[AuthStore] login response:", data);
 
-        this.token = data.accessToken;
-        this.refreshToken = data.refreshToken;
-        this.user = data.user;
-
-        this.setCookies({
+        this.setTokens({
           token: data.accessToken,
           refreshToken: data.refreshToken,
           user: data.user,
         });
-      } catch (err) {
-        const msg =
-          err?.data?.message ||
-          err?.response?._data?.message ||
-          err?.message ||
-          "Login failed";
-        throw new Error(msg);
       } finally {
         this.loading = false;
+        console.log("[AuthStore] login finished, loading set to false");
       }
     },
+logout() {
+  this.clearTokens();
 
-    async forgotPassword(email) {
-      this.loading = true;
-      const config = useRuntimeConfig();
+  if (process.client) {
+    return navigateTo("/login", { replace: true });
+  }
 
-      try {
-        return await $fetch(
-          `${config.public.apiBase}/api/auth/forgot-password`,
-          {
-            method: "POST",
-            headers: this.getHeaders(),
-            body: { email },
-          }
-        );
-      } catch (err) {
-        throw new Error(err || "Request failed");
-      } finally {
-        this.loading = false;
-      }
-    },
+  return true;
+},
 
-    restoreSession() {
-      const tokenCookie = useCookie("token");
-      const refreshTokenCookie = useCookie("refreshToken");
-      const userCookie = useCookie("user");
-
-      if (tokenCookie.value && userCookie.value) {
-        this.token = tokenCookie.value;
-        this.refreshToken = refreshTokenCookie.value;
-
-        try {
-          this.user =
-            typeof userCookie.value === "string"
-              ? JSON.parse(userCookie.value)
-              : userCookie.value;
-        } catch (error) {
-          console.error("Fa", error);
-          this.clearCookies();
-          this.user = null;
-        }
-      }
-    },
 
     async refreshTokens() {
-      if (this.isRefreshing) return;
-      const refreshToken = useCookie("refreshToken").value;
-      const config = useRuntimeConfig();
-
-      if (!refreshToken) {
-        await this.logout();
-        return;
+      if (this.isRefreshing || !this.refreshToken) {
+        console.log("[AuthStore] Skip refresh: already refreshing or no refresh token");
+        return false;
       }
-
+      
+      console.log("[AuthStore] refreshTokens called");
       this.isRefreshing = true;
 
+      const config = useRuntimeConfig();
+
       try {
-        const { accessToken, refreshToken: newRefreshToken } = await $fetch(
+        const res = await $fetch(
           `${config.public.apiBase}/api/auth/refresh-token`,
           {
             method: "POST",
-            headers: this.getHeaders(),
-            body: { refreshToken },
+            body: { refreshToken: this.refreshToken },
           }
         );
+        console.log("[AuthStore] refreshTokens response:", res);
 
-        if (!accessToken) throw new Error("Invalid refresh response");
-
-        this.token = accessToken;
-        this.refreshToken = newRefreshToken;
-        this.setCookies({
-          token: accessToken,
-          refreshToken: newRefreshToken,
+        /**
+         * refresh issues bullshit fixme
+         */
+        this.setTokens({
+          token: res.data.accessToken,
+          // refreshToken: res.data.refreshToken || this.refreshToken,
+          refreshToken: res.data.accessToken,
           user: this.user,
         });
-      } catch {
-        await this.logout();
+        
+        return true;
+      } catch (e) {
+        console.error("[AuthStore] refreshTokens failed", e);
+        this.logout();
+        return false;
       } finally {
         this.isRefreshing = false;
       }
     },
 
-    async logout() {
-      const config = useRuntimeConfig();
-
-      try {
-        await $fetch(`${config.public.apiBase}/api/auth/logout`, {
-          method: "POST",
-          headers: this.getHeaders(),
-        });
-      } catch {
-        console.warn("Logout endpoint unreachable, clearing session anyway");
-      } finally {
-        this.token = null;
-        this.refreshToken = null;
-        this.user = null;
-        this.clearCookies();
-        navigateTo("/login");
+    async ensureValidToken() {
+      
+      if (!this.token) {
+        console.log("[AuthStore] No token available");
+        return false;
       }
+
+      if (this.isTokenExpired) {
+        if (this.refreshToken) {
+          console.log("[AuthStore] Token expired, refreshing before request");
+          return await this.refreshTokens();
+        } else {
+          console.log("[AuthStore] Token expired and no refresh token");
+          return false;
+        }
+      }
+      
+      console.log("[AuthStore] Token is valid");
+      return true;
     },
   },
 });
