@@ -11,7 +11,8 @@
         <div
           v-for="(news, index) in group"
           :key="index"
-          class="px-4 pt-4 pb-2 mb-2 rounded-lg border border-[#1C1C1C] bg-[#0D0D0D] transition">
+          class="px-4 pt-4 pb-2 mb-4 mt-2 rounded-lg bg-[#0D0D0D] transition"
+          :class="impactBorder(news.tag)">
           <a
             :href="news.url"
             target="_blank"
@@ -37,7 +38,15 @@
               <p class="text-[12px] text-gray-400 text-left mb-3">
                 {{ news.source }}
               </p>
-              <p class="text-[11px] bg-gray-700 px-3 py-1 w-fit rounded-full">
+              <p
+                class="text-[11px] px-3 py-1 w-fit rounded-full"
+                :class="[
+                  news.tag == 'Positive'
+                    ? 'bg-[#00BDA7]'
+                    : news.tag == 'Negative'
+                    ? 'bg-red-500'
+                    : 'bg-gray-500',
+                ]">
                 {{ news.tag }}
               </p>
             </div>
@@ -50,9 +59,9 @@
               class="flex gap-1 items-center cursor-pointer">
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
 
-              <span class="flex gap-1 text-sm"
+              <span class="flex gap-1 text-[12px]"
                 >See analysis
                 <UiIcon
                   icon="ic:round-chevron-right"
@@ -267,7 +276,13 @@ const groupedNews = computed(() => {
     )
   );
 });
-
+// Border colors based on severity
+const impactBorder = (severity) => {
+  if (severity === "Negative") return "border-[2px] border-red-500";
+  if (severity === "Neutral") return "border-[2px] border-gray-500";
+  if (severity === "Positive") return "border-[2px] border-[#00BDA7]";
+  return "border border-[#1C1C1C]";
+};
 // Run fetch on mount
 onMounted(() => {
   fetchNews();
