@@ -11,10 +11,10 @@
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe" />
-          <UiButton @click="refreshTokenManually" 
+          <!-- <UiButton @click="refreshTokenManually" 
           >
           Refresh Token
-        </UiButton>
+        </UiButton> -->
 
       </div>
     </div>
