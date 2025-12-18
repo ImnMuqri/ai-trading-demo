@@ -2,7 +2,6 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/auth";
 
 export default defineNuxtPlugin((nuxtApp) => {
-
   const api = axios.create({
     baseURL: useRuntimeConfig().public.apiBase,
     headers: { "Content-Type": "application/json" },
@@ -14,7 +13,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         return config;
       }
 
-      
       const auth = useAuthStore();
 
       if (auth.token) {
@@ -27,16 +25,9 @@ export default defineNuxtPlugin((nuxtApp) => {
         try {
           const exp = JSON.parse(atob(auth.token.split(".")[1])).exp;
           const now = Math.floor(Date.now() / 1000);
-          console.log(
-            "[Axios] Token expires in:",
-            exp - now,
-            "seconds"
-          );
         } catch (e) {
           console.error("[Axios] Error parsing token:", e);
         }
-      } else {
-        console.log("[Axios] No token available for request");
       }
 
       return config;
@@ -53,7 +44,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
     async (error) => {
       const originalRequest = error.config;
-      
+
       console.warn(
         "[Axios] Response error:",
         originalRequest?.url,
@@ -65,30 +56,23 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
 
       // Handle 401 with token refresh logic
-      if (
-        error.response?.status === 401 &&
-        !originalRequest._retry
-      ) {
-        console.log("[Axios] 401 detected, attempting token refresh");
+      if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
         const auth = useAuthStore();
-        
+
         if (auth.refreshToken) {
           const success = await auth.refreshTokens();
 
           if (success && auth.token) {
-            console.log("[Axios] Token refreshed, retrying request");
             originalRequest.headers.Authorization = `Bearer ${auth.token}`;
             return api.request(originalRequest);
           }
         }
-
-        console.log("[Axios] Token refresh failed or no refresh token");
         auth.logout();
-        
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
         }
       }
 

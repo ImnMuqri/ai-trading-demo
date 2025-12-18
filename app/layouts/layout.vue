@@ -5,8 +5,7 @@
       v-if="isMobileMenuOpen"
       class="fixed inset-0 bg-black/50 z-40 md:hidden"
       @click="toggleMobileMenu"
-      aria-hidden="true"
-    ></div>
+      aria-hidden="true"></div>
 
     <!-- Sidebar -->
     <aside :class="asideClasses">
@@ -16,23 +15,19 @@
           @click="toggleSidebarOrMenu"
           class="text-gray-500 hover:text-blue-600 transition"
           :aria-expanded="isMobile ? isMobileMenuOpen : !isCollapsed"
-          aria-label="Toggle menu"
-        >
+          aria-label="Toggle menu">
           <UiIcon
             v-if="isMobile && isMobileMenuOpen"
             icon="meteor-icons:xmark"
-            custom-class="text-white w-[25px] h-[40px]"
-          />
+            custom-class="text-white w-[25px] h-[40px]" />
           <UiIcon
             v-else-if="isMobile && !isMobileMenuOpen"
             icon="stash:burger-classic-duotone"
-            custom-class="text-white w-[25px] h-[40px]"
-          />
+            custom-class="text-white w-[25px] h-[40px]" />
           <UiIcon
             v-else
             icon="stash:burger-classic-duotone"
-            custom-class="text-white w-[25px] h-[40px]"
-          />
+            custom-class="text-white w-[25px] h-[40px]" />
         </button>
 
         <span
@@ -41,8 +36,7 @@
             !isCollapsed
               ? 'opacity-100 translate-x-0 max-w-[180px]'
               : 'opacity-0 -translate-x-4 max-w-0 '
-          "
-        >
+          ">
           <UiIcon icon="icon:tpt-logo" custom-class="w-[180px] h-[40px]" />
         </span>
       </div>
@@ -55,12 +49,10 @@
           :class="[
             isActive('/dashboard') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-        >
+          ]">
           <UiIcon
             icon="material-symbols:dashboard-outline-rounded"
-            custom-class="w-4 h-4"
-          />
+            custom-class="w-4 h-4" />
 
           <!-- Smooth slide/fade text -->
           <span
@@ -69,8 +61,7 @@
               !isCollapsed
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
                 : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            "
-          >
+            ">
             Dashboard
           </span>
         </NuxtLink>
@@ -79,12 +70,10 @@
         <NuxtLink
           to="/dailybias"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          @click="console.log('daily bias clicked')"
           :class="[
             isActive('/dailybias') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-        >
+          ]">
           <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
 
           <!-- Smooth slide/fade text -->
@@ -94,8 +83,7 @@
               !isCollapsed
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
                 : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            "
-          >
+            ">
             Daily Bias
           </span>
         </NuxtLink>
@@ -108,8 +96,7 @@
             isCollapsed
               ? 'max-h-0 opacity-10 scale-y-0'
               : 'max-h-[500px] opacity-100 scale-y-100'
-          "
-        >
+          ">
           <p class="text-[12px] text-white mb-3">
             Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
           </p>
@@ -117,8 +104,7 @@
           <NuxtLink
             to="/settings/subscription"
             class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
-            exact
-          >
+            exact>
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
             <span class="text-[11px]">Upgrade to Ai Pro</span>
           </NuxtLink>
@@ -130,12 +116,10 @@
               isCollapsed
                 ? 'max-h-[48px] opacity-100 scale-20 p-2'
                 : 'max-h-0 opacity-0 scale-10 p-0'
-            "
-          >
+            ">
             <UiIcon
               icon="heroicons:bolt"
-              class="w-5 h-5 text-white"
-            ></UiIcon></div
+              class="w-5 h-5 text-white"></UiIcon></div
         ></NuxtLink>
       </div>
 
@@ -143,12 +127,10 @@
       <div class="p-4 border-t border-[#1C1C1C] mt-auto">
         <button
           @click="handleLogout"
-          class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition"
-        >
+          class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition">
           <div
             class="flex items-center gap-3 transition-all duration-500"
-            :class="!isCollapsed ? 'translate-x-3' : 'translate-x-1.5'"
-          >
+            :class="!isCollapsed ? 'translate-x-3' : 'translate-x-1.5'">
             <UiIcon icon="solar:exit-linear" custom-class="w-5 h-5" />
 
             <span
@@ -157,8 +139,7 @@
                 !isCollapsed
                   ? 'opacity-100 translate-x-0 max-w-[200px]'
                   : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-              "
-            >
+              ">
               Logout
             </span>
           </div>
@@ -169,8 +150,7 @@
     <!-- Main Content -->
     <main
       :style="mainStyle"
-      class="flex-1 p-6 overflow-y-auto transition-all duration-300"
-    >
+      class="flex-1 p-6 overflow-y-auto transition-all duration-300">
       <div class="flex justify-between items-start">
         <div>
           <div class="flex gap-2">
@@ -178,12 +158,10 @@
             <button
               class="md:hidden text-white"
               @click="toggleMobileMenu"
-              aria-label="Open mobile menu"
-            >
+              aria-label="Open mobile menu">
               <UiIcon
                 icon="stash:burger-classic-duotone"
-                custom-class="w-6 h-6"
-              />
+                custom-class="w-6 h-6" />
             </button>
             <h2 class="text-2xl font-semibold text-[#00BDA7]">Dashboard</h2>
           </div>
@@ -195,8 +173,7 @@
         <div class="flex gap-4 items-center">
           <UiIcon
             icon="solar:bell-line-duotone"
-            custom-class="text-white w-5 h-5"
-          />
+            custom-class="text-white w-5 h-5" />
           <div class="p-4 border bg-white rounded-full"></div>
         </div>
       </div>

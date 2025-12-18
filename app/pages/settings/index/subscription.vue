@@ -42,7 +42,13 @@
           <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">
             <p v-for="feature in plan.features" :key="feature">{{ feature }}</p>
           </div>
-          <UiButton v-if="plan.isActive" isDisabled variant="outline" class="w-full">Current Plan</UiButton>
+          <UiButton
+            v-if="plan.isActive"
+            isDisabled
+            variant="outline"
+            class="w-full"
+            >Current Plan</UiButton
+          >
           <UiButton v-else class="w-full">Get Started</UiButton>
         </div>
       </div>
@@ -56,7 +62,8 @@ import { ref, onMounted } from "vue";
 definePageMeta({
   title: "Subscriptions",
   layout: "layout",
-  middleware: "auth",
+  // middleware: "auth",
+  middleware: "auth-client",
 });
 
 const { $api } = useNuxtApp();

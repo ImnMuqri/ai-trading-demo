@@ -11,11 +11,10 @@
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe" />
-          <!-- <UiButton @click="refreshTokenManually" 
+        <!-- <UiButton @click="refreshTokenManually" 
           >
           Refresh Token
         </UiButton> -->
-
       </div>
     </div>
     <div class="flex flex-col-reverse lg:flex-row gap-6 lg:gap-4 w-full h-full">
@@ -230,23 +229,14 @@ const SentimentIndex = (value) => {
   sentimentIndex.value = value;
 };
 
-//Symbols fetching
-// const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
-// const pairs = resCurrency.data.data.currencyPairs || [];
-// symbols.value = pairs.map((pair) => {
-//   let label = pair;
-//   if (!pair.includes("/") && pair.length === 6) {
-//     label = pair.slice(0, 3) + "/" + pair.slice(3);
-//   }
-//   return { label, value: pair };
-// });
-// selectedSymbol.value = symbols.value[0]?.value || "";
 
 const fetchSymbols = async () => {
   try {
-    const resCurrency = await $api.get(`api/contextual-factors/available-pairs`);
+    const resCurrency = await $api.get(
+      `api/contextual-factors/available-pairs`
+    );
     const pairs = resCurrency.data.data.currencyPairs || [];
-    
+
     symbols.value = pairs.map((pair) => {
       let label = pair;
       if (!pair.includes("/") && pair.length === 6) {
@@ -254,12 +244,12 @@ const fetchSymbols = async () => {
       }
       return { label, value: pair };
     });
-    
+
     selectedSymbol.value = symbols.value[0]?.value || "";
   } catch (error) {
-    console.error('[Dashboard] Error fetching symbols:', error);
+    console.error("[Dashboard] Error fetching symbols:", error);
   }
-}
+};
 
 let widget;
 let scriptLoaded = false;
@@ -308,21 +298,18 @@ async function initWidgetSafe(symbol, interval) {
 }
 const tickerContainer = ref(null);
 
-
-async function refreshTokenManually() {
-  try {
-    const success = await auth.refreshTokens();
-    if (success) {
-      console.log("Token refreshed manually");
-    } else {
-      console.log("Failed to refresh token manually");
-    }
-  } catch (error) {
-    console.error("Error refreshing token manually:", error);
-  }
-}
-
-
+// async function refreshTokenManually() {
+//   try {
+//     const success = await auth.refreshTokens();
+//     if (success) {
+//       console.log("Token refreshed manually");
+//     } else {
+//       console.log("Failed to refresh token manually");
+//     }
+//   } catch (error) {
+//     console.error("Error refreshing token manually:", error);
+//   }
+// }
 
 const loadTickerTape = () => {
   if (!tickerContainer.value) return;
@@ -352,20 +339,10 @@ const loadTickerTape = () => {
   tickerContainer.value.appendChild(script);
 };
 
-// onMounted(async () => {
-//   if (process.client) {
-//     await nextTick();
-//     loadTickerTape();
-
-//     await loadTradingViewScript();
-//     initWidgetSafe(selectedSymbol.value, selectedInterval.value);
-//   }
-// });
-
 onMounted(async () => {
   if (process.client) {
     await fetchSymbols();
-    
+
     await nextTick();
     loadTickerTape();
 

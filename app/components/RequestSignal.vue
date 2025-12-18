@@ -71,7 +71,7 @@
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Timeframe</p>
             <p class="text-emerald-500">
-              {{ tradingAnalysis?.timeframe ?? "No Info" }}
+              {{ intervalMap[props.interval] ?? "No Info" }}
             </p>
           </div>
 
@@ -385,7 +385,7 @@ const props = defineProps({
     type: String,
     default: null,
   },
-  timeframe: {
+  interval: {
     type: String,
     default: null,
   },
@@ -428,7 +428,6 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
       entryUpper: analysis.history[0].entryZone?.upper,
       stopLoss: analysis.history[0].stopLoss,
       takeProfit: analysis.history[0].takeProfit,
-      timeframe: analysis.history[0].timeframe,
       symbol: analysis.history[0].symbol,
       createdAt: analysis.history[0].createdAt,
     };
@@ -443,7 +442,7 @@ const requestSignal = async () => {
   isRequestingSignal.value = true;
   try {
     // Map the selected interval to API format
-    const apiTimeframe = intervalMap[props.timeframe] || "M15"; // fallback to H1
+    const apiTimeframe = intervalMap[props.interval] || "No Timeframe Selected"; // fallback to H1
 
     const res = await $api.post(`api/ai/analyze-trading`, {
       symbol: props.symbol,
@@ -459,7 +458,6 @@ const requestSignal = async () => {
       entryUpper: analysis.analysis.entryZone?.upper,
       stopLoss: analysis.analysis.stopLoss,
       takeProfit: analysis.analysis.takeProfit,
-      timeframe: analysis.timeframe,
       symbol: analysis.symbol,
       createdAt: analysis.createdAt,
     };

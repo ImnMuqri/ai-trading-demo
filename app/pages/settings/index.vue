@@ -53,7 +53,8 @@ import { useRouter, useRoute } from "vue-router";
 definePageMeta({
   title: "Settings",
   layout: "layout",
-  middleware: "auth",
+  // // middleware: "auth",
+  middleware: "auth-client",
 });
 
 const router = useRouter();

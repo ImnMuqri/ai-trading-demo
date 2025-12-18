@@ -78,7 +78,8 @@ import { ref, onMounted } from "vue";
 definePageMeta({
   title: "Basic Information",
   layout: "layout",
-  middleware: "auth",
+  // middleware: "auth",
+  middleware: "auth-client",
 });
 const { $api } = useNuxtApp();
 const isEditing = ref(false);
@@ -114,10 +115,10 @@ const getUserProfile = async () => {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     };
-    console.log("User Profile Data:", data);
+
     return profileData.value;
   } catch (error) {
-    console.error("Unable to load user profile", error);
+    console.error("Failed to fetch profile:", error);
     return null;
   }
 };
@@ -130,7 +131,6 @@ const updateUserProfile = async (profileData) => {
       country: profileData.country,
       phone: profileData.phone,
     });
-    console.log("Profile updated:", res.data);
     return res.data;
   } catch (error) {
     console.error("Failed to update profile:", error);

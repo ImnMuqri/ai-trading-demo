@@ -52,7 +52,6 @@ const handleForgotPassword = async () => {
     await auth.forgotPassword(email.value);
     showToast("Password reset link sent to your email", "success");
   } catch (e) {
-    console.log("Forgot password error:", e);
     showToast(e?.data?.message || "Unable to send reset link", "error");
   } finally {
     isLoading.value = false;

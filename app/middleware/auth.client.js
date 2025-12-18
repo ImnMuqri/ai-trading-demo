@@ -16,7 +16,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // Restore session
   if (!auth.token) {
-    console.log('[Auth.Client] Restoring session...');
+    // console.log('[Auth.Client] Restoring session...');
     await auth.restoreSession();
   }
 
@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (!auth.isAuthenticated) {
-    console.log('[Auth.Client] Not authenticated, redirecting to login');
+    // console.log('[Auth.Client] Not authenticated, redirecting to login');
     return navigateTo('/login', { replace: true });
   }
 
