@@ -229,7 +229,6 @@ const SentimentIndex = (value) => {
   sentimentIndex.value = value;
 };
 
-
 const fetchSymbols = async () => {
   try {
     const resCurrency = await $api.get(
@@ -359,9 +358,6 @@ let updateTimeout;
 watch([selectedSymbol, selectedInterval], ([symbol, interval]) => {
   clearTimeout(updateTimeout);
   updateTimeout = setTimeout(() => initWidgetSafe(symbol, interval), 300);
-});
-watch(selectedSymbol, (newVal) => {
-  if (newVal) fetchSymbols();
 });
 </script>
 
