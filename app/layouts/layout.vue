@@ -41,7 +41,7 @@
         </span>
       </div>
 
-      <nav class="flex-1 p-3 space-y-2 pt-10 overflow-hidden">
+      <nav class="flex-1 p-3 space-y-2 pt-4 overflow-hidden">
         <!-- Dashboard -->
         <NuxtLink
           to="/dashboard"
@@ -65,29 +65,6 @@
             Dashboard
           </span>
         </NuxtLink>
-
-        <!-- Daily Bias -->
-        <NuxtLink
-          to="/dailybias"
-          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          :class="[
-            isActive('/dailybias') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-start' : 'justify-start',
-          ]">
-          <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
-
-          <!-- Smooth slide/fade text -->
-          <span
-            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-            :class="
-              !isCollapsed
-                ? 'opacity-100 translate-x-0 max-w-[120px]'
-                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            ">
-            Daily Bias
-          </span>
-        </NuxtLink>
-
         <!-- Admin Panel -->
         <NuxtLink
           to="/admin"
@@ -107,6 +84,27 @@
                 : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
             ">
             Admin Panel
+          </span>
+        </NuxtLink>
+        <!-- Daily Bias -->
+        <NuxtLink
+          to="/dailybias"
+          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+          :class="[
+            isActive('/dailybias') ? activeClass : inactiveClass,
+            isCollapsed ? 'justify-start' : 'justify-start',
+          ]">
+          <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
+
+          <!-- Smooth slide/fade text -->
+          <span
+            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            :class="
+              !isCollapsed
+                ? 'opacity-100 translate-x-0 max-w-[120px]'
+                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+            ">
+            Daily Bias
           </span>
         </NuxtLink>
       </nav>

@@ -49,13 +49,13 @@
         <footer class="mt-6 flex flex-col gap-3">
           <div v-if="type === 'confirmAlert'" class="flex flex-col gap-3">
             <button
-              class="w-full py-3 rounded-md bg-emerald-600 text-white font-semibold hover:bg-emerald-500"
+              class="w-full py-3 rounded-md bg-emerald-600 text-white font-semibold hover:bg-emerald-500 text-sm"
               @click="confirm"
               :disabled="isLoading">
               I am sure
             </button>
             <button
-              class="w-full py-3 rounded-md bg-gray-700 text-gray-200 font-medium hover:bg-gray-600"
+              class="w-full py-3 rounded-md bg-gray-700 text-gray-200 font-medium hover:bg-gray-600 text-sm"
               @click="close"
               :disabled="isLoading">
               I change my mind
