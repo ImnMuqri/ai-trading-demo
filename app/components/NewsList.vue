@@ -17,7 +17,7 @@
             :href="news.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-col md:flex-row gap-6 items-center mb-2">
+            class="flex flex-col md:flex-row gap-6 items-center mb-4">
             <!-- Show image if available -->
             <img
               v-if="news.image"
@@ -51,10 +51,90 @@
               </p>
             </div>
           </a>
+          <div
+            class="overflow-hidden transition-[max-height] duration-300 ease-in"
+            :style="{ maxHeight: openAnalysis === news.id ? '1000px' : '0px' }">
+            <!-- Loading state -->
+            <div
+              class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2"
+              v-show="isAnalysing">
+              <iframe
+                src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
+                class="border-0 !w-20 !h-16">
+              </iframe>
+            </div>
+            <!-- Analysis content -->
+            <div
+              v-if="analysisData"
+              v-show="!isAnalysing"
+              class="bg-[#1C1C1C] text-sm rounded-md mt-2">
+              <div
+                class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
+                <UiIcon
+                  icon="icon:ai-icon"
+                  custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                AI Analysis
+              </div>
+              <div class="flex flex-col gap-2 p-4 text-[12px] text-gray-300">
+                <div>
+                  <p class="font-semibold">Analysis</p>
+                  <p>{{ analysisData.analysis?.analysis }}</p>
+                </div>
+                <div>
+                  <p class="font-semibold">Summary</p>
+                  <p>{{ analysisData.analysis?.summary }}</p>
+                </div>
+                <div>
+                  <p class="font-semibold">Trading Signal</p>
+                  <p>{{ analysisData.analysis?.tradingSignal }}</p>
+                </div>
+                <div class="flex gap-2 py-2">
+                  <UiChip
+                    :custom-class="[
+                      'px-3 py-1 text-xs border rounded-full',
+                      analysisData.analysis.sentiment === 'Positive'
+                        ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
+                        : analysisData.analysis.sentiment === 'Negative'
+                        ? 'bg-red-500/15 text-red-500 border-red-500'
+                        : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                    ]">
+                    {{ analysisData.analysis?.sentiment }}
+                  </UiChip>
 
+                  <UiChip
+                    :custom-class="[
+                      'px-3 py-1 text-xs border rounded-full',
+                      analysisData.analysis.impact === 'Low'
+                        ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
+                        : analysisData.analysis.impact === 'High'
+                        ? 'bg-red-500/15 text-red-500 border-red-500'
+                        : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                    ]">
+                    {{ analysisData.analysis.impact }}
+                  </UiChip>
+                </div>
+              </div>
+            </div>
+          </div>
           <div
             class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1">
             <div
+              v-if="openAnalysis === news.id"
+              @click="closeAnalysis()"
+              class="flex gap-1 items-center cursor-pointer">
+              <UiIcon
+                icon="icon:ai-icon"
+                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+
+              <span class="flex gap-1 text-[12px]"
+                >Hide analysis
+                <UiIcon
+                  icon="ic:round-chevron-right"
+                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
+              ></span>
+            </div>
+            <div
+              v-else
               @click="newAnalysis(news.id)"
               class="flex gap-1 items-center cursor-pointer">
               <UiIcon
@@ -126,50 +206,6 @@
         View Recent Headline
       </div>
     </div>
-
-    <UiModal
-      v-if="analysisData"
-      :show="openAnalysisModal"
-      :isGradient="true"
-      width="max-w-[600px]"
-      :title="analysisData?.newsTitle"
-      :description="analysisData?.newsText"
-      :isLoading="isAnalysing"
-      @close="openAnalysisModal = false">
-      <template #body>
-        <div class="text-gray-300">
-          <div
-            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
-            <div class="flex flex-col gap-1 items-center justify-center">
-              <p>Sentiment</p>
-              <p class="font-semibold">
-                {{ analysisData.analysis.sentiment }}
-              </p>
-            </div>
-            <div class="flex flex-col gap-1 items-center justify-center">
-              <p>Predicted Actual</p>
-              <p class="font-semibold">
-                {{ analysisData.analysis.impact }}
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col gap-2 mt-4">
-            <div>
-              <p class="font-semibold">Ai Summary</p>
-              <p class="text-sm">
-                {{ analysisData.analysis.summary }}
-              </p>
-            </div>
-            <div>
-              <p class="font-semibold">Trading Tips</p>
-              <p class="text-sm">
-                {{ analysisData.analysis.tradingSignal }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </template>
-    </UiModal>
   </div>
 </template>
 
@@ -177,13 +213,10 @@
 import { ref, computed, onMounted } from "vue";
 const { $api } = useNuxtApp();
 
-const currency = ref("EUR USD");
-const dateFilter = ref("2025 11 16");
-
 const isLoading = ref(false);
 const isAnalysing = ref(false);
 const analysisData = ref(null);
-const openAnalysisModal = ref(false);
+const openAnalysis = ref(false);
 const newsList = ref([]);
 
 // Format time
@@ -232,22 +265,37 @@ const fetchNews = async () => {
   }
 };
 const newAnalysis = async (newsId) => {
-  openAnalysisModal.value = true;
+  openAnalysis.value = newsId;
   isAnalysing.value = true;
-  try {
-    const response = await $api.post("/api/ai/analyze-news", {
-      newsId: newsId,
-    });
 
+  const minLoadingTime = 4000;
+  const startTime = Date.now();
+
+  try {
+    const response = await $api.post("/api/ai/analyze-news", { newsId });
     const raw = response.data.data || [];
     analysisData.value = raw;
-    isAnalysing.value = false;
-    return;
   } catch (error) {
     console.error("Analyze news route failed", error);
-    isAnalysing.value = false;
-    return null;
+  } finally {
+    const elapsed = Date.now() - startTime;
+    const remaining = minLoadingTime - elapsed;
+
+    if (remaining > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remaining));
+    }
+
+    // Only set isAnalysing = false if the same news is still open
+    if (openAnalysis.value === newsId) {
+      isAnalysing.value = false;
+    }
   }
+};
+
+const closeAnalysis = () => {
+  openAnalysis.value = false;
+  analysisData.value = null;
+  isAnalysing.value = false;
 };
 
 // Group news by date

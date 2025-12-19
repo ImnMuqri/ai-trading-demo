@@ -87,6 +87,28 @@
             Daily Bias
           </span>
         </NuxtLink>
+
+        <!-- Admin Panel -->
+        <NuxtLink
+          to="/admin"
+          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+          :class="[
+            isActive('/admin') ? activeClass : inactiveClass,
+            isCollapsed ? 'justify-start' : 'justify-start',
+          ]">
+          <UiIcon icon="hugeicons:user" custom-class="w-4 h-4" />
+
+          <!-- Smooth slide/fade text -->
+          <span
+            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            :class="
+              !isCollapsed
+                ? 'opacity-100 translate-x-0 max-w-[120px]'
+                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+            ">
+            Admin Panel
+          </span>
+        </NuxtLink>
       </nav>
 
       <div class="p-3">
@@ -163,11 +185,11 @@
                 icon="stash:burger-classic-duotone"
                 custom-class="w-6 h-6" />
             </button>
-            <h2 class="text-2xl font-semibold text-[#00BDA7]">Dashboard</h2>
+            <h2 class="text-2xl font-semibold text-[#00BDA7]">
+              {{ currentTitle }}
+            </h2>
           </div>
-          <p class="text-gray-200 mt-2 mb-2 text-sm">
-            Welcome to Ai Trading Dashboard
-          </p>
+          <p class="text-gray-200 mt-2 mb-2 text-sm">Welcome to Ai Trading</p>
         </div>
 
         <div class="flex gap-4 items-center">
@@ -193,6 +215,16 @@ const route = useRoute();
 const isCollapsed = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobile = ref(false);
+
+const pageTitles = {
+  "/dashboard": "Dashboard",
+  "/dailybias": "Daily Bias",
+  "/admin": "Admin Panel",
+  "/settings/subscription": "Subscription",
+  // add other routes here
+};
+
+const currentTitle = computed(() => pageTitles[route.path] || "Dashboard");
 
 // detect mobile client side only, keep reactive on resize
 const updateIsMobile = () => {

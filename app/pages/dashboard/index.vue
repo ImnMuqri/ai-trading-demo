@@ -321,10 +321,21 @@ const loadTickerTape = () => {
     "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
   script.async = true;
 
-  const tickerSymbols = symbols.value.map((s) => ({
-    proName: `OANDA:${s.value}`,
-    title: s.label,
-  }));
+  const excludedSymbols = [
+    "USOIL",
+    "UKOIL",
+    "NATGAS",
+    "SPX500",
+    "NAS100",
+    "DJI30",
+  ];
+
+  const tickerSymbols = symbols.value
+    .filter((s) => !excludedSymbols.includes(s.value))
+    .map((s) => ({
+      proName: `OANDA:${s.value}`,
+      title: s.label,
+    }));
 
   script.innerHTML = JSON.stringify({
     symbols: tickerSymbols,

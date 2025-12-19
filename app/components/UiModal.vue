@@ -11,7 +11,7 @@
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
           width ?? 'max-w-[500px]',
           isGradient
-            ? 'bg-[radial-gradient(76.25%_76.25%_at_50%_0%,rgba(0,142,126,0.5)_0%,rgba(0,0,0,0)_100%)]'
+            ? 'bg-[radial-gradient(76.25%_76.25%_at_50%_0%,#008E7E_0%,#121212_100%)]'
             : 'bg-[#121212]',
           'p-6 text-white',
         ]">

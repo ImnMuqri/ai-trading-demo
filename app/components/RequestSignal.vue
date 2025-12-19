@@ -71,7 +71,7 @@
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Timeframe</p>
             <p class="text-emerald-500">
-              {{ intervalMap[props.interval] ?? "No Info" }}
+              {{ tradingAnalysis.timeframe ?? "No Info" }}
             </p>
           </div>
 
@@ -161,7 +161,7 @@
     :show="openDetailedAnalysis"
     :title="analysisData?.symbol"
     description="Here's a detailed analysis of the trading signal."
-    :isGradient="true"
+    :isGradient="false"
     width="max-w-[800px]"
     @close="openDetailedAnalysis = false">
     <template #body>
@@ -170,7 +170,15 @@
           class="flex gap-2 items-center justify-around py-3 border rounded-xl">
           <div class="flex flex-col gap-1 items-center justify-center text-sm">
             <p>Risk Level</p>
-            <p class="font-semibold">{{ analysisData.riskLevel }}</p>
+            <p
+              class="font-semibold"
+              :class="{
+                'text-yellow-500': analysisData.riskLevel === 'Medium',
+                'text-[#00BDA7]': analysisData.riskLevel === 'Low',
+                'text-red-500': analysisData.riskLevel === 'High',
+              }">
+              {{ analysisData.riskLevel }}
+            </p>
           </div>
           <div class="flex flex-col gap-1 items-center justify-center text-sm">
             <p>Risk Reward</p>
@@ -180,7 +188,15 @@
           </div>
           <div class="flex flex-col gap-1 items-center justify-center text-sm">
             <p>Confidence Level</p>
-            <p class="font-semibold">
+            <p
+              class="font-semibold"
+              :class="{
+                'text-red-500': analysisData.confidenceLevel < 0.5,
+                'text-yellow-500':
+                  analysisData.confidenceLevel >= 0.5 &&
+                  analysisData.confidenceLevel <= 0.79,
+                'text-emerald-500': analysisData.confidenceLevel > 0.79,
+              }">
               {{ formatScore(analysisData.confidenceLevel) }}
             </p>
           </div>
@@ -411,33 +427,65 @@ const openModal = () => {
   openDetailedAnalysis.value = true;
 };
 
+const SIGNAL_LIFETIME = 5 * 60 * 1000;
+let expiryTimeout = null;
+
+const clearTradingAnalysis = () => {
+  tradingAnalysis.value = null;
+  analysisData.value = null;
+};
+
 const getSignalHistory = async (limit = 1, offset = 0) => {
   try {
-    const res = await $api.get(`/api/ai/trading-history`, {
-      params: {
-        limit,
-        offset,
-      },
+    const res = await $api.get("/api/ai/trading-history", {
+      params: { limit, offset },
     });
+
     const analysis = res.data.data || {};
+    const history = analysis.history?.[0];
+
+    if (!history) {
+      clearTradingAnalysis();
+      return;
+    }
+
+    const createdAt = new Date(history.createdAt).getTime();
+    const now = Date.now();
+    const timePassed = now - createdAt;
+
+    if (timePassed >= SIGNAL_LIFETIME) {
+      clearTradingAnalysis();
+      return;
+    }
+
     tradingAnalysis.value = {
-      trend: analysis.history[0].trend,
-      signal: analysis.history[0].signal,
-      risk: analysis.history[0].riskLevel,
-      entryLower: analysis.history[0].entryZone?.lower,
-      entryUpper: analysis.history[0].entryZone?.upper,
-      stopLoss: analysis.history[0].stopLoss,
-      takeProfit: analysis.history[0].takeProfit,
-      symbol: analysis.history[0].symbol,
-      createdAt: analysis.history[0].createdAt,
+      trend: history.trend,
+      signal: history.signal,
+      risk: history.riskLevel,
+      entryLower: history.entryZone?.lower,
+      entryUpper: history.entryZone?.upper,
+      stopLoss: history.stopLoss,
+      takeProfit: history.takeProfit,
+      symbol: history.symbol,
+      createdAt: history.createdAt,
+      timeframe: history.timeframe,
     };
-    analysisData.value = analysis.history[0];
-    return;
+
+    analysisData.value = history;
+
+    if (expiryTimeout) {
+      clearTimeout(expiryTimeout);
+    }
+
+    expiryTimeout = setTimeout(() => {
+      clearTradingAnalysis();
+    }, SIGNAL_LIFETIME - timePassed);
   } catch (error) {
     console.error("Unable to load trading history", error);
-    return null;
+    clearTradingAnalysis();
   }
 };
+
 const requestSignal = async () => {
   isRequestingSignal.value = true;
   try {
@@ -459,7 +507,8 @@ const requestSignal = async () => {
       stopLoss: analysis.analysis.stopLoss,
       takeProfit: analysis.analysis.takeProfit,
       symbol: analysis.symbol,
-      createdAt: analysis.createdAt,
+      timeframe: analysis.timeframe,
+      createdAt: Date.now(),
     };
     analysisData.value = analysis.analysis;
     isRequestingSignal.value = false;
