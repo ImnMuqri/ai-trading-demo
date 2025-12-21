@@ -25,41 +25,54 @@
     <div class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
       <div
         class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
-        <div
-          v-for="(meter, index) in meters"
-          :key="index"
-          class="flex flex-col items-center">
-          <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-            <path
-              class="text-gray-700/20"
-              stroke="currentColor"
-              stroke-width="3"
-              fill="none"
-              d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-            <path
-              :stroke="meter.fillColor"
-              stroke-width="3"
-              :stroke-dasharray="`${meter.value}, 100`"
-              stroke-linecap="round"
-              fill="none"
-              d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+        <template v-if="isLoadingContextual">
+          <div
+            v-for="i in 4"
+            :key="i"
+            class="flex flex-col items-center animate-pulse">
+            <div
+              class="w-[100px] h-[100px] rounded-full bg-gray-700/30 mb-2"></div>
+            <div class="h-3 w-20 bg-gray-700/30 rounded"></div>
+          </div>
+        </template>
+        <template v-else>
+          <div
+            v-for="(meter, index) in meters"
+            :key="index"
+            class="flex flex-col items-center">
+            <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
+              <path
+                class="text-gray-700/20"
+                stroke="currentColor"
+                stroke-width="3"
+                fill="none"
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
+              <path
+                :stroke="meter.fillColor"
+                stroke-width="3"
+                :stroke-dasharray="`${meter.value}, 100`"
+                stroke-linecap="round"
+                fill="none"
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
 
-            <text
-              x="19"
-              y="21"
-              class="text-[8px] font-semibold"
-              :fill="meter.fillColor"
-              text-anchor="middle">
-              {{ meter.value }}%
-            </text>
-          </svg>
-          <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
-        </div>
+              <text
+                x="19"
+                y="21"
+                class="text-[8px] font-semibold"
+                :fill="meter.fillColor"
+                text-anchor="middle">
+                {{ meter.value }}%
+              </text>
+            </svg>
+            <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
+          </div>
+        </template>
       </div>
 
       <!-- Toggle Button -->
       <div
         class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
+        :class="[isLoadingContextual ? 'pointer-events-none opacity-50' : '']"
         @click="showKeyFactors = !showKeyFactors">
         <UiIcon
           :icon="
@@ -127,24 +140,36 @@ const SentimentIndex = ref({
   percentage: 0,
   explanation: "",
 });
+const isLoadingContextual = ref(true);
 
 const emit = defineEmits(["sentimentIndex"]);
 
 // Fetch contextual factors
 const fetchContextual = async () => {
-  const resContextual = await $api.post(`api/contextual-factors/analyze`, {
-    currencyPair: props.selectedSymbol,
-  });
-  contextualFactors.value = resContextual.data.data.analysis.factors || [];
-  CFsummary.value = resContextual.data.data.analysis.summary || "";
-  CFexp.value = resContextual.data.data.analysis.factors || [];
-  SentimentIndex.value = {
-    percentage:
-      resContextual.data.data.analysis.sentimentIndex?.percentage || 0,
-    explanation:
-      resContextual.data.data.analysis.sentimentIndex?.explanation || null,
-  };
-  emit("sentimentIndex", SentimentIndex.value);
+  try {
+    isLoadingContextual.value = true;
+
+    const resContextual = await $api.post(`api/contextual-factors/analyze`, {
+      currencyPair: props.selectedSymbol,
+    });
+
+    contextualFactors.value = resContextual.data.data.analysis.factors || [];
+    CFsummary.value = resContextual.data.data.analysis.summary || "";
+    CFexp.value = resContextual.data.data.analysis.factors || [];
+
+    SentimentIndex.value = {
+      percentage:
+        resContextual.data.data.analysis.sentimentIndex?.percentage || 0,
+      explanation:
+        resContextual.data.data.analysis.sentimentIndex?.explanation || null,
+    };
+
+    emit("sentimentIndex", SentimentIndex.value);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    isLoadingContextual.value = false;
+  }
 };
 
 // Map sentiment to color

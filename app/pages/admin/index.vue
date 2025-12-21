@@ -51,7 +51,10 @@
             v-for="(user, index) in usersData"
             :key="user.id"
             class="px-4 grid grid-cols-7 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
-            <div class="col-span-1">{{ index + 1 }}</div>
+            <div
+              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+              {{ index + 1 }}
+            </div>
             <div class="col-span-1 truncate" :title="user.name">
               {{ user.name }}
             </div>
@@ -108,7 +111,10 @@
             v-for="(tx, index) in transactionsData"
             :key="tx.id"
             class="px-4 grid grid-cols-8 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
-            <div class="col-span-1">{{ index + 1 }}</div>
+            <div
+              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+              {{ index + 1 }}
+            </div>
             <div class="col-span-1">{{ tx.userName }}</div>
             <div class="col-span-2 truncate" :title="tx.userEmail">
               {{ tx.userEmail }}

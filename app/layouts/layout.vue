@@ -86,15 +86,15 @@
             Admin Panel
           </span>
         </NuxtLink>
-        <!-- Daily Bias -->
+        <!-- Signal History -->
         <NuxtLink
-          to="/dailybias"
+          to="/signalhistory"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
           :class="[
-            isActive('/dailybias') ? activeClass : inactiveClass,
+            isActive('/signalhistory') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
           ]">
-          <UiIcon icon="solar:bag-broken" custom-class="w-4 h-4" />
+          <UiIcon icon="hugeicons:transaction-history" custom-class="w-4 h-4" />
 
           <!-- Smooth slide/fade text -->
           <span
@@ -104,7 +104,7 @@
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
                 : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
             ">
-            Daily Bias
+            Signal History
           </span>
         </NuxtLink>
       </nav>
@@ -218,6 +218,7 @@ const pageTitles = {
   "/dashboard": "Dashboard",
   "/dailybias": "Daily Bias",
   "/admin": "Admin Panel",
+  "/signalhistory": "Signal History",
   "/settings/subscription": "Subscription",
   // add other routes here
 };

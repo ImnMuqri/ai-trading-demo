@@ -1,7 +1,7 @@
 <template>
   <UiCard
     is-gradient
-    class="flex flex-col justify-between p-4 w-full lg:w-[430px] rounded-lg">
+    class="flex flex-col justify-between p-4 w-full lg:w-[430px] lg:h-[630px] rounded-lg">
     <div>
       <div class="flex gap-1 items-center">
         <p class="text-md">Signal & Insights</p>

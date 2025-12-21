@@ -23,7 +23,7 @@
         :symbol="selectedSymbol"
         :interval="selectedInterval"
         @open-analysis-modal="openDetailedAnalysis = true" />
-      <client-only class="w-full">
+      <client-only class="w-full lg:h-[630px]">
         <div class="grid grid-cols-1 gap-2">
           <UiCard class="px-2">
             <div class="tradingview-widget-container" ref="tickerContainer">
