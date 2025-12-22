@@ -40,8 +40,7 @@
           <UiTable
             :allItems="usersData"
             :isLoading="userLoading"
-            empty-class="min-h-[400px]"
-          >
+            empty-class="min-h-[400px]">
             <template #header>
               <div class="grid grid-cols-6 gap-2">
                 <div
@@ -109,8 +108,7 @@
           <UiTable
             :allItems="transactionsData"
             :isLoading="transactionLoading"
-            empty-class="min-h-[350px]"
-          >
+            empty-class="min-h-[350px]">
             <template #header>
               <div class="grid grid-cols-6 gap-2">
                 <div
@@ -187,6 +185,7 @@
       :show="openConfirm"
       title="Confirm Deletion"
       :description="`Are you sure you want to delete ${selectedUser?.name}? This action cannot be undone.`"
+      :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
       type="confirmAlert"></UiModal>
@@ -216,6 +215,7 @@
         <div class="flex flex-col gap-2.5">
           <UiButton
             class="w-full py-2.5 rounded-md text-white !text-[12px]"
+            :isLoading="isUpdateLoading"
             @click="saveChanges">
             Save Changes </UiButton
           ><UiButton
