@@ -31,7 +31,8 @@
 
       <div class="flex flex-col xl:flex-row gap-4">
         <UiCard class="mt-4 py-2 text-[12px]">
-          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+          <div
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
@@ -42,8 +43,7 @@
                 <div
                   v-for="col in columns"
                   :key="col.key"
-                  class="text-gray-300 font-bold"
-                >
+                  class="text-gray-300 font-bold">
                   {{ col.label }}
                 </div>
               </div>
@@ -55,29 +55,29 @@
                   v-for="col in columns"
                   :key="col.key"
                   class="truncate"
-                  :title="item[col.key]"
-                >
+                  :title="item[col.key]">
                   <span v-if="col.key === 'createdAt'">
-                    {{ item[col.key] ? new Date(item[col.key]).toLocaleDateString() : 'N/A' }}
+                    {{
+                      item[col.key]
+                        ? new Date(item[col.key]).toLocaleDateString()
+                        : "N/A"
+                    }}
                   </span>
 
                   <div
                     v-else-if="col.key === 'actions'"
-                    class="flex gap-2 justify-center"
-                  >
+                    class="flex gap-2 justify-center">
                     <UiButton
                       variant="icon"
                       icon="cuida:edit-outline"
                       size="sm"
-                      @click="updateModal(item)"
-                    />
+                      @click="updateModal(item)" />
                     <UiButton
                       variant="icon"
                       icon="bxs:trash"
                       size="sm"
                       class="bg-red-500"
-                      @click="confirmDelete(item)"
-                    />
+                      @click="confirmDelete(item)" />
                   </div>
 
                   <span v-else>
@@ -91,12 +91,14 @@
 
         <UiCard class="mt-4 py-2 text-[12px] !hidden">
           <!-- Table Header -->
-          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+          <div
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
 
-          <div class="px-4 grid grid-cols-7 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
+          <div
+            class="px-4 grid grid-cols-7 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
             <div class="col-span-1">No.</div>
             <div class="col-span-1">Name</div>
             <div class="col-span-1">Phone</div>
@@ -110,9 +112,9 @@
           <div
             v-for="(user, index) in usersData"
             :key="user.id"
-            class="px-4 grid grid-cols-7 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800"
-          >
-            <div class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+            class="px-4 grid grid-cols-7 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
+            <div
+              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
               {{ index + 1 }}
             </div>
             <div class="col-span-1 truncate" :title="user.name">
@@ -121,8 +123,7 @@
             <div class="col-span-1">{{ user.phone }}</div>
             <div
               class="col-span-1 truncate overflow-hidden whitespace-nowrap"
-              :title="user.email"
-            >
+              :title="user.email">
               {{ user.email }}
             </div>
             <div class="col-span-1 capitalize">{{ user.role }}</div>
@@ -137,27 +138,27 @@
                 variant="icon"
                 :icon="'cuida:edit-outline'"
                 size="sm"
-                custom-class="!px-1 !w-fit"
-              />
+                custom-class="!px-1 !w-fit" />
               <UiButton
                 @click="confirmDelete(user)"
                 variant="icon"
                 :icon="'bxs:trash'"
                 size="sm"
-                custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-              />
+                custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600" />
             </div>
           </div>
         </UiCard>
 
         <UiCard class="mt-4 py-2 text-[12px]">
           <!-- Table Header -->
-          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+          <div
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">Transactions List</p>
           </div>
 
-          <div class="px-4 grid grid-cols-8 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
+          <div
+            class="px-4 grid grid-cols-8 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
             <div class="col-span-1">No.</div>
             <div class="col-span-1">Name</div>
             <div class="col-span-2">Email</div>
@@ -171,9 +172,9 @@
           <div
             v-for="(tx, index) in transactionsData"
             :key="tx.id"
-            class="px-4 grid grid-cols-8 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800"
-          >
-            <div class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+            class="px-4 grid grid-cols-8 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
+            <div
+              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
               {{ index + 1 }}
             </div>
             <div class="col-span-1">{{ tx.userName }}</div>
@@ -191,8 +192,7 @@
                 'text-green-500': tx.paymentStatus === 'completed',
                 'text-yellow-500': tx.paymentStatus === 'pending',
                 'text-red-500': tx.paymentStatus === 'failed',
-              }"
-            >
+              }">
               {{ tx.paymentStatus }}
             </div>
             <div class="col-span-1 flex items-center gap-2">
@@ -211,22 +211,35 @@
       :description="`Are you sure you want to delete ${selectedUser?.name}? This action cannot be undone.`"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"
-    ></UiModal>
+      type="confirmAlert"></UiModal>
 
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
-    >
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
       <template #body>
-        <div class="flex flex-col gap-4">
-          <UiInput label="Name" type="text" v-model="selectedUser.name" />
-          <UiInput label="Email" type="email" v-model="selectedUser.email" />
-          <UiInput label="Phone" type="text" v-model="selectedUser.phone" />
-          <UiInput label="Role" type="text" v-model="selectedUser.role" />
+        <div class="flex flex-col gap-4 px-2">
+          <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
+          <UiInput
+            dark
+            label="Email"
+            type="email"
+            v-model="selectedUser.email" />
+          <UiInput
+            dark
+            label="Phone"
+            type="text"
+            v-model="selectedUser.phone" />
+          <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
+      </template>
+      <template #footer>
+        <UiButton
+          class="w-full py-3 rounded-md text-white text-sm"
+          @click="openUpdate = false">
+          Save Changes
+        </UiButton>
       </template>
     </UiModal>
   </div>

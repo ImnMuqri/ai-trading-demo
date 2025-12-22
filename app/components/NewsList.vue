@@ -329,7 +329,7 @@ const groupedNews = computed(() => {
 const impactBorder = (severity) => {
   if (severity === "Negative") return "border-[2px] border-red-500/50";
   if (severity === "Neutral") return "border-[2px] border-gray-500/50";
-  if (severity === "Positive") return "border-[2px] border-[#00BDA7]/50 ";
+  if (severity === "Positive") return "border-[2px] border-[#00BDA7]/50  ";
   return "border border-[#1C1C1C]";
 };
 // Run fetch on mount
