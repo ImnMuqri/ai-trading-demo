@@ -1,7 +1,7 @@
 <template>
   <div>
     <UiCard
-      class="relative w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F] !border-none !p-0 !mt-0"
+      class="w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F] !border-none !p-0 !mt-0"
       :style="{ display: windowWidth <= props.tableBreakPoints ? 'none' : '' }"
       :class="['', customClass]"
     >
@@ -19,22 +19,14 @@
 
         <div
           v-if="isLoading"
-          class="absolute inset-0 flex h-full w-full !text-white place-items-center justify-center"
+          class="flex h-full w-full !text-white place-items-center justify-center"
           :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]"
         >
           <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-4xl" />
         </div>
 
         <div
-          v-else-if="hasLoaded && allItems.length === 0"
-          class="w-full h-full text-white grid justify-center items-center rounded-md"
-          :class="[classModal ? 'flex-1 h-full' : emptyClass]"
-        >
-          <span>Empty Table</span>
-        </div>
-
-        <div
-          v-else
+          v-else-if="allItems.length != 0 && !isLoading"
           class="overflow-hidden w-full h-full flex-1"
           :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']"
         >
@@ -71,11 +63,18 @@
                 </div>
               </div>
 
-              <div class="col-span-1 truncate">
+              <div class="col-span-1 white">
                 <slot name="row" :item="allItems" :index="index" />
               </div>
             </div>
           </div>
+        </div>
+        <div
+          v-else
+          class="w-full h-full text-white grid justify-center items-center rounded-md"
+          :class="[classModal ? 'flex-1 h-full' : emptyClass]"
+        >
+          <span>Empty Table</span>
         </div>
       </div>
 
