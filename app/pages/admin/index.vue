@@ -89,7 +89,7 @@
           </UiTable>
         </UiCard>
 
-        <UiCard class="mt-4 py-2 text-[12px]">
+        <UiCard class="mt-4 py-2 text-[12px] !hidden">
           <!-- Table Header -->
           <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
