@@ -1,37 +1,50 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center overflow-hidden">
+  <div
+    class="min-h-screen flex items-center justify-center overflow-hidden bg-[#0C0E12] text-white">
     <transition name="fade-up">
       <div
-        class="w-full max-w-[400px] px-8 lg:px-10 mx-5 lg:mx-10 pb-6 bg-white rounded-lg">
-        <div class="text-center my-2">
-          <img
+        class="login-background flex flex-col gap-4 w-full max-w-[400px] p-20 px-12 rounded-lg">
+        <div class="text-center mb-6">
+          <!-- <img
             src="~assets/icons/ai-icon.svg"
             alt="AI Icon"
-            class="mx-auto mb-2 w-32 h-32" />
-          <h1 class="text-2xl font-semibold text-gray-800">Welcome Back</h1>
+            class="mx-auto mb-2 w-32 h-32" /> -->
+          <h1 class="text-3xl font-semibold text-white mb-1">Sign In</h1>
+          <h1 class="text-sm text-[#838383]">Sign in to your account</h1>
         </div>
 
         <form @submit.prevent="handleLogin" class="text-gray-700">
           <div class="mb-4">
-            <label class="block mb-1 text-sm">Email</label>
-            <input
+            <UiInput
+              dark
               type="text"
               v-model="email"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
+              placeholder="Username or Email"
+              customClass="h-10">
+              <template #icon-left>
+                <UiIcon
+                  icon="hugeicons:user-03"
+                  custom-class="text-gray-300" /> </template
+            ></UiInput>
           </div>
 
-          <div>
-            <label class="block mb-1 text-sm">Password</label>
-            <input
+          <div class="mb-2">
+            <UiInput
+              dark
               type="password"
               v-model="password"
-              class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00BDA7] text-[12px]" />
+              placeholder="Password"
+              customClass="h-10">
+              <template #icon-left>
+                <UiIcon
+                  icon="heroicons:lock-closed"
+                  custom-class="text-gray-300" /> </template
+            ></UiInput>
           </div>
-
-          <div class="pb-6">
+          <div class="pb-12">
             <NuxtLink
               to="/forgotpassword"
-              class="text-[10px] underline pt-[5px] px-1 cursor-pointer">
+              class="text-[10px] text-[#00BDA7] underline pt-[5px] px-1 cursor-pointer">
               Forgot Password
             </NuxtLink>
           </div>
@@ -39,12 +52,12 @@
           <UiButton
             :isLoading="isLoading"
             type="submit"
-            class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
+            class="w-full bg-[#00BDA7] text-white py-2.5 !rounded-full hover:bg-[#00CDB5] transition">
             Login
           </UiButton>
         </form>
 
-        <div class="flex gap-1 text-[12px] items-center justify-center pt-20">
+        <div class="flex gap-1 text-[12px] items-center justify-center pt-10">
           <p>Don't have an account?</p>
           <NuxtLink
             to="/register"
@@ -109,5 +122,12 @@ const handleLogin = async () => {
 }
 .fade-up-leave-active {
   transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.login-background {
+  background-image: url("~/assets/bg/LoginBg.svg");
+  background-repeat: no-repeat;
+  background-size: cover; /* makes it fill the background */
+  background-position: center; /* centers the image */
 }
 </style>

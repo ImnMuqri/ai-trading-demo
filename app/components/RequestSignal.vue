@@ -125,14 +125,22 @@
             <p class="absolute bottom-0 left-8 text-[11px] text-center">
               Need more information?
             </p>
+            <p
+              class="absolute -bottom-3.5 left-10 text-[10px] text-[#B4B5B7] text-center italic">
+              Click the button below
+            </p>
           </div>
           <UiButton
             v-if="!tradingAnalysis"
             @click="requestSignal"
-            class="my-2"
+            class="mt-5 mb-1 !text-[12px] !px-8 !rounded-full"
             :isLoading="isRequestingSignal"
             >Request Signal</UiButton
           >
+          <div class="flex gap-1 text-[11px] text-center text-[#B4B5B7]">
+            <p>Signal Left:</p>
+            <p class="text-[#00BDA7]">1000</p>
+          </div>
         </div>
       </div>
     </div>
@@ -379,6 +387,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { showToast } from "~/composables/useToastMessage";
 const { $api } = useNuxtApp();
 
 const tradingAnalysis = ref(null);
@@ -487,10 +496,10 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
 };
 
 const requestSignal = async () => {
+  if (isRequestingSignal.value) return; // prevent multiple calls
   isRequestingSignal.value = true;
   try {
-    // Map the selected interval to API format
-    const apiTimeframe = intervalMap[props.interval] || "No Timeframe Selected"; // fallback to H1
+    const apiTimeframe = intervalMap[props.interval] || "No Timeframe Selected";
 
     const res = await $api.post(`api/ai/analyze-trading`, {
       symbol: props.symbol,
@@ -504,16 +513,16 @@ const requestSignal = async () => {
       risk: analysis.analysis.riskLevel,
       entryLower: analysis.analysis.entryZone?.lower,
       entryUpper: analysis.analysis.entryZone?.upper,
-      stopLoss: analysis.analysis.stopLoss,
-      takeProfit: analysis.analysis.takeProfit,
+      stopLoss: analysis.analysis.stopLoss?.toFixed(2),
+      takeProfit: analysis.analysis.takeProfit?.toFixed(2),
       symbol: analysis.symbol,
       timeframe: analysis.timeframe,
       createdAt: Date.now(),
     };
     analysisData.value = analysis.analysis;
-    isRequestingSignal.value = false;
   } catch (error) {
-    console.error("Failed to analyze trading:", error);
+    showToast(error.response?.data?.message || error.message, "error");
+  } finally {
     isRequestingSignal.value = false;
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-full">
-    <label v-if="label" class="mb-1 text-sm font-medium text-gray-500">
+    <label v-if="label" class="mb-1 text-[12px] font-medium text-white">
       {{ label }}
     </label>
     <div class="relative w-full">
@@ -26,7 +26,7 @@
         :disabled="isDisabled"
         :readonly="isReadonly"
         :class="[
-          'w-full rounded-lg text-white text-sm   transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
+          'w-full h-10 rounded-lg text-white !text-[11px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
           isDisabled
             ? 'opacity-50 cursor-not-allowed'
             : 'border-gray-300 focus:border-[#00BDA7]',
@@ -35,7 +35,7 @@
           'py-2',
           customClass,
           dark
-            ? 'bg-[#1C1C1C] border-[#2A2A2A] text-white'
+            ? 'bg-[#1A1C20] border-[#2A2A2A] text-white'
             : 'bg-white border !text-black',
         ]" />
     </div>
@@ -82,5 +82,9 @@ watch(
 </script>
 
 <style scoped>
-/* Optional: adjust icon sizes inside input */
+::v-deep input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #1a1c20 inset;
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
 </style>

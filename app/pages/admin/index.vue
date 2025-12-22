@@ -64,8 +64,7 @@
                   v-for="col in userColumns"
                   :key="col.key"
                   class="truncate"
-                  :title="item[col.key]"
-                >
+                  :title="item[col.key]">
                   <span v-if="col.key === 'createdAt'">
                     {{
                       item[col.key]
@@ -76,8 +75,7 @@
 
                   <div
                     v-else-if="col.key === 'actions'"
-                    class="flex gap-2 justify-center"
-                  >
+                    class="flex gap-2 justify-center">
                     <UiButton
                       variant="icon"
                       icon="cuida:edit-outline"
@@ -202,22 +200,35 @@
       :description="`Are you sure you want to delete ${selectedUser?.name}? This action cannot be undone.`"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"
-    ></UiModal>
+      type="confirmAlert"></UiModal>
 
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
-    >
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
       <template #body>
-        <div class="flex flex-col gap-4">
-          <UiInput label="Name" type="text" v-model="selectedUser.name" />
-          <UiInput label="Email" type="email" v-model="selectedUser.email" />
-          <UiInput label="Phone" type="text" v-model="selectedUser.phone" />
-          <UiInput label="Role" type="text" v-model="selectedUser.role" />
+        <div class="flex flex-col gap-4 px-2">
+          <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
+          <UiInput
+            dark
+            label="Email"
+            type="email"
+            v-model="selectedUser.email" />
+          <UiInput
+            dark
+            label="Phone"
+            type="text"
+            v-model="selectedUser.phone" />
+          <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
+      </template>
+      <template #footer>
+        <UiButton
+          class="w-full py-3 rounded-md text-white text-sm"
+          @click="openUpdate = false">
+          Save Changes
+        </UiButton>
       </template>
     </UiModal>
   </div>
