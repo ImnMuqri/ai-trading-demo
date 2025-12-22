@@ -33,11 +33,9 @@
         <!-- User List -->
         <UiCard
           class="mt-4 py-2 text-[12px] h-full min-h-[400px]"
-          :class="userLoading ? '!w-full' : '!w-fit'"
-        >
+          :class="userLoading ? '!w-full' : '!w-fit'">
           <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
-          >
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
@@ -45,15 +43,13 @@
           <UiTable
             :allItems="usersData"
             :isLoading="userLoading"
-            empty-class="min-h-[350px]"
-          >
+            empty-class="min-h-[350px]">
             <template #header>
               <div class="grid grid-cols-6 gap-2">
                 <div
                   v-for="col in userColumns"
                   :key="col.key"
-                  class="text-gray-300 font-bold"
-                >
+                  class="text-gray-300 font-bold">
                   <div v-if="col.label === 'Actions'" class="!text-center">
                     {{ col.label }}
                   </div>
@@ -85,15 +81,13 @@
                       icon="cuida:edit-outline"
                       size="sm"
                       custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)"
-                    />
+                      @click="updateModal(item)" />
                     <UiButton
                       variant="icon"
                       icon="bxs:trash"
                       size="sm"
                       custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)"
-                    />
+                      @click="confirmDelete(item)" />
                   </div>
 
                   <span v-else>
@@ -109,8 +103,7 @@
         <UiCard class="mt-4 py-2 text-[12px] flex-1 w-full">
           <!-- Table Header -->
           <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
-          >
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">Transactions List</p>
           </div>
@@ -121,8 +114,7 @@
                 <div
                   v-for="col in transactionsColumns"
                   :key="col.key"
-                  class="text-gray-300 font-bold"
-                >
+                  class="text-gray-300 font-bold">
                   <div v-if="col.label === 'Status'">
                     {{ col.label }}
                   </div>
@@ -137,8 +129,7 @@
                   v-for="col in transactionsColumns"
                   :key="col.key"
                   class="truncate"
-                  :title="item[col.key]"
-                >
+                  :title="item[col.key]">
                   <span v-if="col.key === 'createdAt'">
                     <span class="text-gray-400 font-semibold">
                       {{
@@ -158,29 +149,25 @@
                       'text-green-500': item[col.key] === 'completed',
                       'text-yellow-500': item[col.key] === 'pending',
                       'text-red-500': item[col.key] === 'failed',
-                    }"
-                  >
+                    }">
                     {{ item[col.key] }}
                   </span>
 
                   <div
                     v-else-if="col.key === 'actions'"
-                    class="flex gap-2 justify-center"
-                  >
+                    class="flex gap-2 justify-center">
                     <UiButton
                       variant="icon"
                       icon="cuida:edit-outline"
                       size="sm"
                       custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)"
-                    />
+                      @click="updateModal(item)" />
                     <UiButton
                       variant="icon"
                       icon="bxs:trash"
                       size="sm"
                       custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)"
-                    />
+                      @click="confirmDelete(item)" />
                   </div>
 
                   <span v-else>
@@ -224,11 +211,17 @@
         </div>
       </template>
       <template #footer>
-        <UiButton
-          class="w-full py-3 rounded-md text-white text-sm"
-          @click="openUpdate = false">
-          Save Changes
-        </UiButton>
+        <div class="flex flex-col gap-2.5">
+          <UiButton
+            class="w-full py-2.5 rounded-md text-white !text-[12px]"
+            @click="saveChanges">
+            Save Changes </UiButton
+          ><UiButton
+            class="w-full py-2.5 rounded-md text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
+            @click="openUpdate = false">
+            Cancel
+          </UiButton>
+        </div>
       </template>
     </UiModal>
   </div>
@@ -246,8 +239,15 @@ const usersData = ref([]);
 const transactionsData = ref([]);
 const openConfirm = ref(false);
 const openUpdate = ref(false);
-const selectedUser = ref(null);
-
+const selectedUser = ref({
+  id: null,
+  name: "",
+  email: "",
+  role: "",
+  isActive: "",
+});
+const isUpdateLoading = ref(false);
+const isDeleteLoading = ref(false);
 const userLoading = ref(false);
 const transactionLoading = ref(false);
 const userColumns = [
@@ -298,6 +298,7 @@ const confirmDelete = (user) => {
 };
 
 const handleDeleteConfirmed = async () => {
+  isDeleteLoading.value = true;
   if (!selectedUser.value.id) return;
 
   try {
@@ -311,14 +312,46 @@ const handleDeleteConfirmed = async () => {
     openConfirm.value = false;
     selectedUser.value = null;
     showToast("User deleted successfully", "success");
+    isDeleteLoading.value = false;
   } catch (error) {
-    console.error("Failed to delete user:", error);
+    showToast(error.response.data.message ?? "Error", "error");
+    isDeleteLoading.value = false;
   }
 };
 
 const updateModal = (user) => {
   selectedUser.value = user;
   openUpdate.value = true;
+};
+
+const saveChanges = async () => {
+  if (isUpdateLoading.value) return;
+  isUpdateLoading.value = true;
+  if (!selectedUser.value.id) return;
+
+  try {
+    const res = await $api.put(`/api/admin/users/${selectedUser.value.id}`, {
+      name: selectedUser.value.name,
+      email: selectedUser.value.email,
+      role: selectedUser.value.role,
+      isActive: selectedUser.value.isActive,
+    });
+
+    const updatedUser = res.data.data;
+
+    // Update local state
+    usersData.value = usersData.value.map((user) =>
+      user.id === updatedUser.id ? { ...user, ...updatedUser } : user
+    );
+
+    showToast("User updated successfully", "success");
+    isUpdateLoading.value = false;
+    openUpdate.value = false;
+  } catch (error) {
+    showToast("Failed to update user", "error");
+    isUpdateLoading.value = false;
+    console.error(error);
+  }
 };
 
 const getTransactions = async () => {

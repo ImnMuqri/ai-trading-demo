@@ -80,23 +80,23 @@
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Entry Zone</p>
             <p class="text-yellow-500">
-              {{ tradingAnalysis?.entryLower ?? "--" }}
+              {{ formatPrice(tradingAnalysis?.entryLower) ?? "--" }}
               to
-              {{ tradingAnalysis?.entryUpper ?? "--" }}
+              {{ formatPrice(tradingAnalysis?.entryUpper) ?? "--" }}
             </p>
           </div>
           <div
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Stop Loss</p>
             <p class="text-red-500">
-              {{ tradingAnalysis?.stopLoss ?? "No Info" }}
+              {{ formatPrice(tradingAnalysis?.stopLoss) ?? "No Info" }}
             </p>
           </div>
           <div
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Take Profit</p>
             <p class="text-emerald-500">
-              {{ tradingAnalysis?.takeProfit ?? "No Info" }}
+              {{ formatPrice(tradingAnalysis?.takeProfit) ?? "No Info" }}
             </p>
           </div>
           <!-- Risk Level -->
@@ -137,7 +137,9 @@
             :isLoading="isRequestingSignal"
             >Request Signal</UiButton
           >
-          <div class="flex gap-1 text-[11px] text-center text-[#B4B5B7]">
+          <div
+            v-if="!tradingAnalysis"
+            class="flex gap-1 text-[11px] text-center text-[#B4B5B7]">
             <p>Signal Left:</p>
             <p class="text-[#00BDA7]">1000</p>
           </div>
@@ -199,13 +201,13 @@
             <p
               class="font-semibold"
               :class="{
-                'text-red-500': analysisData.confidenceLevel < 0.5,
+                'text-red-500': (analysisData?.confidenceLevel ?? 0) < 0.5,
                 'text-yellow-500':
-                  analysisData.confidenceLevel >= 0.5 &&
-                  analysisData.confidenceLevel <= 0.79,
-                'text-emerald-500': analysisData.confidenceLevel > 0.79,
+                  (analysisData?.confidenceLevel ?? 0) >= 0.5 &&
+                  (analysisData?.confidenceLevel ?? 0) <= 0.79,
+                'text-emerald-500': (analysisData?.confidenceLevel ?? 0) > 0.79,
               }">
-              {{ formatScore(analysisData.confidenceLevel) }}
+              {{ formatScore(analysisData?.confidenceLevel) ?? "No Data" }}
             </p>
           </div>
         </div>
@@ -345,35 +347,35 @@
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Stop Loss</p>
                   <p class="text-red-500">
-                    {{ analysisData?.stopLoss ?? "No Info" }}
+                    {{ formatPrice(analysisData?.stopLoss) ?? "No Info" }}
                   </p>
                 </div>
                 <div
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit</p>
                   <p class="text-emerald-500">
-                    {{ analysisData.takeProfit }}
+                    {{ formatPrice(analysisData.takeProfit) }}
                   </p>
                 </div>
                 <div
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 1</p>
                   <p class="text-emerald-500">
-                    {{ analysisData.takeProfit1 }}
+                    {{ formatPrice(analysisData.takeProfit1) }}
                   </p>
                 </div>
                 <div
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 2</p>
                   <p class="text-emerald-500">
-                    {{ analysisData.takeProfit2 }}
+                    {{ formatPrice(analysisData.takeProfit2) }}
                   </p>
                 </div>
                 <div
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 3</p>
                   <p class="text-emerald-500">
-                    {{ analysisData.takeProfit3 }}
+                    {{ formatPrice(analysisData.takeProfit3) }}
                   </p>
                 </div>
               </div>
@@ -386,14 +388,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { showToast } from "~/composables/useToastMessage";
 const { $api } = useNuxtApp();
-
 const tradingAnalysis = ref(null);
 const isRequestingSignal = ref(false);
 const openDetailedAnalysis = ref(false);
-const analysisData = ref(null);
+const analysisData = ref({
+  // Basic info
+  symbol: null,
+  confidenceLevel: 0,
+  trend: "No Info",
+  volatility: "No Info",
+  riskLevel: "Low",
+  riskRewardRatio: null,
+
+  // Entry / exit
+  entryZone: { lower: null, upper: null },
+  stopLoss: null,
+  takeProfit: null,
+  takeProfit1: null,
+  takeProfit2: null,
+  takeProfit3: null,
+
+  // AI Analysis
+  validationCriteria: null,
+  invalidationCriteria: null,
+  overallTrendBias: null,
+  marketStructure: null,
+  priceActionAnalysis: null,
+  indicatorAnalysis: null,
+  additionalTips: null,
+  analysisSummary: null,
+
+  // Key Insight
+  volumeAnalysis: null,
+  marketSentiment: null,
+});
+
 const intervalMap = {
   1: "M1",
   5: "M5",
@@ -416,6 +448,10 @@ const props = defineProps({
   },
 });
 
+const formatPrice = (value) => {
+  if (!value) return "—";
+  return Number(value).toFixed(2);
+};
 const formatScore = (score) => `${Math.round(score * 100)}%`;
 const formatDateTime = (isoString) => {
   if (!isoString) return "";
@@ -444,8 +480,29 @@ const clearTradingAnalysis = () => {
   analysisData.value = null;
 };
 
+// Cache structure: { 'SYMBOL_TIMEFRAME': { data, createdAt } }
+const historyCache = ref({});
+
 const getSignalHistory = async (limit = 1, offset = 0) => {
   try {
+    const key = `${props.symbol}_${
+      intervalMap[props.interval] || props.interval
+    }`;
+
+    // Check cache first
+    const cached = historyCache.value[key];
+    if (cached) {
+      const timePassed = Date.now() - cached.createdAt;
+      if (timePassed < SIGNAL_LIFETIME) {
+        tradingAnalysis.value = cached.data.tradingAnalysis;
+        analysisData.value = cached.data.analysisData;
+        return;
+      } else {
+        // Expired cache
+        delete historyCache.value[key];
+      }
+    }
+
     const res = await $api.get("/api/ai/trading-history", {
       params: { limit, offset },
     });
@@ -467,7 +524,17 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
       return;
     }
 
-    tradingAnalysis.value = {
+    // Only set if symbol + timeframe match current props
+    const currentTimeframe = intervalMap[props.interval] || props.interval;
+    if (
+      history.symbol !== props.symbol ||
+      history.timeframe !== currentTimeframe
+    ) {
+      clearTradingAnalysis();
+      return;
+    }
+
+    const newTradingAnalysis = {
       trend: history.trend,
       signal: history.signal,
       risk: history.riskLevel,
@@ -480,13 +547,19 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
       timeframe: history.timeframe,
     };
 
+    tradingAnalysis.value = newTradingAnalysis;
     analysisData.value = history;
 
-    if (expiryTimeout) {
-      clearTimeout(expiryTimeout);
-    }
+    // Save in cache
+    historyCache.value[key] = {
+      data: { tradingAnalysis: newTradingAnalysis, analysisData: history },
+      createdAt: Date.now(),
+    };
 
+    if (expiryTimeout) clearTimeout(expiryTimeout);
     expiryTimeout = setTimeout(() => {
+      // Remove only this timeframe from cache
+      delete historyCache.value[key];
       clearTradingAnalysis();
     }, SIGNAL_LIFETIME - timePassed);
   } catch (error) {
@@ -513,8 +586,8 @@ const requestSignal = async () => {
       risk: analysis.analysis.riskLevel,
       entryLower: analysis.analysis.entryZone?.lower,
       entryUpper: analysis.analysis.entryZone?.upper,
-      stopLoss: analysis.analysis.stopLoss?.toFixed(2),
-      takeProfit: analysis.analysis.takeProfit?.toFixed(2),
+      stopLoss: analysis.analysis.stopLoss,
+      takeProfit: analysis.analysis.takeProfit,
       symbol: analysis.symbol,
       timeframe: analysis.timeframe,
       createdAt: Date.now(),
@@ -526,6 +599,34 @@ const requestSignal = async () => {
     isRequestingSignal.value = false;
   }
 };
+
+watch(
+  () => [props.symbol, props.interval],
+  async ([newSymbol, newInterval] = [], [oldSymbol, oldInterval] = []) => {
+    if (!newSymbol || !newInterval) {
+      clearTradingAnalysis();
+      return;
+    }
+
+    const key = `${newSymbol}_${intervalMap[newInterval] || newInterval}`;
+    const cached = historyCache.value[key];
+
+    if (cached) {
+      const timePassed = Date.now() - cached.createdAt;
+      if (timePassed < SIGNAL_LIFETIME) {
+        tradingAnalysis.value = cached.data.tradingAnalysis;
+        analysisData.value = cached.data.analysisData;
+        return;
+      } else {
+        delete historyCache.value[key]; // expired
+      }
+    }
+
+    // No valid cache, fetch new signal history
+    await getSignalHistory();
+  },
+  { immediate: true }
+);
 
 onMounted(() => {
   getSignalHistory(1, 0);

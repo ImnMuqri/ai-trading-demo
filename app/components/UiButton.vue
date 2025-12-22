@@ -60,7 +60,7 @@ const variantClasses = computed(() => {
     case "icon":
       return "bg-[#00BDA7] hover:bg-[#00A592] text-white p-2 rounded-full";
     default:
-      return "bg-[#00BDA7] hover:bg-[#00BDA7] text-white";
+      return "bg-[#00BDA7] hover:bg-[#00BDA7]/70 text-white";
   }
 });
 

@@ -3,13 +3,11 @@
     <UiCard
       class="relative w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F] !border-none !p-0 !mt-0"
       :style="{ display: windowWidth <= props.tableBreakPoints ? 'none' : '' }"
-      :class="['', customClass]"
-    >
+      :class="['', customClass]">
       <div class="flex-1 h-full">
         <h2
           v-if="title"
-          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2 text-lg font-semibold text-gray-100"
-        >
+          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2 text-lg font-semibold text-gray-100">
           {{ title }}
         </h2>
 
@@ -20,38 +18,33 @@
         <div
           v-if="isLoading"
           class="absolute inset-0 flex h-full w-full !text-white place-items-center justify-center"
-          :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]"
-        >
+          :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]">
           <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-4xl" />
         </div>
 
         <div
           v-else-if="hasLoaded && allItems.length === 0"
           class="w-full h-full text-white grid justify-center items-center rounded-md"
-          :class="[classModal ? 'flex-1 h-full' : emptyClass]"
-        >
+          :class="[classModal ? 'flex-1 h-full' : emptyClass]">
           <span>Empty Table</span>
         </div>
 
         <div
           v-else
           class="overflow-hidden w-full h-full flex-1"
-          :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']"
-        >
+          :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']">
           <!-- Header -->
           <div
             class="px-4 grid grid-cols-[60px_1fr] gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]"
             :class="[isModal ? (rowsPerPage > 10 ? 'pr-2' : '') : '']"
-            @click="sortCol"
-          >
+            @click="sortCol">
             <div class="col-span-1">No.</div>
             <div class="h-fit">
               <slot
                 name="header"
                 :handle-sort="handleSort"
                 :sort-key="sortKey"
-                :sort-dir="sortDir"
-              />
+                :sort-dir="sortDir" />
             </div>
           </div>
 
@@ -61,12 +54,10 @@
               v-for="(allItems, index) in pagedItems"
               :key="index"
               class="px-4 grid grid-cols-[60px_1fr] gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800 text-gray-300"
-              :class="[index < allItems.length - 1 || !$slots.total ? '' : '']"
-            >
+              :class="[index < allItems.length - 1 || !$slots.total ? '' : '']">
               <div class="border-gray-200 h-full grid">
                 <div
-                  class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
-                >
+                  class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
                   {{ (currentPage - 1) * rowsPerPage + index + 1 }}
                 </div>
               </div>
@@ -100,8 +91,9 @@
     <div v-if="$slots.card">
       <UiCard
         class="bg-white p-4 flex flex-col h-full"
-        :style="{ display: props.tableBreakPoints < windowWidth ? 'none' : '' }"
-      >
+        :style="{
+          display: props.tableBreakPoints < windowWidth ? 'none' : '',
+        }">
         <!-- Header -->
         <div class="pb-3">
           <slot name="tableHeader" />
@@ -112,8 +104,7 @@
 
           <div
             v-if="allItems.length === 0 && !isLoading"
-            class="text-black grid justify-center items-center border border-gray-200 rounded-md h-[350px]"
-          >
+            class="text-black grid justify-center items-center border border-gray-200 rounded-md h-[350px]">
             <span>Empty Table</span>
           </div>
         </div>
