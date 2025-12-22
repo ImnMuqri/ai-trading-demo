@@ -1,7 +1,7 @@
 <template>
   <div>
     <UiCard
-      class="w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F]"
+      class="relative w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F] !border-none !p-0 !mt-0"
       :style="{ display: windowWidth <= props.tableBreakPoints ? 'none' : '' }"
       :class="['', customClass]"
     >
@@ -18,33 +18,29 @@
         </div>
 
         <div
-          v-if="allItems.length == 0 && !isLoading"
-          class="text-black grid justify-center items-center border border-gray-200 rounded-md"
+          v-if="isLoading"
+          class="absolute inset-0 flex h-full w-full !text-white place-items-center justify-center"
+          :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]"
+        >
+          <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-4xl" />
+        </div>
+
+        <div
+          v-else-if="hasLoaded && allItems.length === 0"
+          class="w-full h-full text-white grid justify-center items-center rounded-md"
           :class="[classModal ? 'flex-1 h-full' : emptyClass]"
         >
           <span>Empty Table</span>
         </div>
 
         <div
-          v-if="isLoading"
-          class="text-black grid place-items-center min-h-[300px] border border-gray-200"
-          :class="[classModal ? 'flex-1 h-full' : emptyClass]"
-        >
-          <UiIcon
-            :icon="['fas', 'spinner']"
-            class="text-[30px] text-gray-400 animate-spin"
-            iconClass="inline-flex items-center justify-center w-fit h-fit"
-          />
-        </div>
-
-        <div
-          v-if="allItems.length != 0 && !isLoading"
+          v-else
           class="overflow-hidden w-full h-full flex-1"
           :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']"
         >
           <!-- Header -->
           <div
-            class="px-4 grid grid-cols-[60px_1fr] gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C] border-b border-gray-800"
+            class="px-4 grid grid-cols-[60px_1fr] gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]"
             :class="[isModal ? (rowsPerPage > 10 ? 'pr-2' : '') : '']"
             @click="sortCol"
           >
@@ -65,7 +61,7 @@
               v-for="(allItems, index) in pagedItems"
               :key="index"
               class="px-4 grid grid-cols-[60px_1fr] gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800 text-gray-300"
-              :class="[index < allItems.length - 1 || !$slots.total ? 'border-b border-gray-200' : '']"
+              :class="[index < allItems.length - 1 || !$slots.total ? '' : '']"
             >
               <div class="border-gray-200 h-full grid">
                 <div
@@ -90,13 +86,13 @@
       <!-- Pagination -->
       <div v-if="$slots.pagination" class="h-full">
         <slot name="pagination">
-          <UiPagination
+          <!-- <UiPagination
             :totalItems="totalItems"
             :currentPage="currentPage"
             :rowsPerPage="rowsPerPage"
             @page-changed="(page) => emit('page-changed', page)"
             @rows-per-page-changed="(rpp) => emit('rows-per-page-changed', rpp)"
-          />
+          /> -->
         </slot>
       </div>
     </UiCard>
@@ -142,7 +138,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 const props = defineProps({
@@ -177,6 +172,8 @@ const emit = defineEmits([
 const sortKey = ref(null);
 const sortDir = ref(null);
 
+const hasLoaded = ref(false);
+
 const handleSort = (col) => {
   if (sortKey.value !== col.key) {
     // first click → descending
@@ -192,11 +189,7 @@ const handleSort = (col) => {
   }
 };
 
-const baseItems = computed(() => {
-  return props.allItems && props.allItems.length > 0
-    ? props.allItems
-    : props.items;
-});
+const baseItems = computed(() => props.allItems);
 
 const sortedItems = computed(() => {
   if (!sortKey.value || !sortDir.value) return baseItems.value;
@@ -239,13 +232,15 @@ const classModal = computed(() => {
   return props.class;
 });
 
-const windowWidth = ref(window.innerWidth);
+// const windowWidth = ref(window.innerWidth);
+const windowWidth = ref(null);
 
 function updateWidth() {
   windowWidth.value = window.innerWidth;
 }
 
 onMounted(() => {
+  windowWidth.value = window.innerWidth;
   window.addEventListener("resize", updateWidth);
 });
 
@@ -256,4 +251,14 @@ onUnmounted(() => {
 watch(pagedItems, (newVal) => {
   emit("update:paginated-items", newVal);
 });
+
+watch(
+  () => props.isLoading,
+  (loading) => {
+    if (loading === false) {
+      hasLoaded.value = true;
+    }
+  },
+  { immediate: true }
+);
 </script>
