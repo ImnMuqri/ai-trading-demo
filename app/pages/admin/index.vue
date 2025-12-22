@@ -31,19 +31,17 @@
 
       <div class="flex flex-col 2xl:flex-row gap-4">
         <!-- User List -->
-        <UiCard
-          class="mt-4 py-2 text-[12px] h-full min-h-[400px]"
-          :class="userLoading ? '!w-full' : '!w-fit'">
+        <UiCard class="mt-4 py-2 text-[12px] h-full min-h-[400px] flex-1">
           <div
             class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
-
           <UiTable
             :allItems="usersData"
             :isLoading="userLoading"
-            empty-class="min-h-[350px]">
+            empty-class="min-h-[400px]"
+          >
             <template #header>
               <div class="grid grid-cols-6 gap-2">
                 <div
@@ -100,7 +98,7 @@
         </UiCard>
 
         <!-- Transactions list -->
-        <UiCard class="mt-4 py-2 text-[12px] flex-1 w-full">
+        <UiCard class="mt-4 py-2 text-[12px] flex-1 min-h-[350px] w-full">
           <!-- Table Header -->
           <div
             class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
@@ -108,7 +106,11 @@
             <p class="text-lg font-semibold py-2">Transactions List</p>
           </div>
 
-          <UiTable :allItems="transactionsData" :isLoading="transactionLoading">
+          <UiTable
+            :allItems="transactionsData"
+            :isLoading="transactionLoading"
+            empty-class="min-h-[350px]"
+          >
             <template #header>
               <div class="grid grid-cols-6 gap-2">
                 <div
@@ -287,6 +289,7 @@ const getUsers = async () => {
 
     return usersData.value;
   } catch (error) {
+    userLoading.value = false;
     console.error("Failed to fetch users:", error);
     return [];
   }
@@ -381,7 +384,6 @@ const getTransactions = async () => {
     return transactionsData.value;
   } catch (error) {
     transactionLoading.value = false;
-
     console.error("Failed to fetch transactions:", error);
     return [];
   }
