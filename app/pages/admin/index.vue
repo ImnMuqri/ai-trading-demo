@@ -37,7 +37,6 @@
           </div>
 
           <UiTable :allItems="usersData" :isLoading="isLoading">
-            <!-- Dynamic Header -->
             <template #header>
               <div class="grid grid-cols-[repeat(6,_1fr)] gap-2">
                 <div
@@ -50,7 +49,6 @@
               </div>
             </template>
 
-            <!-- Dynamic Rows -->
             <template #row="{ item }">
               <div class="grid grid-cols-[repeat(6,_1fr)] gap-2 items-center">
                 <div
