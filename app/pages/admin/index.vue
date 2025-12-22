@@ -1,13 +1,14 @@
 <template>
   <div class="flex flex-col gap-4 text-white">
     <div class="flex flex-col md:flex-row gap-4">
-      <UiCard isGradient class="p-20 flex-1">System Analytic</UiCard
-      ><UiCard isGradient class="p-20 text-md flex flex-col items-center gap-3">
+      <UiCard isGradient class="p-20 flex-1">System Analytic</UiCard>
+      <UiCard isGradient class="p-20 text-md flex flex-col items-center gap-3">
         <div class="flex justify-between items-center gap-4">
           <span class="text-lg">Trading Analysis</span>
         </div>
       </UiCard>
     </div>
+
     <div>
       <UiCard class="p-5 text-[12px]">
         <div class="flex items-center justify-around">
@@ -25,18 +26,79 @@
             New Users
             <p class="text-lg text-[#00BDA7]">3000</p>
           </div>
-        </div></UiCard
-      >
+        </div>
+      </UiCard>
+
       <div class="flex flex-col xl:flex-row gap-4">
         <UiCard class="mt-4 py-2 text-[12px]">
-          <!-- Table Header -->
-          <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
-          <div
-            class="px-4 grid grid-cols-7 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
+
+          <UiTable :allItems="usersData" :isLoading="isLoading">
+            <!-- Dynamic Header -->
+            <template #header>
+              <div class="grid grid-cols-[repeat(6,_1fr)] gap-2">
+                <div
+                  v-for="col in columns"
+                  :key="col.key"
+                  class="text-gray-300 font-bold"
+                >
+                  {{ col.label }}
+                </div>
+              </div>
+            </template>
+
+            <!-- Dynamic Rows -->
+            <template #row="{ item }">
+              <div class="grid grid-cols-[repeat(6,_1fr)] gap-2 items-center">
+                <div
+                  v-for="col in columns"
+                  :key="col.key"
+                  class="truncate"
+                  :title="item[col.key]"
+                >
+                  <span v-if="col.key === 'createdAt'">
+                    {{ item[col.key] ? new Date(item[col.key]).toLocaleDateString() : 'N/A' }}
+                  </span>
+
+                  <div
+                    v-else-if="col.key === 'actions'"
+                    class="flex gap-2 justify-center"
+                  >
+                    <UiButton
+                      variant="icon"
+                      icon="cuida:edit-outline"
+                      size="sm"
+                      @click="updateModal(item)"
+                    />
+                    <UiButton
+                      variant="icon"
+                      icon="bxs:trash"
+                      size="sm"
+                      class="bg-red-500"
+                      @click="confirmDelete(item)"
+                    />
+                  </div>
+
+                  <span v-else>
+                    {{ item[col.key] }}
+                  </span>
+                </div>
+              </div>
+            </template>
+          </UiTable>
+        </UiCard>
+
+        <UiCard class="mt-4 py-2 text-[12px]">
+          <!-- Table Header -->
+          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+            <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
+            <p class="text-lg font-semibold py-2">User List</p>
+          </div>
+
+          <div class="px-4 grid grid-cols-7 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
             <div class="col-span-1">No.</div>
             <div class="col-span-1">Name</div>
             <div class="col-span-1">Phone</div>
@@ -50,9 +112,9 @@
           <div
             v-for="(user, index) in usersData"
             :key="user.id"
-            class="px-4 grid grid-cols-7 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
-            <div
-              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+            class="px-4 grid grid-cols-7 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800"
+          >
+            <div class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
               {{ index + 1 }}
             </div>
             <div class="col-span-1 truncate" :title="user.name">
@@ -61,10 +123,10 @@
             <div class="col-span-1">{{ user.phone }}</div>
             <div
               class="col-span-1 truncate overflow-hidden whitespace-nowrap"
-              :title="user.email">
+              :title="user.email"
+            >
               {{ user.email }}
             </div>
-
             <div class="col-span-1 capitalize">{{ user.role }}</div>
             <div class="col-span-1 flex items-center gap-2">
               <span class="text-gray-400 font-semibold">
@@ -77,26 +139,27 @@
                 variant="icon"
                 :icon="'cuida:edit-outline'"
                 size="sm"
-                custom-class="!px-1 !w-fit" />
+                custom-class="!px-1 !w-fit"
+              />
               <UiButton
                 @click="confirmDelete(user)"
                 variant="icon"
                 :icon="'bxs:trash'"
                 size="sm"
-                custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600" />
+                custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
+              />
             </div>
           </div>
         </UiCard>
+
         <UiCard class="mt-4 py-2 text-[12px]">
           <!-- Table Header -->
-          <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+          <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
             <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">Transactions List</p>
           </div>
 
-          <div
-            class="px-4 grid grid-cols-8 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
+          <div class="px-4 grid grid-cols-8 gap-2 text-gray-300 font-bold p-3 rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
             <div class="col-span-1">No.</div>
             <div class="col-span-1">Name</div>
             <div class="col-span-2">Email</div>
@@ -110,9 +173,9 @@
           <div
             v-for="(tx, index) in transactionsData"
             :key="tx.id"
-            class="px-4 grid grid-cols-8 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800">
-            <div
-              class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+            class="px-4 grid grid-cols-8 gap-2 items-center transition p-3 hover:bg-[#111111] border-t border-gray-800"
+          >
+            <div class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
               {{ index + 1 }}
             </div>
             <div class="col-span-1">{{ tx.userName }}</div>
@@ -130,7 +193,8 @@
                 'text-green-500': tx.paymentStatus === 'completed',
                 'text-yellow-500': tx.paymentStatus === 'pending',
                 'text-red-500': tx.paymentStatus === 'failed',
-              }">
+              }"
+            >
               {{ tx.paymentStatus }}
             </div>
             <div class="col-span-1 flex items-center gap-2">
@@ -142,24 +206,26 @@
         </UiCard>
       </div>
     </div>
+
     <UiModal
       :show="openConfirm"
       title="Confirm Deletion"
       :description="`Are you sure you want to delete ${selectedUser?.name}? This action cannot be undone.`"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
+
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-4">
           <UiInput label="Name" type="text" v-model="selectedUser.name" />
-
           <UiInput label="Email" type="email" v-model="selectedUser.email" />
-
           <UiInput label="Phone" type="text" v-model="selectedUser.phone" />
           <UiInput label="Role" type="text" v-model="selectedUser.role" />
         </div>
@@ -181,6 +247,16 @@ const transactionsData = ref([]);
 const openConfirm = ref(false);
 const openUpdate = ref(false);
 const selectedUser = ref(null);
+
+const isLoading = ref(false);
+const columns = [
+  { label: "Name", key: "name" },
+  { label: "Phone", key: "phone" },
+  { label: "Email", key: "email" },
+  { label: "Role", key: "role" },
+  { label: "Created At", key: "createdAt" },
+  { label: "Actions", key: "actions" },
+];
 
 const getUsers = async () => {
   try {
