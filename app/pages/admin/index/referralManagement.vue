@@ -232,6 +232,8 @@ const referralColumns = [
 
 const currentPage = ref(1);
 const rowsPerPage = ref(15);
+const transactionCurrentPage = ref(1);
+const transactionRowsPerPage = ref(15);
 
 const openCreate = ref(false);
 const openUpdate = ref(false);
@@ -319,6 +321,14 @@ const handlePageChange = (page) => {
 };
 
 const handleRowsPerPageChange = (rpp) => {
+  rowsPerPage.value = rpp;
+  currentPage.value = 1; // reset to first page
+};
+const transactionHandlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+const transactionandleRowsPerPageChange = (rpp) => {
   rowsPerPage.value = rpp;
   currentPage.value = 1; // reset to first page
 };

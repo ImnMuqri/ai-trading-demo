@@ -41,7 +41,11 @@
           <UiTable
             :allItems="usersData"
             :isLoading="userLoading"
-            :rowsPerPage="usersData.length"
+            :currentPage="currentPage"
+            :rowsPerPage="rowsPerPage"
+            :totalItems="usersData.length"
+            @page-changed="handlePageChange"
+            @rows-per-page-changed="handleRowsPerPageChange"
             empty-class="min-h-[400px]"
           >
             <template #header="{ applyBorder }">
@@ -117,7 +121,11 @@
           <UiTable
             :allItems="transactionsData"
             :isLoading="transactionLoading"
-            :rowsPerPage="transactionsData.length"
+            :currentPage="transactionCurrentPage"
+            :rowsPerPage="transactionRowsPerPage"
+            :totalItems="transactionsData.length"
+            @page-changed="transactionHandlePageChange"
+            @rows-per-page-changed="transactionandleRowsPerPageChange"
             empty-class="min-h-[350px]"
           >
             <template #header="{ applyBorder }">
@@ -295,6 +303,12 @@ const transactionsColumns = [
   { label: "Status", key: "paymentStatus" },
   { label: "Created At", key: "createdAt" },
 ];
+
+const currentPage = ref(1);
+const rowsPerPage = ref(5);
+const transactionCurrentPage = ref(1);
+const transactionRowsPerPage = ref(1);
+
 const getUsers = async () => {
   userLoading.value = true;
   try {
@@ -419,6 +433,23 @@ onMounted(() => {
   getUsers();
   getTransactions();
 });
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+const handleRowsPerPageChange = (rpp) => {
+  rowsPerPage.value = rpp;
+  currentPage.value = 1; // reset to first page
+};
+const transactionHandlePageChange = (page) => {
+  transactionCurrentPage.value = page;
+};
+
+const transactionandleRowsPerPageChange = (rpp) => {
+  transactionRowsPerPage.value = rpp;
+  transactionCurrentPage.value = 1; // reset to first page
+};
 </script>
 
 <style lang="scss" scoped></style>
