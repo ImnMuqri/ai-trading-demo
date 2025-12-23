@@ -9,59 +9,102 @@
       <UiTable
         :allItems="referralCampaigns"
         :isLoading="campaignsLoading"
-        :rowsPerPage="referralCampaigns.length"
-        empty-class="min-h-[400px]">
+        :currentPage="currentPage"
+        :rowsPerPage="rowsPerPage"
+        :totalItems="referralCampaigns.length"
+        @page-changed="handlePageChange"
+        @rows-per-page-changed="handleRowsPerPageChange"
+        empty-class="min-h-[400px]"
+      >
         <template #header>
           <div class="grid grid-cols-6 gap-2">
-            <div class="text-gray-300 font-bold">ID</div>
-            <div class="text-gray-300 font-bold">Name</div>
-            <div class="text-gray-300 font-bold">Commission %</div>
-            <div class="text-gray-300 font-bold">Status</div>
-            <div class="text-gray-300 font-bold">Created</div>
-            <div class="text-gray-300 font-bold text-center">Actions</div>
+            <div
+              v-for="(col, idx) in referralColumns"
+              :key="col.key"
+              class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
+              :class="
+                idx < referralColumns.length - 1
+                  ? 'border-r border-[#2A2A2A] pr-2'
+                  : ''
+              "
+            >
+              {{ col.label }}
+            </div>
           </div>
         </template>
 
         <template #row="{ item }">
-          <div class="grid grid-cols-6 gap-2 items-center">
-            <div>{{ item.id }}</div>
-            <div>{{ item.name }}</div>
-            <div>{{ item.commissionPercentage }}%</div>
-            <div>
+          <div
+            class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center"
+          >
+            <div
+              v-for="(col, idx) in referralColumns"
+              :key="col.key"
+              class="flex flex-row items-center justify-center text-gray-300 font-bold h-12"
+              :class="
+                idx < referralColumns.length - 1
+                  ? 'border-r border-[#2A2A2A] pr-2'
+                  : ''
+              "
+              :title="item[col.key]"
+            >
+              <span v-if="col.key === 'createdAt'">
+                {{
+                  item[col.key]
+                    ? new Date(item[col.key]).toLocaleDateString()
+                    : "N/A"
+                }}
+              </span>
               <span
+                v-else-if="col.key === 'status'"
+                class="font-semibold capitalize"
                 :class="
-                  item.status === 'active'
+                  item[col.key] === 'active'
                     ? 'text-emerald-500 font-semibold'
                     : 'text-yellow-500 font-semibold'
-                ">
-                {{ item.status }}
+                "
+              >
+                {{ item[col.key] }}
               </span>
-            </div>
-            <div>{{ new Date(item.createdAt).toLocaleDateString() }}</div>
-            <div class="flex gap-[2px] justify-center">
-              <UiButton
-                variant="icon"
-                icon="cuida:edit-outline"
-                size="sm"
-                custom-class="!px-1 !text-[#00BDA7] !bg-transparent"
-                @click="openUpdateModal(item)" />
-              <UiButton
-                variant="icon"
-                icon="bxs:trash"
-                size="sm"
-                custom-class="!px-1 !text-red-500 !bg-transparent"
-                @click="openDeleteConfirm(item)" />
+
+              <div
+                v-else-if="col.key === 'actions'"
+                class="flex gap-[2px] justify-center"
+              >
+                <UiButton
+                  variant="icon"
+                  icon="cuida:edit-outline"
+                  size="sm"
+                  custom-class="!px-1 !text-[#00BDA7] !bg-transparent"
+                  @click="openUpdateModal(item)"
+                />
+                <UiButton
+                  variant="icon"
+                  icon="bxs:trash"
+                  size="sm"
+                  custom-class="!px-1 !text-red-500 !bg-transparent"
+                  @click="openDeleteConfirm(item)"
+                />
+              </div>
+
+              <span v-else>
+                {{ item[col.key] }}
+              </span>
             </div>
           </div>
         </template>
+        <template #pagination></template>
       </UiTable>
 
+      <!-- Add Referral Campaings -->
       <div
         v-if="referralCampaigns.length < 5"
-        class="flex flex-col gap-[2px] items-center justify-center py-20">
+        class="flex flex-col gap-[2px] items-center justify-center py-20"
+      >
         <UiIcon
           icon="humbleicons:users"
-          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
+          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+        />
         <p>CREATE MORE CAMPAIGNS</p>
         <p class="italic text-[10px] text-[#626262]">
           Click the button below to create a new referral campaign
@@ -69,12 +112,14 @@
         <div class="py-2">
           <UiButton
             class="!rounded-full !text-[11px]"
-            @click="openCreate = true">
+            @click="openCreate = true"
+          >
             Create Campaign
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-white" />
+                custom-class="w-4 h-4 !text-white"
+              />
             </template>
           </UiButton>
         </div>
@@ -85,7 +130,8 @@
     <UiModal
       :show="openCreate"
       title="Create Referral Campaign"
-      @close="openCreate = false">
+      @close="openCreate = false"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <UiInput dark label="Name" v-model="newCampaign.name" />
@@ -94,17 +140,20 @@
             dark
             label="Commission Percentage"
             type="number"
-            v-model.number="newCampaign.commissionPercentage" />
+            v-model.number="newCampaign.commissionPercentage"
+          />
           <UiInput
             dark
             label="Start Date"
             type="date"
-            v-model="newCampaign.startDate" />
+            v-model="newCampaign.startDate"
+          />
           <UiInput
             dark
             label="End Date"
             type="date"
-            v-model="newCampaign.endDate" />
+            v-model="newCampaign.endDate"
+          />
         </div>
       </template>
 
@@ -112,7 +161,8 @@
         <UiButton
           class="w-full py-2.5"
           :isLoading="isCreating"
-          @click="createCampaign">
+          @click="createCampaign"
+        >
           Create Campaign
         </UiButton>
       </template>
@@ -122,7 +172,8 @@
     <UiModal
       :show="openUpdate"
       title="Update Campaign"
-      @close="openUpdate = false">
+      @close="openUpdate = false"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <UiInput dark label="Name" v-model="selectedCampaign.name" />
@@ -135,12 +186,14 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="updateCampaign">
+            @click="updateCampaign"
+          >
             Save Changes
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -155,7 +208,8 @@
       type="confirmAlert"
       :isLoading="isDeleteLoading"
       @confirm="deleteCampaign"
-      @close="openConfirm = false" />
+      @close="openConfirm = false"
+    />
   </div>
 </template>
 
@@ -166,6 +220,18 @@ const { $api } = useNuxtApp();
 
 const referralCampaigns = ref([]);
 const campaignsLoading = ref(false);
+
+const referralColumns = [
+  { label: "ID", key: "id" },
+  { label: "Name", key: "name" },
+  { label: "Commission %", key: "commissionPercentage" },
+  { label: "Status", key: "status" },
+  { label: "Created", key: "createdAt" },
+  { label: "Actions", key: "actions" },
+];
+
+const currentPage = ref(1);
+const rowsPerPage = ref(15);
 
 const openCreate = ref(false);
 const openUpdate = ref(false);
@@ -246,6 +312,15 @@ const deleteCampaign = async () => {
   } finally {
     isDeleteLoading.value = false;
   }
+};
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+const handleRowsPerPageChange = (rpp) => {
+  rowsPerPage.value = rpp;
+  currentPage.value = 1; // reset to first page
 };
 
 onMounted(getCampaigns);

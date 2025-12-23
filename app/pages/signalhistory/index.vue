@@ -22,36 +22,28 @@
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
       >
-        <template #header>
+        <template #header="{ applyBorder }">
           <div class="grid grid-cols-5 gap-2">
             <div
               v-for="(col, idx) in historyColumns"
               :key="col.key"
-              class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
-              :class="
-                idx < historyColumns.length - 1
-                  ? 'border-r border-[#2A2A2A] pr-2'
-                  : ''
-              "
+              class="flex flex-row items-center justify-center text-gray-300 font-bold"
+              :class="applyBorder(idx, historyColumns.length)"
             >
               {{ col.label }}
             </div>
           </div>
         </template>
 
-        <template #row="{ item }">
+        <template #row="{ item, applyBorder }">
           <div
             class="grid grid-cols-5 gap-2 items-center text-[#838383] text-center"
           >
             <div
               v-for="(col, idx) in historyColumns"
               :key="col.key"
-              class="flex flex-row items-center justify-center text-gray-300 font-bold h-12"
-              :class="
-                idx < historyColumns.length - 1
-                  ? 'border-r border-[#2A2A2A] pr-2'
-                  : ''
-              "
+              class="text-gray-300 font-bold"
+              :class="applyBorder(idx, historyColumns.length)"
               :title="item[col.key]"
             >
               <span v-if="col.key === 'createdAt'" class="text-gray-400">

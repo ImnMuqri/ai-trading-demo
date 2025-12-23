@@ -81,8 +81,8 @@
                   :applyBorder="
                     (idx, total) =>
                       idx < total - 1
-                        ? 'border-r border-[#1C1C1C] pr-2 h-10 flex items-center justify-center'
-                        : 'h-10 flex items-center justify-center'
+                        ? 'border-r border-[#1C1C1C] pr-2 h-10 flex items-center justify-center truncate'
+                        : 'h-10 flex items-center justify-center truncate'
                   "
                 />
               </div>
