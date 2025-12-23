@@ -56,12 +56,16 @@
             :style="{ maxHeight: openAnalysis === news.id ? '1000px' : '0px' }">
             <!-- Loading state -->
             <div
-              class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2"
+              class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2 py-2"
               v-show="isAnalysing">
               <iframe
                 src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
-                class="border-0 !w-20 !h-16">
+                class="border-0 !w-16 !h-14">
               </iframe>
+              <p
+                class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text">
+                Generating Ai Analysis
+              </p>
             </div>
             <!-- Analysis content -->
             <div
@@ -354,5 +358,22 @@ div::-webkit-scrollbar-thumb {
 }
 div::-webkit-scrollbar-thumb:hover {
   background-color: #00e0c0;
+}
+
+.shimmer-text {
+  background: linear-gradient(90deg, #bbb 20%, #fff 50%, #bbb 90%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 2s infinite linear;
+}
+
+@keyframes shimmer-text {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 </style>

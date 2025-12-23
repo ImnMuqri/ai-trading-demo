@@ -146,7 +146,7 @@
       <!-- Logout, anchored bottom -->
       <div class="p-4 border-t border-[#1C1C1C] mt-auto">
         <button
-          @click="handleLogout"
+          @click="confirmLogout = true"
           class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition">
           <div
             class="flex items-center gap-3 transition-all duration-500"
@@ -166,7 +166,6 @@
         </button>
       </div>
     </aside>
-
     <!-- Main Content -->
     <main
       :style="mainStyle"
@@ -200,6 +199,14 @@
 
       <slot />
     </main>
+
+    <UiModal
+      :show="confirmLogout"
+      title="Confirm Logout"
+      description="Are you sure you want to log out?"
+      type="confirmAlert"
+      @confirm="handleLogout"
+      @close="confirmLogout = false" />
   </div>
 </template>
 
@@ -213,6 +220,7 @@ const route = useRoute();
 const isCollapsed = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobile = ref(false);
+const confirmLogout = ref(false);
 
 const pageTitles = {
   "/dashboard": "Dashboard",
@@ -284,10 +292,7 @@ function toggleMobileMenu() {
 }
 
 const handleLogout = async () => {
-  const confirmLogout = confirm("Are you sure you want to log out?");
-  if (confirmLogout) {
-    await logout();
-  }
+  await logout();
 };
 </script>
 
