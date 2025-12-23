@@ -1,6 +1,6 @@
 <template>
   <!-- Top tabs for admin -->
-  <div class="pt-4 pb-4 px-2 overflow-x-auto flex flex-wrap gap-2">
+  <div class="pt-4 pb-2.5 px-2 overflow-x-auto flex flex-wrap gap-2">
     <UiChip
       v-for="tab in adminTabs"
       :key="tab.path"
@@ -15,7 +15,6 @@
       {{ tab.label }}
     </UiChip>
   </div>
-
   <!-- Main content -->
   <main class="flex-1 transition-opacity duration-300 ease-in-out">
     <NuxtPage />
