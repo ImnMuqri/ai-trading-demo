@@ -1,8 +1,108 @@
 <template>
   <div class="flex flex-col gap-4 text-white">
-    <div class="flex flex-col md:flex-row gap-4">
-      <UiCard isGradient class="p-20 flex-1">System Analytic</UiCard>
-      <UiCard isGradient class="p-20 text-md flex flex-col items-center gap-3">
+    <div class="flex flex-col lg:flex-row gap-4">
+      <UiCard isGradient class="p-4 flex-1"
+        ><div class="flex gap-2 items-center">
+          <UiIcon
+            icon="qlementine-icons:system-monitor-16"
+            custom-class="w-3 h-3"></UiIcon>
+          <p class="text-sm">System Analytic</p>
+        </div>
+        <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
+          <div class="flex flex-row items-center gap-8">
+            <UiProgress
+              type="circle"
+              :progress="[70, 80]"
+              title="Users Statistics"
+              custom-class="max-w-[150px]" />
+
+            <div class="flex flex-col gap-1.5 text-white">
+              <div>
+                <p class="text-sm text-[#838383]">Total Users</p>
+                <p class="text-xl font-semibold text-[#00BDA7]">
+                  {{ analytics.userStats.totalUsers }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Admin Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.userStats.adminCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Manager Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.userStats.managerCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Affiliate Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.userStats.affiliateCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">User Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.userStats.userCount }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row items-center gap-8">
+            <UiProgress
+              type="circle"
+              :progress="[70, 90]"
+              title="Transaction Statistics"
+              custom-class="max-w-[150px]" />
+
+            <div class="flex flex-col gap-1.5 text-white">
+              <div>
+                <p class="text-sm text-[#838383]">Total Transactions</p>
+                <p class="text-xl font-semibold text-[#00BDA7]">
+                  {{ analytics.transactionStats.totalTransactions }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">AI Analysis Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.transactionStats.aiAnalysisCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Payment Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.transactionStats.paymentCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Renewal Counts</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.transactionStats.renewalCount }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-sm text-[#838383]">Total Revenue</p>
+                <p class="text-sm font-semibold">
+                  {{ analytics.transactionStats.totalRevenue }} USD
+                </p>
+              </div>
+            </div>
+          </div>
+        </div></UiCard
+      >
+      <UiCard
+        isGradient
+        class="lg:px-60 lg:py-40 text-md flex flex-col items-center gap-3">
         <div class="flex justify-between items-center gap-4">
           <span class="text-lg">Trading Analysis</span>
         </div>
@@ -28,176 +128,188 @@
           </div>
         </div>
       </UiCard>
-
-      <div class="flex flex-col 2xl:flex-row gap-4">
-        <!-- User List -->
-        <UiCard class="mt-4 py-2 text-[12px] h-full min-h-[400px] flex-1">
+      <div class="flex flex-col">
+        <div class="pt-5 flex gap-2 text-white text-[12px]">
           <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
-          >
-            <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
-            <p class="text-lg font-semibold py-2">User List</p>
+            class="px-5 py-2.5 rounded-t-md border cursor-pointer transition-all"
+            :class="
+              activeTab === 'users'
+                ? 'bg-[#00BDA7]/50 border-[#00BDA7]'
+                : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
+            "
+            @click="activeTab = 'users'">
+            Users
           </div>
-          <UiTable
-            :allItems="usersData"
-            :isLoading="userLoading"
-            :rowsPerPage="usersData.length"
-            empty-class="min-h-[400px]"
-          >
-            <template #header="{ applyBorder }">
-              <div class="grid grid-cols-6 gap-2">
-                <div
-                  v-for="(col, idx) in userColumns"
-                  :key="col.key"
-                  class="text-gray-300 font-bold"
-                  :class="applyBorder(idx, userColumns.length)"
-                >
-                  <div>{{ col.label }}</div>
-                </div>
-              </div>
-            </template>
-
-            <template #row="{ item, applyBorder }">
-              <div class="grid grid-cols-6 gap-2 items-center">
-                <div
-                  v-for="(col, idx) in userColumns"
-                  :key="col.key"
-                  class="truncate"
-                  :class="applyBorder(idx, userColumns.length)"
-                  :title="item[col.key]"
-                >
-                  <span v-if="col.key === 'createdAt'">
-                    {{
-                      item[col.key]
-                        ? new Date(item[col.key]).toLocaleDateString()
-                        : "N/A"
-                    }}
-                  </span>
-
+          <div
+            class="px-5 py-2.5 rounded-t-md border cursor-pointer transition-all"
+            :class="
+              activeTab === 'transactions'
+                ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
+                : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
+            "
+            @click="activeTab = 'transactions'">
+            Transactions
+          </div>
+        </div>
+        <div class="flex flex-col 2xl:flex-row gap-4">
+          <!-- User List -->
+          <UiCard
+            v-show="activeTab === 'users'"
+            class="py-2 text-[12px] h-full min-h-[400px] flex-1"
+            custom-class="!rounded-t-none !rounded-tr-lg">
+            <div
+              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+              <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
+              <p class="text-lg font-semibold py-2">User List</p>
+            </div>
+            <UiTable
+              :allItems="usersData"
+              :isLoading="userLoading"
+              :rowsPerPage="usersData.length"
+              empty-class="min-h-[400px]">
+              <template #header="{ applyBorder }">
+                <div class="grid grid-cols-6 gap-2">
                   <div
-                    v-else-if="col.key === 'actions'"
-                    class="flex flex-wrap gap-2 justify-center"
-                  >
-                    <UiButton
-                      variant="icon"
-                      icon="cuida:edit-outline"
-                      size="sm"
-                      custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)"
-                    />
-                    <UiButton
-                      variant="icon"
-                      icon="bxs:trash"
-                      size="sm"
-                      custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)"
-                    />
-                  </div>
-
-                  <div v-else>
-                    {{ item[col.key] }}
+                    v-for="(col, idx) in userColumns"
+                    :key="col.key"
+                    class="text-gray-300 font-bold"
+                    :class="applyBorder(idx, userColumns.length)">
+                    <div>{{ col.label }}</div>
                   </div>
                 </div>
-              </div>
-            </template>
-            <template #pagination></template>
-          </UiTable>
-        </UiCard>
+              </template>
 
-        <!-- Transactions list -->
-        <UiCard class="mt-4 py-2 text-[12px] flex-1 min-h-[350px] w-full">
-          <!-- Table Header -->
-          <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
-          >
-            <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
-            <p class="text-lg font-semibold py-2">Transactions List</p>
-          </div>
-
-          <UiTable
-            :allItems="transactionsData"
-            :isLoading="transactionLoading"
-            :rowsPerPage="transactionsData.length"
-            empty-class="min-h-[350px]"
-          >
-            <template #header="{ applyBorder }">
-              <div class="grid grid-cols-6 gap-2">
-                <div
-                  v-for="(col, idx) in transactionsColumns"
-                  :key="col.key"
-                  class="text-gray-300 font-bold"
-                  :class="applyBorder(idx, transactionsColumns.length)"
-                >
-                  <div v-if="col.label === 'Status'">
-                    {{ col.label }}
-                  </div>
-                  <div v-else>{{ col.label }}</div>
-                </div>
-              </div>
-            </template>
-
-            <template #row="{ item, applyBorder }">
-              <div class="grid grid-cols-6 gap-2 items-center">
-                <div
-                  v-for="(col, idx) in transactionsColumns"
-                  :key="col.key"
-                  class="truncate"
-                  :class="applyBorder(idx, transactionsColumns.length)"
-                  :title="item[col.key]"
-                >
-                  <span v-if="col.key === 'createdAt'">
-                    <span class="text-gray-400 font-semibold">
+              <template #row="{ item, applyBorder }">
+                <div class="grid grid-cols-6 gap-2 items-center">
+                  <div
+                    v-for="(col, idx) in userColumns"
+                    :key="col.key"
+                    class="truncate"
+                    :class="applyBorder(idx, userColumns.length)"
+                    :title="item[col.key]">
+                    <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
                           ? new Date(item[col.key]).toLocaleDateString()
                           : "N/A"
-                      }}</span
-                    >
-                  </span>
-                  <span v-else-if="col.key === 'type'" class="capitalize">
-                    {{ item[col.key].replaceAll("_", " ") }}
-                  </span>
-                  <span
-                    v-else-if="col.key === 'paymentStatus'"
-                    class="font-semibold capitalize"
-                    :class="{
-                      'text-green-500': item[col.key] === 'completed',
-                      'text-yellow-500': item[col.key] === 'pending',
-                      'text-red-500': item[col.key] === 'failed',
-                    }"
-                  >
-                    {{ item[col.key] }}
-                  </span>
+                      }}
+                    </span>
 
-                  <div
-                    v-else-if="col.key === 'actions'"
-                    class="flex gap-2 justify-center"
-                  >
-                    <UiButton
-                      variant="icon"
-                      icon="cuida:edit-outline"
-                      size="sm"
-                      custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)"
-                    />
-                    <UiButton
-                      variant="icon"
-                      icon="bxs:trash"
-                      size="sm"
-                      custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)"
-                    />
+                    <div
+                      v-else-if="col.key === 'actions'"
+                      class="flex flex-wrap gap-[2px] justify-center">
+                      <UiButton
+                        variant="icon"
+                        icon="cuida:edit-outline"
+                        size="sm"
+                        custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
+                        @click="updateModal(item)" />
+                      <UiButton
+                        variant="icon"
+                        icon="bxs:trash"
+                        size="sm"
+                        custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
+                        @click="confirmDelete(item)" />
+                    </div>
+
+                    <div v-else>
+                      {{ item[col.key] }}
+                    </div>
                   </div>
-
-                  <span v-else>
-                    {{ item[col.key] }}
-                  </span>
                 </div>
-              </div>
-            </template>
-            <template #pagination></template>
-          </UiTable>
-        </UiCard>
+              </template>
+              <template #pagination></template>
+            </UiTable>
+          </UiCard>
+          <!-- Transactions list -->
+          <UiCard
+            v-show="activeTab === 'transactions'"
+            class="py-2 text-[12px] flex-1 min-h-[350px] w-full">
+            <!-- Table Header -->
+            <div
+              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+              <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
+              <p class="text-lg font-semibold py-2">Transactions List</p>
+            </div>
+
+            <UiTable
+              :allItems="transactionsData"
+              :isLoading="transactionLoading"
+              :rowsPerPage="transactionsData.length"
+              empty-class="min-h-[350px]">
+              <template #header="{ applyBorder }">
+                <div class="grid grid-cols-6 gap-2">
+                  <div
+                    v-for="(col, idx) in transactionsColumns"
+                    :key="col.key"
+                    class="text-gray-300 font-bold"
+                    :class="applyBorder(idx, transactionsColumns.length)">
+                    <div v-if="col.label === 'Status'">
+                      {{ col.label }}
+                    </div>
+                    <div v-else>{{ col.label }}</div>
+                  </div>
+                </div>
+              </template>
+
+              <template #row="{ item, applyBorder }">
+                <div class="grid grid-cols-6 gap-2 items-center">
+                  <div
+                    v-for="(col, idx) in transactionsColumns"
+                    :key="col.key"
+                    class="truncate"
+                    :class="applyBorder(idx, transactionsColumns.length)"
+                    :title="item[col.key]">
+                    <span v-if="col.key === 'createdAt'">
+                      <span class="text-gray-400 font-semibold">
+                        {{
+                          item[col.key]
+                            ? new Date(item[col.key]).toLocaleDateString()
+                            : "N/A"
+                        }}</span
+                      >
+                    </span>
+                    <span v-else-if="col.key === 'type'" class="capitalize">
+                      {{ item[col.key].replaceAll("_", " ") }}
+                    </span>
+                    <span
+                      v-else-if="col.key === 'paymentStatus'"
+                      class="font-semibold capitalize"
+                      :class="{
+                        'text-green-500': item[col.key] === 'completed',
+                        'text-yellow-500': item[col.key] === 'pending',
+                        'text-red-500': item[col.key] === 'failed',
+                      }">
+                      {{ item[col.key] }}
+                    </span>
+
+                    <div
+                      v-else-if="col.key === 'actions'"
+                      class="flex gap-2 justify-center">
+                      <UiButton
+                        variant="icon"
+                        icon="cuida:edit-outline"
+                        size="sm"
+                        custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
+                        @click="updateModal(item)" />
+                      <UiButton
+                        variant="icon"
+                        icon="bxs:trash"
+                        size="sm"
+                        custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
+                        @click="confirmDelete(item)" />
+                    </div>
+
+                    <span v-else>
+                      {{ item[col.key] }}
+                    </span>
+                  </div>
+                </div>
+              </template>
+              <template #pagination></template>
+            </UiTable>
+          </UiCard>
+        </div>
       </div>
     </div>
 
@@ -208,15 +320,13 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"
-    ></UiModal>
+      type="confirmAlert"></UiModal>
 
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
-    >
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -224,29 +334,25 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email"
-          />
+            v-model="selectedUser.email" />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone"
-          />
+            v-model="selectedUser.phone" />
           <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
       </template>
       <template #footer>
         <div class="flex flex-col gap-2.5">
           <UiButton
-            class="w-full py-2.5 rounded-md text-white !text-[12px]"
+            class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges"
-          >
+            @click="saveChanges">
             Save Changes </UiButton
           ><UiButton
-            class="w-full py-2.5 rounded-md text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false"
-          >
+            class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
+            @click="openUpdate = false">
             Cancel
           </UiButton>
         </div>
@@ -263,6 +369,8 @@ definePageMeta({
   middleware: "auth-client",
 });
 const { $api } = useNuxtApp();
+const activeTab = ref("users");
+
 const usersData = ref([]);
 const transactionsData = ref([]);
 const openConfirm = ref(false);
@@ -274,6 +382,7 @@ const selectedUser = ref({
   role: "",
   isActive: "",
 });
+const analyticsLoading = ref(false);
 const isUpdateLoading = ref(false);
 const isDeleteLoading = ref(false);
 const userLoading = ref(false);
@@ -295,6 +404,35 @@ const transactionsColumns = [
   { label: "Status", key: "paymentStatus" },
   { label: "Created At", key: "createdAt" },
 ];
+
+const analytics = ref({
+  userStats: {
+    totalUsers: 0,
+    adminCount: 0,
+    managerCount: 0,
+    affiliateCount: 0,
+    userCount: 0,
+  },
+  transactionStats: {
+    totalTransactions: 0,
+    aiAnalysisCount: 0,
+    paymentCount: 0,
+    renewalCount: 0,
+    totalRevenue: 0,
+  },
+});
+const getAnalytics = async () => {
+  analyticsLoading.value = true;
+  try {
+    const res = await $api.get("/api/admin/analytics");
+    analytics.value = res.data.data;
+  } catch (err) {
+    console.error("Failed to fetch analytics", err);
+  } finally {
+    analyticsLoading.value = false;
+  }
+};
+
 const getUsers = async () => {
   userLoading.value = true;
   try {
@@ -418,6 +556,7 @@ const getTransactions = async () => {
 onMounted(() => {
   getUsers();
   getTransactions();
+  getAnalytics();
 });
 </script>
 
