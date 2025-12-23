@@ -3,7 +3,7 @@
     <div
       v-if="show"
       ref="root"
-      class="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity"
+      class="px-4 fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity"
       :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
       <div
         :class="[

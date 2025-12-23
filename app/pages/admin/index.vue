@@ -1,6 +1,6 @@
 <template>
   <!-- Top tabs for admin -->
-  <div class="pt-4 pb-4 px-2 overflow-x-auto flex gap-2">
+  <div class="pt-4 pb-4 px-2 overflow-x-auto flex flex-wrap gap-2">
     <UiChip
       v-for="tab in adminTabs"
       :key="tab.path"
