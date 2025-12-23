@@ -33,7 +33,8 @@
         <!-- User List -->
         <UiCard class="mt-4 py-2 text-[12px] h-full min-h-[400px] flex-1">
           <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+          >
             <UiIcon icon="mdi:users" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">User List</p>
           </div>
@@ -41,28 +42,30 @@
             :allItems="usersData"
             :isLoading="userLoading"
             :rowsPerPage="usersData.length"
-            empty-class="min-h-[400px]">
-            <template #header>
+            empty-class="min-h-[400px]"
+          >
+            <template #header="{ applyBorder }">
               <div class="grid grid-cols-6 gap-2">
                 <div
-                  v-for="col in userColumns"
+                  v-for="(col, idx) in userColumns"
                   :key="col.key"
-                  class="text-gray-300 font-bold">
-                  <div v-if="col.label === 'Actions'" class="!text-center">
-                    {{ col.label }}
-                  </div>
-                  <div v-else>{{ col.label }}</div>
+                  class="text-gray-300 font-bold"
+                  :class="applyBorder(idx, userColumns.length)"
+                >
+                  <div>{{ col.label }}</div>
                 </div>
               </div>
             </template>
 
-            <template #row="{ item }">
+            <template #row="{ item, applyBorder }">
               <div class="grid grid-cols-6 gap-2 items-center">
                 <div
-                  v-for="col in userColumns"
+                  v-for="(col, idx) in userColumns"
                   :key="col.key"
                   class="truncate"
-                  :title="item[col.key]">
+                  :class="applyBorder(idx, userColumns.length)"
+                  :title="item[col.key]"
+                >
                   <span v-if="col.key === 'createdAt'">
                     {{
                       item[col.key]
@@ -73,27 +76,31 @@
 
                   <div
                     v-else-if="col.key === 'actions'"
-                    class="flex flex-wrap gap-2 justify-center">
+                    class="flex flex-wrap gap-2 justify-center"
+                  >
                     <UiButton
                       variant="icon"
                       icon="cuida:edit-outline"
                       size="sm"
                       custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)" />
+                      @click="updateModal(item)"
+                    />
                     <UiButton
                       variant="icon"
                       icon="bxs:trash"
                       size="sm"
                       custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)" />
+                      @click="confirmDelete(item)"
+                    />
                   </div>
 
-                  <span v-else>
+                  <div v-else>
                     {{ item[col.key] }}
-                  </span>
+                  </div>
                 </div>
               </div>
             </template>
+            <template #pagination></template>
           </UiTable>
         </UiCard>
 
@@ -101,7 +108,8 @@
         <UiCard class="mt-4 py-2 text-[12px] flex-1 min-h-[350px] w-full">
           <!-- Table Header -->
           <div
-            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+            class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+          >
             <UiIcon icon="mdi:currency-usd" custom-class="w-5 h-5"></UiIcon>
             <p class="text-lg font-semibold py-2">Transactions List</p>
           </div>
@@ -110,13 +118,16 @@
             :allItems="transactionsData"
             :isLoading="transactionLoading"
             :rowsPerPage="transactionsData.length"
-            empty-class="min-h-[350px]">
-            <template #header>
+            empty-class="min-h-[350px]"
+          >
+            <template #header="{ applyBorder }">
               <div class="grid grid-cols-6 gap-2">
                 <div
-                  v-for="col in transactionsColumns"
+                  v-for="(col, idx) in transactionsColumns"
                   :key="col.key"
-                  class="text-gray-300 font-bold">
+                  class="text-gray-300 font-bold"
+                  :class="applyBorder(idx, transactionsColumns.length)"
+                >
                   <div v-if="col.label === 'Status'">
                     {{ col.label }}
                   </div>
@@ -125,13 +136,15 @@
               </div>
             </template>
 
-            <template #row="{ item }">
+            <template #row="{ item, applyBorder }">
               <div class="grid grid-cols-6 gap-2 items-center">
                 <div
-                  v-for="col in transactionsColumns"
+                  v-for="(col, idx) in transactionsColumns"
                   :key="col.key"
                   class="truncate"
-                  :title="item[col.key]">
+                  :class="applyBorder(idx, transactionsColumns.length)"
+                  :title="item[col.key]"
+                >
                   <span v-if="col.key === 'createdAt'">
                     <span class="text-gray-400 font-semibold">
                       {{
@@ -151,25 +164,29 @@
                       'text-green-500': item[col.key] === 'completed',
                       'text-yellow-500': item[col.key] === 'pending',
                       'text-red-500': item[col.key] === 'failed',
-                    }">
+                    }"
+                  >
                     {{ item[col.key] }}
                   </span>
 
                   <div
                     v-else-if="col.key === 'actions'"
-                    class="flex gap-2 justify-center">
+                    class="flex gap-2 justify-center"
+                  >
                     <UiButton
                       variant="icon"
                       icon="cuida:edit-outline"
                       size="sm"
                       custom-class="!px-1 !w-fit"
-                      @click="updateModal(item)" />
+                      @click="updateModal(item)"
+                    />
                     <UiButton
                       variant="icon"
                       icon="bxs:trash"
                       size="sm"
                       custom-class="!px-1 !w-fit bg-red-500 hover:bg-red-600"
-                      @click="confirmDelete(item)" />
+                      @click="confirmDelete(item)"
+                    />
                   </div>
 
                   <span v-else>
@@ -178,6 +195,7 @@
                 </div>
               </div>
             </template>
+            <template #pagination></template>
           </UiTable>
         </UiCard>
       </div>
@@ -190,13 +208,15 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
 
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -204,12 +224,14 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email" />
+            v-model="selectedUser.email"
+          />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone" />
+            v-model="selectedUser.phone"
+          />
           <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
       </template>
@@ -218,11 +240,13 @@
           <UiButton
             class="w-full py-2.5 rounded-md text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges">
+            @click="saveChanges"
+          >
             Save Changes </UiButton
           ><UiButton
             class="w-full py-2.5 rounded-md text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>

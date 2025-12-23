@@ -1,48 +1,57 @@
 <template>
   <div class="text-white">
-    <UiCard class="mt-4 py-2 text-sm min-h-screen">
+    <UiCard
+      :class="[
+        'mt-4 py-2 text-sm w-full transition-all',
+        historyLoading ? 'min-h-[80vh]' : 'min-h-[80vh]',
+      ]"
+    >
       <!-- Header -->
       <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
         <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
         <p class="text-lg font-semibold py-2">Signal History</p>
       </div>
-      <div class="flex flex-row">
-        <span>Chart</span>
-        <UiProgress
-          type="circle"
-          :progress="[96]"
-          :color="['#00BDA7', '#FF3300']"
-          customClass="w-40 h-40"
-        />
-      </div>
 
       <UiTable
         :allItems="historyData"
         :isLoading="historyLoading"
-        :rowsPerPage="historyData.length"
-        empty-class="min-h-screen"
+        :currentPage="currentPage"
+        :rowsPerPage="rowsPerPage"
+        :totalItems="historyData.length"
+        empty-class="!min-h-[75vh]"
+        @page-changed="handlePageChange"
+        @rows-per-page-changed="handleRowsPerPageChange"
       >
         <template #header>
           <div class="grid grid-cols-5 gap-2">
             <div
-              v-for="col in historyColumns"
+              v-for="(col, idx) in historyColumns"
               :key="col.key"
-              class="text-gray-300 font-bold"
+              class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
+              :class="
+                idx < historyColumns.length - 1
+                  ? 'border-r border-[#2A2A2A] pr-2'
+                  : ''
+              "
             >
-              <div v-if="col.label === 'Actions'" class="">
-                {{ col.label }}
-              </div>
-              <div v-else>{{ col.label }}</div>
+              {{ col.label }}
             </div>
           </div>
         </template>
 
         <template #row="{ item }">
-          <div class="grid grid-cols-5 gap-2 items-center text-[#838383]">
+          <div
+            class="grid grid-cols-5 gap-2 items-center text-[#838383] text-center"
+          >
             <div
-              v-for="col in historyColumns"
+              v-for="(col, idx) in historyColumns"
               :key="col.key"
-              class="truncate"
+              class="flex flex-row items-center justify-center text-gray-300 font-bold h-12"
+              :class="
+                idx < historyColumns.length - 1
+                  ? 'border-r border-[#2A2A2A] pr-2'
+                  : ''
+              "
               :title="item[col.key]"
             >
               <span v-if="col.key === 'createdAt'" class="text-gray-400">
@@ -84,6 +93,7 @@
             </div>
           </div>
         </template>
+        <template #pagination></template>
       </UiTable>
     </UiCard>
     <UiModal
@@ -357,6 +367,9 @@ const historyColumns = [
   { label: "Actions", key: "actions" },
 ];
 
+const currentPage = ref(1);
+const rowsPerPage = ref(15);
+
 const formatScore = (score) => `${Math.round(score * 100)}%`;
 const formatPrice = (value) => {
   if (!value) return "—";
@@ -379,6 +392,15 @@ const getSignalHistory = async () => {
 const viewSignal = (signal) => {
   selectedHistory.value = signal;
   openDetailedAnalysis.value = true;
+};
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+const handleRowsPerPageChange = (rpp) => {
+  rowsPerPage.value = rpp;
+  currentPage.value = 1; // reset to first page
 };
 
 onMounted(() => {
