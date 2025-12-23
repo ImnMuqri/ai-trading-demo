@@ -56,7 +56,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
 
       // Handle 401 with token refresh logic
-      if (error.response?.status === 401 && !originalRequest._retry) {
+      if (
+        (error.response?.status === 401 || error.response?.status === 403) &&
+        !originalRequest._retry
+      ) {
         originalRequest._retry = true;
 
         const auth = useAuthStore();

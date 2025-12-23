@@ -8,7 +8,21 @@
         <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
       </div>
       <div class="grid grid-cols-1 h-fit">
-        <div class="h-fit grid grid-cols-1 gap-2 mt-4">
+        <div
+          class="relative flex flex-col items-center justify-center"
+          :class="isRequestingSignal ? 'opacity-100' : 'hidden'">
+          <iframe
+            src="https://lottie.host/embed/19bbd268-9de6-4b34-87af-9b8597b78ad7/T8RAh3Cqqo.lottie"
+            class="border-0 !w-[450px] !h-[450px]">
+          </iframe>
+          <p
+            class="absolute text-sm font-semibold inline-block text-gray-400 shimmer-text">
+            Generating Ai Analysis
+          </p>
+        </div>
+        <div
+          v-if="!isRequestingSignal"
+          class="h-fit grid grid-cols-1 gap-2 mt-4">
           <div
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Trend</p>
@@ -40,7 +54,7 @@
           </div>  -->
         </div>
         <div
-          v-if="tradingAnalysis != null"
+          v-if="tradingAnalysis != null && !isRequestingSignal"
           class="h-fit grid grid-cols-1 gap-2 mt-4">
           <div class="flex gap-1 items-center">
             <UiIcon icon="hugeicons:ai-idea"></UiIcon>
@@ -116,6 +130,7 @@
           </div>
         </div>
         <div
+          v-if="!isRequestingSignal"
           class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
           :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
           <div v-if="!tradingAnalysis" class="relative">
@@ -141,12 +156,16 @@
             v-if="!tradingAnalysis"
             class="flex gap-1 text-[11px] text-center text-[#B4B5B7]">
             <p>Signal Left:</p>
-            <p class="text-[#00BDA7]">1000</p>
+            <p class="text-[#00BDA7]">
+              {{ limitBalance?.remaining ?? "No Data" }}
+            </p>
           </div>
         </div>
       </div>
     </div>
-    <div v-if="tradingAnalysis" class="flex flex-col md:flex-row gap-2">
+    <div
+      v-if="tradingAnalysis && !isRequestingSignal"
+      class="flex flex-col md:flex-row gap-2">
       <UiCard
         @click="requestSignal"
         class="relative flex items-center justify-center text-[12px] h-full w-full text-gray-400 text-center !bg-[#00BDA7] !text-black p-2.5 cursor-pointer">
@@ -388,7 +407,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, nextTick } from "vue";
 import { showToast } from "~/composables/useToastMessage";
 const { $api } = useNuxtApp();
 const tradingAnalysis = ref(null);
@@ -480,6 +499,30 @@ const clearTradingAnalysis = () => {
   analysisData.value = null;
 };
 
+const limitBalance = ref(null);
+const limitBalanceLoading = ref(false);
+
+const getLimitBalance = async () => {
+  limitBalanceLoading.value = true;
+
+  try {
+    const res = await $api.get("/api/ai/limit-balance");
+
+    limitBalance.value = res.data?.data ?? null;
+
+    return limitBalance.value;
+  } catch (error) {
+    console.error("Unable to load limit balance", error);
+    showToast(
+      error.response?.data?.message || "Failed to fetch limit balance",
+      "error"
+    );
+    return null;
+  } finally {
+    limitBalanceLoading.value = false;
+  }
+};
+
 // Cache structure: { 'SYMBOL_TIMEFRAME': { data, createdAt } }
 const historyCache = ref({});
 
@@ -569,12 +612,17 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
 };
 
 const requestSignal = async () => {
-  if (isRequestingSignal.value) return; // prevent multiple calls
+  if (isRequestingSignal.value) return;
+
   isRequestingSignal.value = true;
+  await nextTick(); // ensures DOM updates immediately for Iframe
+
+  const minLoadingTime = 4000;
+  const startTime = Date.now();
+
   try {
     const apiTimeframe = intervalMap[props.interval] || "No Timeframe Selected";
-
-    const res = await $api.post(`api/ai/analyze-trading`, {
+    const res = await $api.post("/api/ai/analyze-trading", {
       symbol: props.symbol,
       timeframe: apiTimeframe,
     });
@@ -596,6 +644,13 @@ const requestSignal = async () => {
   } catch (error) {
     showToast(error.response?.data?.message || error.message, "error");
   } finally {
+    const elapsed = Date.now() - startTime;
+    const remaining = minLoadingTime - elapsed;
+
+    if (remaining > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remaining));
+    }
+
     isRequestingSignal.value = false;
   }
 };
@@ -630,7 +685,25 @@ watch(
 
 onMounted(() => {
   getSignalHistory(1, 0);
+  getLimitBalance();
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.shimmer-text {
+  background: linear-gradient(90deg, #bbb 20%, #fff 50%, #bbb 90%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer-text 2s infinite linear;
+}
+
+@keyframes shimmer-text {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+</style>
