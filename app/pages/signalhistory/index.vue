@@ -6,6 +6,16 @@
         <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
         <p class="text-lg font-semibold py-2">Signal History</p>
       </div>
+      <div class="flex flex-row">
+        <span>Chart</span>
+        <UiProgress
+          type="circle"
+          :progress="[96]"
+          :color="['#00BDA7', '#FF3300']"
+          customClass="w-40 h-40"
+        />
+      </div>
+
       <UiTable
         :allItems="historyData"
         :isLoading="historyLoading"

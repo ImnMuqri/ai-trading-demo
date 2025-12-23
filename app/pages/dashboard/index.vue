@@ -14,10 +14,7 @@
           :options="intervalOptions"
           placeholder="Select Timeframe"
         />
-        <!-- <UiButton @click="refreshTokenManually" 
-          >
-          Refresh Token
-        </UiButton> -->
+        <!-- <UiButton @click="refreshTokenManually"> Refresh Token </UiButton> -->
       </div>
     </div>
     <div class="flex flex-col-reverse lg:flex-row gap-6 lg:gap-4 w-full h-full">

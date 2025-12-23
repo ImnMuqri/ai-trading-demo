@@ -75,6 +75,25 @@ export default defineNuxtPlugin((nuxtApp) => {
           window.location.href = "/login";
         }
       }
+      if (error.response?.status === 403 && !originalRequest._retry) {
+        originalRequest._retry = true;
+
+        const auth = useAuthStore();
+
+        if (auth.refreshToken) {
+          const success = await auth.refreshTokens();
+
+          if (success && auth.token) {
+            originalRequest.headers.Authorization = `Bearer ${auth.token}`;
+            return api.request(originalRequest);
+          }
+        }
+        auth.logout();
+
+        if (typeof window !== "undefined") {
+          window.location.href = "/login";
+        }
+      }
 
       return Promise.reject(error);
     }

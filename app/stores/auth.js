@@ -203,12 +203,15 @@ export const useAuthStore = defineStore("auth", {
       }
 
       if (this.isTokenExpired) {
+        console.log("[AuthStore - EVT] Token Expired");
         if (this.refreshToken) {
           return await this.refreshTokens();
         } else {
           return false;
         }
       }
+      console.log("[AuthStore - EVT] Token Still Valid");
+
       return true;
     },
     async forgotPassword(email) {
