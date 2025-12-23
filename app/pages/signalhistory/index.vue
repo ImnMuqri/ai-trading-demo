@@ -1,58 +1,80 @@
 <template>
   <div class="text-white">
-    <UiCard class="mt-4 py-2 text-sm">
+    <UiCard class="mt-4 py-2 text-sm min-h-screen">
       <!-- Header -->
       <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
         <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
         <p class="text-lg font-semibold py-2">Signal History</p>
       </div>
-
-      <!-- Table Header -->
-      <div
-        class="px-4 grid grid-cols-6 gap-2 text-gray-300 font-bold p-3 bg-gradient-to-b from-[#111111] to-[#1C1C1C]">
-        <div>No.</div>
-        <div>Time</div>
-        <div>Symbol</div>
-        <div>Timeframe</div>
-        <div>Signal</div>
-        <div>Action</div>
-      </div>
-
-      <!-- Rows -->
-      <div
-        v-for="(item, index) in historyData"
-        :key="item.id"
-        class="px-4 grid grid-cols-6 gap-2 items-center p-3 border-t border-gray-800 hover:bg-[#111111] text-[#838383]">
-        <div
-          class="flex justify-center items-center h-6 w-6 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
-          {{ index + 1 }}
-        </div>
-
-        <div class="text-gray-400">
-          {{ new Date(item.createdAt).toLocaleString() }}
-        </div>
-
-        <div class="font-semibold">{{ item.symbol }}</div>
-
-        <div>{{ item.timeframe }}</div>
-
-        <div
-          class="font-semibold"
-          :class="item.signal === 'BUY' ? 'text-green-500' : 'text-red-500'">
-          {{ item.signal }}
-        </div>
-
-        <div>
-          <div
-            @click="viewSignal(item)"
-            class="flex gap-1 items-center cursor-pointer hover:text-[#00BDA7] underline">
-            <p>View Signal</p>
-            <UiIcon
-              icon="ic:round-chevron-right"
-              custom-class="w-4 h-4 hover:text-[#00BDA7]"></UiIcon>
+      <UiTable
+        :allItems="historyData"
+        :isLoading="historyLoading"
+        :rowsPerPage="historyData.length"
+        empty-class="min-h-screen"
+      >
+        <template #header>
+          <div class="grid grid-cols-5 gap-2">
+            <div
+              v-for="col in historyColumns"
+              :key="col.key"
+              class="text-gray-300 font-bold"
+            >
+              <div v-if="col.label === 'Actions'" class="">
+                {{ col.label }}
+              </div>
+              <div v-else>{{ col.label }}</div>
+            </div>
           </div>
-        </div>
-      </div>
+        </template>
+
+        <template #row="{ item }">
+          <div class="grid grid-cols-5 gap-2 items-center text-[#838383]">
+            <div
+              v-for="col in historyColumns"
+              :key="col.key"
+              class="truncate"
+              :title="item[col.key]"
+            >
+              <span v-if="col.key === 'createdAt'" class="text-gray-400">
+                {{
+                  item[col.key]
+                    ? new Date(item[col.key]).toLocaleString()
+                    : "N/A"
+                }}
+              </span>
+              <span v-else-if="col.key === 'symbol'" class="font-semibold">
+                {{ item[col.key] }}
+              </span>
+              <span
+                v-else-if="col.key === 'signal'"
+                class="font-semibold"
+                :class="
+                  item[col.key] === 'BUY' ? 'text-green-500' : 'text-red-500'
+                "
+              >
+                {{ item[col.key] }}
+              </span>
+
+              <div v-else-if="col.key === 'actions'" class="flex">
+                <div
+                  @click="viewSignal(item)"
+                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition"
+                >
+                  <p>View Signal</p>
+                  <UiIcon
+                    icon="ic:round-chevron-right"
+                    custom-class="w-4 h-4"
+                  />
+                </div>
+              </div>
+
+              <span v-else>
+                {{ item[col.key] }}
+              </span>
+            </div>
+          </div>
+        </template>
+      </UiTable>
     </UiCard>
     <UiModal
       :show="openDetailedAnalysis"
@@ -60,13 +82,16 @@
       description="Here's a detailed analysis of the trading signal."
       :isGradient="false"
       width="max-w-[800px]"
-      @close="openDetailedAnalysis = false">
+      @close="openDetailedAnalysis = false"
+    >
       <template #body>
         <div class="text-gray-300">
           <div
-            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
+            class="flex gap-2 items-center justify-around py-3 border rounded-xl"
+          >
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Risk Level</p>
               <p
                 class="font-semibold"
@@ -74,19 +99,22 @@
                   'text-yellow-500': selectedHistory.riskLevel === 'Medium',
                   'text-[#00BDA7]': selectedHistory.riskLevel === 'Low',
                   'text-red-500': selectedHistory.riskLevel === 'High',
-                }">
+                }"
+              >
                 {{ selectedHistory.riskLevel }}
               </p>
             </div>
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Risk Reward</p>
               <p class="font-semibold">
                 {{ selectedHistory.riskRewardRatio }}
               </p>
             </div>
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Confidence Level</p>
               <p
                 class="font-semibold"
@@ -96,7 +124,8 @@
                     selectedHistory.confidenceLevel >= 0.5 &&
                     selectedHistory.confidenceLevel <= 0.79,
                   'text-emerald-500': selectedHistory.confidenceLevel > 0.79,
-                }">
+                }"
+              >
                 {{ formatScore(selectedHistory.confidenceLevel) }}
               </p>
             </div>
@@ -104,11 +133,13 @@
 
           <div class="flex flex-col gap-2 text-sm">
             <div
-              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2">
+              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2"
+            >
               <div class="flex items-center gap-1">
                 <UiIcon
                   icon="hugeicons:ai-idea"
-                  custom-class="h-4 w-4"></UiIcon>
+                  custom-class="h-4 w-4"
+                ></UiIcon>
                 <h3 class="text-lg font-semibold">AI Analysis</h3>
               </div>
               <div class="flex flex-col gap-4">
@@ -168,38 +199,44 @@
                 <div class="flex items-center gap-2">
                   <UiIcon
                     icon="hugeicons:book-open-01"
-                    custom-class="h-3.5 w-3.5"></UiIcon>
+                    custom-class="h-3.5 w-3.5"
+                  ></UiIcon>
                   <p>Key Insight</p>
                 </div>
                 <div class="flex flex-col gap-2 mt-2">
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Trend</p>
                     <p
                       :class="
                         selectedHistory?.trend == 'Bullish'
                           ? 'text-emerald-500'
                           : 'text-red-500'
-                      ">
+                      "
+                    >
                       {{ selectedHistory?.trend ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Volatility</p>
                     <p class="text-emerald-500">
                       {{ selectedHistory?.volatility ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB] uppercase">Volume Analysis</p>
                     <p>
                       {{ selectedHistory.volumeAnalysis }}
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB] uppercase">Market Sentiment</p>
                     <p>
                       {{ selectedHistory.marketSentiment }}
@@ -211,24 +248,28 @@
                 <div class="flex items-center gap-1">
                   <UiIcon
                     icon="hugeicons:ai-idea"
-                    custom-class="h-3.5 w-3.5"></UiIcon>
+                    custom-class="h-3.5 w-3.5"
+                  ></UiIcon>
                   <p>Trade Idea</p>
                 </div>
                 <div class="flex flex-col gap-2 mt-2">
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Signal</p>
                     <p
                       :class="
                         selectedHistory?.signal === 'BUY'
                           ? 'text-emerald-500'
                           : 'text-red-500'
-                      ">
+                      "
+                    >
                       {{ selectedHistory?.signal ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Entry Zone</p>
                     <p class="text-yellow-500">
                       {{ selectedHistory?.entryZone.upper ?? "No Info" }}-
@@ -236,35 +277,40 @@
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Stop Loss</p>
                     <p class="text-red-500">
                       {{ formatPrice(selectedHistory?.stopLoss ?? "No Info") }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit) }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 1</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit1) }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 2</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit2) }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 3</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit3) }}
@@ -292,6 +338,14 @@ const { $api } = useNuxtApp();
 const historyData = ref([]);
 const openDetailedAnalysis = ref(false);
 const selectedHistory = ref(null);
+const historyLoading = ref(false);
+const historyColumns = [
+  { label: "Time", key: "createdAt" },
+  { label: "Symbol", key: "symbol" },
+  { label: "Timeframe", key: "timeframe" },
+  { label: "Signal", key: "signal" },
+  { label: "Actions", key: "actions" },
+];
 
 const formatScore = (score) => `${Math.round(score * 100)}%`;
 const formatPrice = (value) => {
@@ -300,10 +354,14 @@ const formatPrice = (value) => {
 };
 
 const getSignalHistory = async () => {
+  historyLoading.value = true;
   try {
     const res = await $api.get("/api/ai/trading-history");
     historyData.value = res.data.data.history || [];
+    historyLoading.value = false;
   } catch (error) {
+    historyLoading.value = false;
+
     console.error("Failed to load signal history", error);
   }
 };
