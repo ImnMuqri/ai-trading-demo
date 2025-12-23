@@ -56,7 +56,7 @@
 
           <!-- Smooth slide/fade text -->
           <span
-            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
             :class="
               !isCollapsed
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
@@ -77,7 +77,7 @@
 
           <!-- Smooth slide/fade text -->
           <span
-            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
             :class="
               !isCollapsed
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
@@ -98,7 +98,7 @@
 
           <!-- Smooth slide/fade text -->
           <span
-            class="inline-block text-sm whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
             :class="
               !isCollapsed
                 ? 'opacity-100 translate-x-0 max-w-[120px]'
