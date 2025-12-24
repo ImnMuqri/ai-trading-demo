@@ -93,10 +93,15 @@
           <div
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Entry Zone</p>
-            <p class="text-yellow-500">
+            <p v-if="tradingAnalysis.signal == 'SELL'" class="text-yellow-500">
               {{ formatPrice(tradingAnalysis?.entryLower) ?? "--" }}
               to
               {{ formatPrice(tradingAnalysis?.entryUpper) ?? "--" }}
+            </p>
+            <p v-else class="text-yellow-500">
+              {{ formatPrice(tradingAnalysis?.entryUpper) ?? "--" }}
+              to
+              {{ formatPrice(tradingAnalysis?.entryLower) ?? "--" }}
             </p>
           </div>
           <div
@@ -110,7 +115,7 @@
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Take Profit</p>
             <p class="text-emerald-500">
-              {{ formatPrice(tradingAnalysis?.takeProfit1) ?? "No Info" }}
+              {{ formatPrice(tradingAnalysis?.takeProfit) ?? "No Info" }}
             </p>
           </div>
           <!-- Risk Level -->

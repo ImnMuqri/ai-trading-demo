@@ -216,7 +216,6 @@ const sentimentIndex = ref({
 });
 
 const intervalOptions = [
-  { label: "1 Minute", value: "1" },
   { label: "5 Minutes", value: "5" },
   { label: "15 Minutes", value: "15" },
   { label: "1 Hour", value: "60" },
