@@ -1,8 +1,7 @@
 <template>
   <UiCard class="flex flex-col gap-2 border px-4 pt-4 flex-1">
     <div
-      class="flex flex-wrap space-y-2 min-[450px]:space-y-0 items-center justify-between"
-    >
+      class="flex flex-wrap space-y-2 min-[450px]:space-y-0 items-center justify-between">
       <div class="flex gap-1 items-center">
         <span class="text-[#00BDA7] text-md">Contextual Factors </span>
         <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
@@ -25,102 +24,89 @@
     <p class="text-sm text-gray-300">{{ CFsummary }}</p>
     <div class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
       <div
-        class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4"
-      >
+        class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
         <template v-if="isLoadingContextual">
           <div
             v-for="i in 4"
             :key="i"
-            class="flex flex-col items-center animate-pulse"
-          >
+            class="flex flex-col items-center animate-pulse">
             <div
-              class="w-[100px] h-[100px] rounded-full bg-gray-700/30 mb-2"
-            ></div>
+              class="w-[100px] h-[100px] rounded-full bg-gray-700/30 mb-2"></div>
             <div class="h-3 w-20 bg-gray-700/30 rounded"></div>
           </div>
         </template>
         <template v-else>
-          <div
+          <!-- <div
             v-for="(meter, index) in meters"
             :key="index"
-            class="!hidden flex flex-col items-center"
-          >
+            class="!hidden flex flex-col items-center">
             <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
               <path
                 class="text-gray-700/20"
                 stroke="currentColor"
                 stroke-width="3"
                 fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-              />
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
               <path
                 :stroke="meter.fillColor"
                 stroke-width="3"
                 :stroke-dasharray="`${meter.value}, 100`"
                 stroke-linecap="round"
                 fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-              />
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
 
               <text
                 x="19"
                 y="21"
                 class="text-[8px] font-semibold"
                 :fill="meter.fillColor"
-                text-anchor="middle"
-              >
+                text-anchor="middle">
                 {{ meter.value }}%
               </text>
             </svg>
             <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
-          </div>
+          </div> -->
           <div
             v-for="(meter, index) in meters"
             :key="index"
-            class="flex flex-col items-center"
-          >
+            class="flex flex-col items-center">
             <UiProgress
               type="circle"
               :progress="[meter.value]"
               :color="[meter.fillColor]"
-              custom-class="max-w-[100px]"
-            />
+              custom-class="max-w-[100px]" />
             <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
-            <svg
+            <!-- <svg
               width="100"
               height="100"
               viewBox="0 0 36 36"
-              class="!hidden mb-2"
-            >
+              class="!hidden mb-2">
               <path
                 class="text-gray-700/20"
                 stroke="currentColor"
                 stroke-width="3"
                 fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-              />
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
               <path
                 :stroke="meter.fillColor"
                 stroke-width="3"
                 :stroke-dasharray="`${meter.value}, 100`"
                 stroke-linecap="round"
                 fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
-              />
+                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
 
               <text
                 x="19"
                 y="21"
                 class="text-[8px] font-semibold"
                 :fill="meter.fillColor"
-                text-anchor="middle"
-              >
+                text-anchor="middle">
                 {{ meter.value }}%
               </text>
             </svg>
             <p class="!hidden text-sm text-gray-300 text-center">
               {{ meter.label }}
-            </p>
+            </p> -->
           </div>
         </template>
       </div>
@@ -129,11 +115,11 @@
       <div
         class="w-full h-fit py-3 text-center border-t border-b border-[#1C1C1C] flex gap-2 items-center justify-center cursor-pointer"
         :class="[isLoadingContextual ? 'pointer-events-none opacity-50' : '']"
-        @click="showKeyFactors = !showKeyFactors"
-      >
+        @click="showKeyFactors = !showKeyFactors">
         <UiIcon
-          :icon="showKeyFactors ? 'mdi:eye-off-outline' : 'meteor-icons:robot'"
-        ></UiIcon>
+          :icon="
+            showKeyFactors ? 'mdi:eye-off-outline' : 'meteor-icons:robot'
+          "></UiIcon>
         <p class="text-sm text-gray-400">
           {{ showKeyFactors ? "Hide details" : "See key takeaways" }}
         </p>
@@ -142,8 +128,7 @@
       <!-- Key Factors -->
       <div
         class="w-full overflow-hidden transition-all duration-500 ease-in-out"
-        :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }"
-      >
+        :style="{ maxHeight: showKeyFactors ? '1000px' : '0px' }">
         <div class="flex gap-1 items-center py-4 border-[#1C1C1C]">
           <span class="text-[#00BDA7] text-md">Key Factors </span>
           <UiIcon icon="material-symbols:info-outline-rounded"></UiIcon>
@@ -151,8 +136,7 @@
         <div
           v-for="(item, idx) in CFexp"
           :key="item.title"
-          class="flex flex-col lg:grid grid-cols-4 gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]"
-        >
+          class="flex flex-col lg:grid grid-cols-4 gap-2 lg:gap-6 items-start justify-end mt-4 mb-4 pb-4 border-b border-[#1C1C1C]">
           <div class="grid grid-cols-1 gap-3 text-md col-span-1">
             <p
               class="text-end font-semibold"
@@ -160,8 +144,7 @@
                 'text-[#00BDA7]': item.sentiment === 'bullish',
                 'text-red-500': item.sentiment === 'bearish',
                 'text-gray-400': item.sentiment === 'neutral',
-              }"
-            >
+              }">
               {{ item.name }}
             </p>
           </div>
@@ -171,8 +154,7 @@
               'text-[#00BDA7]': item.sentiment === 'bullish',
               'text-red-500': item.sentiment === 'bearish',
               'text-gray-400': item.sentiment === 'neutral',
-            }"
-          >
+            }">
             {{ item.explanation }}
           </div>
         </div>

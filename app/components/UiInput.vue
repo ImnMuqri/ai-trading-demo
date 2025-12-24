@@ -14,7 +14,7 @@
       <!-- Right icon slot -->
       <div
         v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
         <slot name="icon-right"></slot>
       </div>
 

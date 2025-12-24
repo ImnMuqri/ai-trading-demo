@@ -137,8 +137,8 @@
 
           <div class="h-[450px] flex flex-col items-center justify-center">
             <svg
-              width="200"
-              height="200"
+              width="220"
+              height="300"
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
@@ -147,8 +147,8 @@
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
-                stroke="#323232"
-                stroke-width="3.8"
+                stroke="#1C1C1C"
+                stroke-width="6.5"
                 stroke-linecap="round" />
 
               <!-- progress ring -->
@@ -172,12 +172,12 @@
                 <tspan
                   x="20"
                   dy="8"
-                  font-size="8"
+                  font-size="7"
                   font-weight="700"
                   fill="#10B981">
                   {{ sentimentIndex.percentage }}
                 </tspan>
-                <tspan x="20.4" dy="3.4" font-size="2.5" fill="#6B7280">
+                <tspan x="20.4" dy="3.4" font-size="2.2" fill="#6B7280">
                   Cautious Optimism
                 </tspan>
               </text>
@@ -216,6 +216,7 @@ const sentimentIndex = ref({
 });
 
 const intervalOptions = [
+  { label: "1 Minutes", value: "1" },
   { label: "5 Minutes", value: "5" },
   { label: "15 Minutes", value: "15" },
   { label: "1 Hour", value: "60" },

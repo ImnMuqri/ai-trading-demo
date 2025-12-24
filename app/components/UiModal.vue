@@ -7,15 +7,15 @@
       :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
       <div
         :class="[
-          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-8 px-6 text-white',
+          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white',
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
           width ?? 'max-w-[500px]',
           type === 'successAlert'
-            ? 'success-background h-[420px] !w-[400px] !rounded-3xl border-none flex flex-col items-center justify-center'
+            ? 'success-background h-[420px] !w-[400px] !rounded-3xl border-none py-8 flex flex-col items-center justify-center'
             : type === 'confirmAlert'
-            ? 'confirm-background h-[420px] !w-[400px] !rounded-3xl border-none  flex flex-col items-center justify-end'
+            ? 'confirm-background h-[420px] !w-[400px] !rounded-3xl border-none py-8 flex flex-col items-center justify-end'
             : type === 'errorAlert'
-            ? 'error-background h-[420px] !w-[400px] !rounded-3xl border-none flex flex-col items-center justify-center'
+            ? 'error-background h-[420px] !w-[400px] !rounded-3xl border-none py-8 flex flex-col items-center justify-center'
             : isGradient
             ? 'bg-[radial-gradient(76.25%_76.25%_at_50%_0%,#008E7E_0%,#282828FF_100%)]'
             : ' bg-[#121212]',

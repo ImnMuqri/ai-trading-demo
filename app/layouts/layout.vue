@@ -107,6 +107,27 @@
             Signal History
           </span>
         </NuxtLink>
+        <!-- Affiliate Management -->
+        <NuxtLink
+          to="/affiliate"
+          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+          :class="[
+            isActive('/affiliate') ? activeClass : inactiveClass,
+            isCollapsed ? 'justify-start' : 'justify-start',
+          ]">
+          <UiIcon icon="humbleicons:users" custom-class="w-4 h-4" />
+
+          <!-- Smooth slide/fade text -->
+          <span
+            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+            :class="
+              !isCollapsed
+                ? 'opacity-100 translate-x-0 max-w-[200px]'
+                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+            ">
+            Affiliate Management
+          </span>
+        </NuxtLink>
       </nav>
 
       <div class="p-3">
@@ -142,29 +163,6 @@
               class="w-5 h-5 text-white"></UiIcon></div
         ></NuxtLink>
       </div>
-
-      <!-- Logout, anchored bottom -->
-      <div class="p-4 border-t border-[#1C1C1C] mt-auto">
-        <button
-          @click="confirmLogout = true"
-          class="flex items-center gap-3 w-full text-left py-2 text-sm text-red-500 hover:bg-red-50 rounded-md transition">
-          <div
-            class="flex items-center gap-3 transition-all duration-500"
-            :class="!isCollapsed ? 'translate-x-3' : 'translate-x-1.5'">
-            <UiIcon icon="solar:exit-linear" custom-class="w-5 h-5" />
-
-            <span
-              class="inline-block whitespace-nowrap transition-all duration-300 ease-in-out"
-              :class="
-                !isCollapsed
-                  ? 'opacity-100 translate-x-0 max-w-[200px]'
-                  : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-              ">
-              Logout
-            </span>
-          </div>
-        </button>
-      </div>
     </aside>
     <!-- Main Content -->
     <main
@@ -193,10 +191,42 @@
           <UiIcon
             icon="solar:bell-line-duotone"
             custom-class="text-white w-5 h-5" />
-          <div class="p-4 border bg-white rounded-full"></div>
+
+          <UiPopover position="bottom">
+            <template #trigger>
+              <div class="p-4 border bg-white rounded-full"></div>
+            </template>
+
+            <div class="text-[#BCBBBB] w-32 flex flex-col justify-start">
+              <div class="hover:bg-gray-800 rounded-md group cursor-pointer">
+                <NuxtLink
+                  to="/settings/basicinfo"
+                  class="flex items-center gap-2 px-3 py-2 rounded-md transition">
+                  <UiIcon icon="hugeicons:user-03" custom-class="w-4 h-4" />
+
+                  <span
+                    class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out">
+                    User Profile
+                  </span>
+                </NuxtLink>
+              </div>
+              <div class="h-[2px]" />
+              <div class="hover:bg-red-500 rounded-md group cursor-pointer">
+                <UiButton
+                  variant="text"
+                  @click="confirmLogout = true"
+                  class="w-fit text-red-500 group-hover:text-white !border-none">
+                  Logout
+                  <template #icon-left>
+                    <UiIcon
+                      icon="solar:exit-linear"
+                      custom-class="w-3 h-3" /></template
+                ></UiButton>
+              </div>
+            </div>
+          </UiPopover>
         </div>
       </div>
-
       <slot />
     </main>
 
@@ -229,6 +259,7 @@ const pageTitles = {
   "/admin/referralmanagement": "Admin Panel - Referral Management",
   "/admin/subsmanagement": "Admin Panel - Subscription Management",
   "/signalhistory": "Signal History",
+  "/affiliate": "Affiliate Dashboard",
   "/settings/subscription": "Subscription",
   // add other routes here
 };

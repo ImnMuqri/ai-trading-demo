@@ -22,7 +22,7 @@
   </div>
 
   <div
-    class="flex flex-col md:flex-row border-b border-l border-r border-[#2D2D2D] bg-[#111111] h-[70%] overflow-hidden">
+    class="flex flex-col md:flex-row border-b border-l border-r border-[#2D2D2D] bg-[#111111]">
     <!-- Sidebar for desktop -->
     <aside class="hidden md:block w-64 p-6 border-r border-[#2D2D2D]">
       <nav class="flex flex-col gap-2 text-sm">

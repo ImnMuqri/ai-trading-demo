@@ -638,6 +638,7 @@ const requestSignal = async () => {
       createdAt: Date.now(),
     };
     analysisData.value = analysis.analysis;
+    getLimitBalance();
   } catch (error) {
     showToast(error.response?.data?.message || error.message, "error");
   } finally {

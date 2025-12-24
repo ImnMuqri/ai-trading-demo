@@ -83,7 +83,16 @@
           v-else
           class="w-full h-full text-white grid justify-center items-center rounded-md"
           :class="[classModal ? 'flex-1 h-full' : emptyClass]">
-          <span>Empty Table</span>
+          <div
+            class="flex flex-col gap-[2px] items-center justify-center py-20">
+            <UiIcon
+              icon="ph:files-duotone"
+              custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
+            <p>No records found</p>
+            <p class="italic text-[10px] text-[#626262]">
+              New data will appear here once it becomes available.
+            </p>
+          </div>
         </div>
       </div>
 

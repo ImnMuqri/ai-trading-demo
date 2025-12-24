@@ -32,7 +32,7 @@
           >
         </div>
       </div>
-      <div class="grid grid-cols-1 gap-4 w-full lg:w-[500px]">
+      <div class="grid grid-cols-1 gap-4 w-full mt-4 lg:w-[500px]">
         <UiInput
           v-model="profileData.name"
           label="Name"

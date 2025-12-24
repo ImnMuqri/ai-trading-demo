@@ -71,6 +71,7 @@
           ]">
           {{ props.title }}
         </div>
+
         <div
           v-if="!props.title"
           :class="[
