@@ -196,18 +196,32 @@ const fetchNews = async () => {
 const catalystAnalysis = async (economicCalendarId) => {
   openAnalysisModal.value = true;
   isAnalysing.value = true;
+
+  const minLoadingTime = 5000;
+  const startTime = Date.now();
+
   try {
-    const response = await $api.post("api/economic-calendar-predictions", {
+    const response = await $api.post("/api/economic-calendar-predictions", {
       economicCalendarId,
     });
+
     const raw = response.data.data || [];
     analysisData.value = raw;
-    isAnalysing.value = false;
   } catch (error) {
     console.error("Failed to load news", error);
-    isAnalysing.value = false;
+  } finally {
+    const elapsed = Date.now() - startTime;
+    const remaining = minLoadingTime - elapsed;
+
+    if (remaining > 0) {
+      await new Promise((resolve) => setTimeout(resolve, remaining));
+    }
+    if (openAnalysisModal.value) {
+      isAnalysing.value = false;
+    }
   }
 };
+
 // Auto run fetch on mount
 onMounted(() => {
   fetchNews();

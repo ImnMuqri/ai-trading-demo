@@ -1,6 +1,21 @@
 <template>
   <div class="flex flex-col gap-4 text-white">
     <div class="flex flex-col lg:flex-row gap-4">
+      <UiCard isGradient class="p-4 flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <UiIcon
+            icon="qlementine-icons:system-monitor-16"
+            custom-class="w-3 h-3"></UiIcon>
+          <span class="text-sm">Trading Analysis</span>
+        </div>
+        <div class="p-10 flex items-center justify-center">
+          <UiProgress
+            type="circle"
+            :progress="[50, 50]"
+            title="Trading Analysis"
+            custom-class="max-w-[150px]" />
+        </div>
+      </UiCard>
       <UiCard isGradient class="p-4 flex-1"
         ><div class="flex gap-2 items-center">
           <UiIcon
@@ -25,28 +40,28 @@
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Admin Counts</p>
+                <p class="text-[12px] text-[#838383]">Admin Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats.adminCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Manager Counts</p>
+                <p class="text-[12px] text-[#838383]">Manager Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats.managerCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Affiliate Counts</p>
+                <p class="text-[12px] text-[#838383]">Affiliate Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats.affiliateCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">User Counts</p>
+                <p class="text-[12px] text-[#838383]">User Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats.userCount }}
                 </p>
@@ -70,28 +85,28 @@
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">AI Analysis Counts</p>
+                <p class="text-[12px] text-[#838383]">AI Analysis Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.transactionStats.aiAnalysisCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Payment Counts</p>
+                <p class="text-[12px] text-[#838383]">Payment Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.transactionStats.paymentCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Renewal Counts</p>
+                <p class="text-[12px] text-[#838383]">Renewal Counts</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.transactionStats.renewalCount }}
                 </p>
               </div>
 
               <div>
-                <p class="text-sm text-[#838383]">Total Revenue</p>
+                <p class="text-[12px] text-[#838383]">Total Revenue</p>
                 <p class="text-sm font-semibold">
                   {{ analytics.transactionStats.totalRevenue }} USD
                 </p>
@@ -100,13 +115,6 @@
           </div>
         </div></UiCard
       >
-      <UiCard
-        isGradient
-        class="lg:px-60 lg:py-40 text-md flex flex-col items-center gap-3">
-        <div class="flex justify-between items-center gap-4">
-          <span class="text-lg">Trading Analysis</span>
-        </div>
-      </UiCard>
     </div>
 
     <div>
@@ -155,7 +163,7 @@
           <!-- User List -->
           <UiCard
             v-show="activeTab === 'users'"
-            class="py-2 text-[12px] h-full min-h-[400px] flex-1"
+            class="py-2 text-[12px] h-full flex-1"
             custom-class="!rounded-t-none !rounded-tr-lg">
             <div
               class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
@@ -189,7 +197,12 @@
                     v-for="(col, idx) in userColumns"
                     :key="col.key"
                     class="truncate"
-                    :class="applyBorder(idx, userColumns.length)"
+                    :class="[
+                      applyBorder(idx, userColumns.length),
+                      col.key === 'role' || col.key === 'name'
+                        ? 'capitalize'
+                        : '',
+                    ]"
                     :title="item[col.key]">
                     <span v-if="col.key === 'createdAt'">
                       {{
@@ -228,7 +241,7 @@
           <!-- Transactions list -->
           <UiCard
             v-show="activeTab === 'transactions'"
-            class="py-2 text-[12px] flex-1 min-h-[350px] w-full"
+            class="py-2 text-[12px] flex-1 w-full"
             custom-class="!rounded-t-none !rounded-tr-lg">
             <!-- Table Header -->
             <div

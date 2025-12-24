@@ -1,6 +1,6 @@
 <template>
   <div class="text-white">
-    <UiCard class="py-2 text-[12px] h-full min-h-[300px] flex-1">
+    <UiCard class="py-2 text-[12px] h-full flex-1">
       <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
         <UiIcon icon="mdi:credit-card-outline" custom-class="w-4 h-4"></UiIcon>
         <p class="text-sm font-semibold py-2">Package List</p>
@@ -14,16 +14,14 @@
         :totalItems="subscriptionPlans.length"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
-        empty-class="min-h-[400px]"
-      >
+        empty-class="min-h-[400px]">
         <template #header="{ applyBorder }">
           <div class="grid grid-cols-6 gap-2">
             <div
               v-for="(col, idx) in subscriptionColumns"
               :key="col.key"
               class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
-              :class="applyBorder(idx, subscriptionColumns.length)"
-            >
+              :class="applyBorder(idx, subscriptionColumns.length)">
               {{ col.label }}
             </div>
           </div>
@@ -36,38 +34,35 @@
               :key="col.key"
               class="!truncate"
               :class="applyBorder(idx, subscriptionColumns.length)"
-              :title="item[col.key]"
-            >
+              :title="item[col.key]">
               <span v-if="col.key === 'isActive'">
                 <span
                   :class="
                     item[col.key]
                       ? 'text-emerald-500 font-semibold'
                       : 'text-red-500 font-semibold'
-                  "
-                >
+                  ">
                   {{ item[col.key] ? "Active" : "Inactive" }}</span
                 >
               </span>
-
+              <span v-else-if="col.key === 'price'">
+                <span> {{ item[col.key] }} {{ item.currency }}</span>
+              </span>
               <div
                 v-else-if="col.key === 'actions'"
-                class="flex flex-wrap gap-[2px] justify-center"
-              >
+                class="flex flex-wrap gap-[2px] justify-center">
                 <UiButton
                   variant="icon"
                   icon="cuida:edit-outline"
                   size="sm"
                   custom-class="!px-1 !w-fit !text-[#00BDA7] hover:!text-[#00BDA7]/80 !bg-transparent"
-                  @click="openUpdateModal(item)"
-                />
+                  @click="openUpdateModal(item)" />
                 <UiButton
                   variant="icon"
                   icon="bxs:trash"
                   size="sm"
                   custom-class="!px-1 !w-fit !text-red-500 hover:!text-red-600 !bg-transparent"
-                  @click="openDeleteConfirm(item)"
-                />
+                  @click="openDeleteConfirm(item)" />
               </div>
 
               <span v-else>
@@ -76,16 +71,27 @@
             </div>
           </div>
         </template>
+        <template v-if="subscriptionPlans.length >= 5" #actions>
+          <UiButton
+            variant="text"
+            class="!text-[11px] !px-2 !mx-2"
+            @click="openCreate = true">
+            Create Package
+            <template #icon-left>
+              <UiIcon
+                icon="hugeicons:add-01"
+                custom-class="w-4 h-4 !text-[#00BDA7]" />
+            </template>
+          </UiButton>
+        </template>
         <template #pagination></template>
       </UiTable>
       <div
-        v-if="subscriptionPlans.length < 5"
-        class="flex flex-col gap-[2px] items-center justify-center py-20"
-      >
+        v-if="subscriptionPlans.length < 5 && !plansLoading"
+        class="flex flex-col gap-[2px] items-center justify-center py-20">
         <UiIcon
           icon="hugeicons:package-open"
-          custom-class="w-[70px] h-[70px]  bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
-        />
+          custom-class="w-[70px] h-[70px]  bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
         <p>CREATE MORE PACKAGE</p>
         <p class="italic text-[10px] text-[#626262]">
           Click on the button below to create more package
@@ -95,14 +101,12 @@
             label="Create Package"
             variant="primary"
             class="!rounded-full !text-[11px] capitalize"
-            @click="openCreate = true"
-          >
+            @click="openCreate = true">
             Create new package
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-white"
-              />
+                custom-class="w-4 h-4 !text-white" />
             </template>
           </UiButton>
         </div>
@@ -117,61 +121,52 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"
-    />
+      type="confirmAlert" />
 
     <!-- Update Plan Modal -->
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update Plan"
-      description="Edit the plan details below. Ensure the information is correct."
-    >
+      description="Edit the plan details below. Ensure the information is correct.">
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput
             dark
             label="Package Name"
             type="text"
-            v-model="selectedPlan.name"
-          />
+            v-model="selectedPlan.name" />
           <UiInput
             dark
             label="Description"
             type="text"
-            v-model="selectedPlan.description"
-          />
+            v-model="selectedPlan.description" />
           <UiInput
             dark
             label="Request Limit"
             type="number"
-            v-model="selectedPlan.requestLimit"
-          />
+            v-model="selectedPlan.requestLimit" />
           <UiInput
             dark
             label="Price"
             type="number"
-            v-model="selectedPlan.price"
-          />
+            v-model="selectedPlan.price" />
           <UiInput
             dark
             label="Currency"
             type="text"
-            v-model="selectedPlan.currency"
-          />
+            v-model="selectedPlan.currency" />
           <UiInput
             dark
             label="Duration (days)"
             type="number"
-            v-model="selectedPlan.duration"
-          />
+            v-model="selectedPlan.duration" />
           <div class="flex items-center gap-2">
             <input
               type="checkbox"
               id="isActive"
               v-model="selectedPlan.isActive"
-              class="w-3 h-3"
-            />
+              class="w-3 h-3" />
             <label for="isActive" class="text-[12px]">Active</label>
           </div>
         </div>
@@ -182,14 +177,12 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="handleUpdatePlan"
-          >
+            @click="handleUpdatePlan">
             Save Changes
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false"
-          >
+            @click="openUpdate = false">
             Cancel
           </UiButton>
         </div>
@@ -201,8 +194,7 @@
       :show="openCreate"
       title="Create New Package"
       :description="'Fill in the details below to create a new subscription plan.'"
-      @close="openCreate = false"
-    >
+      @close="openCreate = false">
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <UiInput dark label="Name" v-model="newPlan.name" />
@@ -211,22 +203,19 @@
             dark
             label="Request Limit"
             type="number"
-            v-model.number="newPlan.requestLimit"
-          />
+            v-model.number="newPlan.requestLimit" />
           <UiInput
             dark
             label="Price"
             type="number"
             step="0.01"
-            v-model.number="newPlan.price"
-          />
+            v-model.number="newPlan.price" />
           <UiInput dark label="Currency" v-model="newPlan.currency" />
           <UiInput
             dark
             label="Duration (days)"
             type="number"
-            v-model.number="newPlan.duration"
-          />
+            v-model.number="newPlan.duration" />
           <div class="flex flex-col gap-2">
             <label class="text-white text-[12px]">Features:</label>
             <div class="flex flex-col gap-1 text-[12px]">
@@ -237,8 +226,7 @@
               <label class="flex items-center gap-2 text-white">
                 <input
                   type="checkbox"
-                  v-model="newPlan.features.priority_support"
-                />
+                  v-model="newPlan.features.priority_support" />
                 Priority Support
               </label>
             </div>
@@ -253,16 +241,14 @@
       <template #footer>
         <div class="flex flex-col gap-2.5">
           <UiButton
-            class="w-full py-2.5 rounded-md text-white !text-[12px]"
+            class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isCreating"
-            @click="createPlan"
-          >
+            @click="createPlan">
             Create Plan
           </UiButton>
           <UiButton
-            class="w-full py-2.5 rounded-md text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openCreate = false"
-          >
+            class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
+            @click="openCreate = false">
             Cancel
           </UiButton>
         </div>
@@ -281,7 +267,7 @@ const plansLoading = ref(false);
 const subscriptionColumns = [
   { label: "ID", key: "id" },
   { label: "Request Limit", key: "requestLimit" },
-  { label: "Price", key: "currency" },
+  { label: "Price", key: "price" },
   { label: "Duration (days)", key: "duration" },
   { label: "Active", key: "isActive" },
   { label: "Actions", key: "actions" },

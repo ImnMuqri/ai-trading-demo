@@ -20,7 +20,10 @@ body {
   font-family: "Poppins", sans-serif !important;
 }
 .Vue-Toastification__toast {
-  @apply !p-0  !bg-transparent !rounded-xl;
+  @apply !p-0  !bg-transparent !rounded-none;
+}
+.Vue-Toastification__progress-bar {
+  @apply mt-3 mx-2 !rounded-full;
 }
 
 .Vue-Toastification__close-button,

@@ -1,7 +1,7 @@
 <template>
   <UiCard
     is-gradient
-    class="flex flex-col justify-between p-4 w-full lg:w-[430px] lg:h-[630px] rounded-lg">
+    class="flex flex-col justify-between p-4 w-full lg:w-[430px] lg:h-[630px] rounded-lg transition-opacity duration-300">
     <div>
       <div class="flex gap-1 items-center">
         <p class="text-md">Signal & Insights</p>
@@ -21,8 +21,8 @@
           </p>
         </div>
         <div
-          v-if="!isRequestingSignal"
-          class="h-fit grid grid-cols-1 gap-2 mt-4">
+          class="h-fit grid grid-cols-1 gap-2 mt-4"
+          :class="!isRequestingSignal ? 'opacity-100' : 'hidden'">
           <div
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Trend</p>

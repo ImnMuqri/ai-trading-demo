@@ -1,16 +1,14 @@
 <template>
-  <div class="mt-3 flex justify-end w-full">
+  <div class="flex justify-end w-full">
     <div class="flex items-center gap-2">
       <!-- Previous -->
       <div
         class="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer hover:bg-[#1C1C1C] transition"
         :class="{ 'opacity-50 cursor-not-allowed': currentPage === 1 }"
-        @click="currentPage > 1 && goToPage(currentPage - 1)"
-      >
+        @click="currentPage > 1 && goToPage(currentPage - 1)">
         <UiIcon
           icon="ic:round-chevron-left"
-          custom-class="w-6 h-6 text-[#218863]"
-        />
+          custom-class="w-6 h-6 text-[#218863]" />
       </div>
 
       <!-- Pages -->
@@ -23,15 +21,13 @@
               ? 'bg-[#00BDA7] text-black font-bold'
               : 'bg-transparent text-[#A3A3A3] hover:bg-[#1C1C1C]'
           "
-          @click="goToPage(page)"
-        >
+          @click="goToPage(page)">
           {{ page }}
         </div>
 
         <div
           v-else
-          class="w-8 h-8 flex items-center justify-center text-gray-400 text-sm"
-        >
+          class="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">
           …
         </div>
       </template>
@@ -40,12 +36,10 @@
       <div
         class="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer hover:bg-[#1C1C1C] transition"
         :class="{ 'opacity-50 cursor-not-allowed': currentPage === totalPages }"
-        @click="currentPage < totalPages && goToPage(currentPage + 1)"
-      >
+        @click="currentPage < totalPages && goToPage(currentPage + 1)">
         <UiIcon
           icon="ic:round-chevron-right"
-          custom-class="w-6 h-6 text-[#218863]"
-        />
+          custom-class="w-6 h-6 text-[#218863]" />
       </div>
     </div>
   </div>

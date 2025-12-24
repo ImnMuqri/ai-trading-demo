@@ -55,6 +55,8 @@ const variantClasses = computed(() => {
   switch (props.variant) {
     case "secondary":
       return "bg-gray-700 hover:bg-gray-600 text-white";
+    case "text":
+      return " text-[#00BDA7] bg-transparent border border-transparent hover:border-[#00BDA7] ";
     case "outline":
       return "border border-[#00BDA7] text-[#00BDA7] hover:bg-[#00BDA7] hover:text-white";
     case "icon":
