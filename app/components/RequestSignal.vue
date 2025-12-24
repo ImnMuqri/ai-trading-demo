@@ -110,7 +110,7 @@
             class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Take Profit</p>
             <p class="text-emerald-500">
-              {{ formatPrice(tradingAnalysis?.takeProfit) ?? "No Info" }}
+              {{ formatPrice(tradingAnalysis?.takeProfit1) ?? "No Info" }}
             </p>
           </div>
           <!-- Risk Level -->
@@ -371,13 +371,6 @@
                 </div>
                 <div
                   class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
-                  <p class="text-[#BCBBBB]">Take Profit</p>
-                  <p class="text-emerald-500">
-                    {{ formatPrice(analysisData.takeProfit) }}
-                  </p>
-                </div>
-                <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 1</p>
                   <p class="text-emerald-500">
                     {{ formatPrice(analysisData.takeProfit1) }}
@@ -425,7 +418,6 @@ const analysisData = ref({
   // Entry / exit
   entryZone: { lower: null, upper: null },
   stopLoss: null,
-  takeProfit: null,
   takeProfit1: null,
   takeProfit2: null,
   takeProfit3: null,
@@ -584,7 +576,7 @@ const getSignalHistory = async (limit = 1, offset = 0) => {
       entryLower: history.entryZone?.lower,
       entryUpper: history.entryZone?.upper,
       stopLoss: history.stopLoss,
-      takeProfit: history.takeProfit,
+      takeProfit: history.takeProfit1,
       symbol: history.symbol,
       createdAt: history.createdAt,
       timeframe: history.timeframe,
@@ -635,7 +627,7 @@ const requestSignal = async () => {
       entryLower: analysis.analysis.entryZone?.lower,
       entryUpper: analysis.analysis.entryZone?.upper,
       stopLoss: analysis.analysis.stopLoss,
-      takeProfit: analysis.analysis.takeProfit,
+      takeProfit: analysis.analysis.takeProfit1,
       symbol: analysis.symbol,
       timeframe: analysis.timeframe,
       createdAt: Date.now(),
