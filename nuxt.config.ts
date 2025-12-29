@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: false },
+  generate: { fallback: "404.html" },
   css: ["~/assets/css/main.css"],
   modules: ["@nuxt/icon", "@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxt/image"],
   app: {

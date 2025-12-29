@@ -13,6 +13,15 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     isAuthenticated: (state) => Boolean(state.token),
 
+    userRole: (state) => state.user?.role ?? null,
+
+    hasRole: (state) => (roles) => {
+      if (!state.user) return false;
+      return Array.isArray(state.user.role)
+        ? roles.some((r) => state.user.role.includes(r))
+        : roles.includes(state.user.role);
+    },
+
     isTokenExpired: (state) => {
       if (!state.token) return true;
 

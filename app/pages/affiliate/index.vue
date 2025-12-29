@@ -10,11 +10,13 @@
         <div class="flex items-center gap-2">
           <UiIcon
             icon="qlementine-icons:money-16"
-            custom-class="w-3 h-3"></UiIcon>
+            custom-class="w-3 h-3"
+          ></UiIcon>
           <span class="text-sm">Affiliator Profit</span>
         </div>
         <div
-          class="w-full md:w-[350px] px-6 py-2 flex items-center justify-between gap-8">
+          class="w-full md:w-[350px] px-6 py-2 flex items-center justify-between gap-8"
+        >
           <div>
             <p class="text-sm text-[#838383]">Total Profits</p>
             <p class="text-2xl font-semibold text-[#00BDA7]">
@@ -33,12 +35,14 @@
             <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
               <div
                 class="h-full rounded-r-full bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] transition-all duration-300"
-                :style="{ width: progress + '%' }"></div>
+                :style="{ width: progress + '%' }"
+              ></div>
             </div>
             <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
               <div
                 class="h-full rounded-r-full bg-white transition-all duration-300"
-                :style="{ width: progress + '%' }"></div>
+                :style="{ width: progress + '%' }"
+              ></div>
             </div>
           </div>
         </div>
@@ -80,7 +84,8 @@
               type="circle"
               :progress="[70, 80]"
               title="Total Clients"
-              custom-class="max-w-[150px]" />
+              custom-class="max-w-[150px]"
+            />
 
             <div class="flex flex-col gap-1.5 text-white">
               <div>
@@ -97,7 +102,8 @@
                 </p>
               </div>
               <div
-                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"></div>
+                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+              ></div>
               <div>
                 <p class="text-[12px] text-[#838383]">
                   New Clients Last 30 Days
@@ -123,7 +129,8 @@
               type="circle"
               :progress="[70, 90]"
               title="Clients Type"
-              custom-class="max-w-[150px]" />
+              custom-class="max-w-[150px]"
+            />
 
             <div class="flex flex-col gap-1.5 text-white">
               <div>
@@ -154,7 +161,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Active Users</p>
             </div>
             <p class="text-lg text-[#00BDA7]">
@@ -166,7 +174,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Inactive Users</p>
             </div>
             <p class="text-lg text-red-500">
@@ -178,7 +187,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <div class="flex gap-1 items-center">
                 <p>Client Account Expiring</p>
                 <p class="text-[#838383] text-[11px]">- in 10 days</p>
@@ -200,7 +210,8 @@
                 ? 'bg-[#00BDA7]/50 border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'clients'">
+            @click="activeTab = 'clients'"
+          >
             Clients
           </div>
           <div class="cursor-not-allowed" title="Upcoming Features">
@@ -211,7 +222,8 @@
                   ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
                   : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
               "
-              @click="activeTab = 'transactions'">
+              @click="activeTab = 'transactions'"
+            >
               Affiliate Approval
             </div>
           </div>
@@ -221,9 +233,11 @@
           <UiCard
             v-show="activeTab === 'clients'"
             class="py-2 text-[12px] h-full flex-1"
-            custom-class="!rounded-t-none !rounded-tr-lg">
+            custom-class="!rounded-t-none !rounded-tr-lg"
+          >
             <div
-              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+            >
               <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
               <p class="text-lg font-semibold py-2 text-sm">Clients List</p>
             </div>
@@ -235,14 +249,16 @@
               :totalItems="usersData.length"
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
-              empty-class="min-h-[400px]">
+              empty-class="min-h-[400px]"
+            >
               <template #header="{ applyBorder }">
                 <div class="grid grid-cols-6 gap-2">
                   <div
                     v-for="(col, idx) in userColumns"
                     :key="col.key"
                     class="text-gray-300 font-bold"
-                    :class="applyBorder(idx, userColumns.length)">
+                    :class="applyBorder(idx, userColumns.length)"
+                  >
                     <div>{{ col.label }}</div>
                   </div>
                 </div>
@@ -260,7 +276,8 @@
                         ? 'capitalize'
                         : '',
                     ]"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
@@ -271,19 +288,22 @@
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex flex-wrap gap-[2px] justify-center">
+                      class="flex flex-wrap gap-[2px] justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <div v-else>
@@ -306,12 +326,14 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -319,12 +341,14 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email" />
+            v-model="selectedUser.email"
+          />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone" />
+            v-model="selectedUser.phone"
+          />
           <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
       </template>
@@ -333,11 +357,13 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges">
+            @click="saveChanges"
+          >
             Save Changes </UiButton
           ><UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -349,12 +375,14 @@
       :description="`Invite friends to experience AI Trading and receive commission from their subscription.`"
       width="max-w-[600px]"
       @confirm="handleDeleteConfirmed"
-      @close="openReferral = false">
+      @close="openReferral = false"
+    >
       <template #body>
         <div class="grid grid-cols-3 items-center justify-around mt-4">
           <div class="flex flex-col items-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon icon="fa:send-o" custom-class="h-5 w-5 mr-1"></UiIcon>
             </div>
             <p class="text-white text-sm">Send Invitation</p>
@@ -364,10 +392,12 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon
                 icon="fluent:form-multiple-collection-24-regular"
-                custom-class="h-6 w-6"></UiIcon>
+                custom-class="h-6 w-6"
+              ></UiIcon>
             </div>
             <p class="text-white text-sm">Registration</p>
             <p class="text-[11px] text-[#838383] text-center">
@@ -376,7 +406,8 @@
           </div>
           <div class="flex flex-col items-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon icon="tabler:coins" custom-class="h-5 w-5 "></UiIcon>
             </div>
             <p class="text-white text-sm">Earn Commission</p>
@@ -400,7 +431,8 @@
                 dark
                 placeholder="Generate your referral link"
                 isReadonly
-                class="relative">
+                class="relative"
+              >
                 <template #icon-right>
                   <UiIcon
                     icon="solar:copy-bold"
@@ -410,13 +442,15 @@
                         ? 'text-[#00BDA7]'
                         : 'text-[#838383] hover:text-white'
                     "
-                    @click="copyLink" />
+                    @click="copyLink"
+                  />
                 </template>
               </UiInput>
 
               <p
                 v-if="copied"
-                class="absolute -bottom-5 right-0 text-[11px] mt-1 text-[#00BDA7]">
+                class="absolute -bottom-5 right-0 text-[11px] mt-1 text-[#00BDA7]"
+              >
                 Copied to clipboard
               </p>
             </div>
@@ -435,6 +469,7 @@ import { showToast } from "~/composables/useToastMessage";
 definePageMeta({
   layout: "layout",
   middleware: "auth-client",
+  roles: ["affiliate", "admin"],
 });
 const { $api } = useNuxtApp();
 const activeTab = ref("clients");
