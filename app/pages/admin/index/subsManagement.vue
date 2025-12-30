@@ -490,8 +490,8 @@ const openUpdateModal = (plan) => {
   openUpdate.value = true;
 };
 
-// Update API call
 const handleUpdatePlan = async () => {
+  if (isUpdateLoading.value) return;
   if (!selectedPlan.value) return;
   if (!validateForm(selectedPlan.value)) return;
 
@@ -517,6 +517,9 @@ const handleUpdatePlan = async () => {
     successModal.value = true;
   } catch (error) {
     console.error("Failed to update plan:", error);
+    const message = error?.response?.data?.message ?? "Error updating plan";
+    showToast(message, "error");
+    openUpdate.value = false;
   } finally {
     isUpdateLoading.value = false;
   }
@@ -530,12 +533,16 @@ const openDeleteConfirm = (plan) => {
 
 // Delete API call
 const handleDeleteConfirmed = async () => {
+  if (isDeleteLoading.value) return;
   if (!selectedPlan.value) return;
+
   isDeleteLoading.value = true;
+
   try {
     const res = await $api.delete(
       `/api/admin/subscription/plans/${selectedPlan.value.id}`
     );
+
     openConfirm.value = false;
     successMsg.value =
       res.data?.message ?? "Plan has been deleted successfully";
@@ -543,6 +550,12 @@ const handleDeleteConfirmed = async () => {
     getSubscriptionPlans();
   } catch (error) {
     console.error("Failed to delete plan:", error);
+
+    const message = error?.response?.data?.message ?? "Error in deleting plan";
+
+    showToast(message, "error");
+
+    openConfirm.value = false;
   } finally {
     isDeleteLoading.value = false;
   }

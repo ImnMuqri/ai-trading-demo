@@ -175,12 +175,7 @@
             </p>
           </div>
           <div class="">
-            <UiInput
-              dark
-              label="Start Date"
-              type="date"
-              v-model="newCampaign.startDate"
-            />
+            <UiDate label="Start Date" v-model="newCampaign.startDate" />
             <p
               v-if="errors.startDate"
               class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
@@ -189,12 +184,13 @@
             </p>
           </div>
           <div class="">
-            <UiInput
+            <!-- <UiInput
               dark
               label="End Date"
               type="date"
               v-model="newCampaign.endDate"
-            />
+            /> -->
+            <UiDate label="End Date" v-model="newCampaign.endDate" />
             <p
               v-if="errors.endDate"
               class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
@@ -224,8 +220,24 @@
     >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
-          <UiInput dark label="Name" v-model="selectedCampaign.name" />
-          <UiInput dark label="Status" v-model="selectedCampaign.status" />
+          <div class="">
+            <UiInput dark label="Name" v-model="selectedCampaign.name" />
+            <p
+              v-if="errors.name"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.name }}
+            </p>
+          </div>
+          <div class="">
+            <UiInput dark label="Status" v-model="selectedCampaign.status" />
+            <p
+              v-if="errors.status"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.status }}
+            </p>
+          </div>
         </div>
       </template>
 
@@ -258,6 +270,13 @@
       @confirm="deleteCampaign"
       @close="openConfirm = false"
     />
+    <UiModal
+      :show="successModal"
+      title="Success"
+      :description="successMsg"
+      type="successAlert"
+      @close="successModal = false"
+    ></UiModal>
   </div>
 </template>
 
@@ -265,6 +284,8 @@
 import { ref, onMounted } from "vue";
 
 const { $api } = useNuxtApp();
+
+const fromDate = ref(null);
 
 const referralCampaigns = ref([]);
 const campaignsLoading = ref(false);
@@ -292,6 +313,9 @@ const isUpdateLoading = ref(false);
 const isDeleteLoading = ref(false);
 
 const selectedCampaign = ref(null);
+
+const successModal = ref(false);
+const successMsg = ref("Action successful");
 
 const newCampaign = ref({
   name: "",
@@ -363,6 +387,7 @@ const validateForm = (selected) => {
 };
 
 const getCampaigns = async () => {
+  if (campaignsLoading.value) return;
   campaignsLoading.value = true;
   try {
     const res = await $api.get("/api/admin/referral/campaigns");
@@ -377,9 +402,17 @@ const createCampaign = async () => {
   if (!validateForm(newCampaign.value)) return;
   isCreating.value = true;
   try {
-    await $api.post("/api/admin/referral/campaigns", newCampaign.value);
+    const res = await $api.post(
+      "/api/admin/referral/campaigns",
+      newCampaign.value
+    );
+    successMsg.value = res.data?.message ?? "Campaign added successfully";
+    successModal.value = true;
     openCreate.value = false;
     await getCampaigns();
+  } catch (error) {
+    console.error("Error in creating campaign, ", error);
+    showToast(error ?? "Error in creating campaign", "error");
   } finally {
     isCreating.value = false;
   }
@@ -391,18 +424,36 @@ const openUpdateModal = (campaign) => {
 };
 
 const updateCampaign = async () => {
-  if (!validateForm(selectedCampaign.value)) return;
+  if (isUpdateLoading.value) return;
+
+  clearErrors();
+  let isValid = true;
+  if (!selectedCampaign.value.name) {
+    errors.value.name = "Referral name is required";
+    isValid = false;
+  }
+  if (!selectedCampaign.value.status) {
+    errors.value.status = "Status is required";
+    isValid = false;
+  }
+  if (!isValid) return;
+
   isUpdateLoading.value = true;
   try {
-    await $api.put(
+    const res = await $api.put(
       `/api/admin/referral/campaigns/${selectedCampaign.value.id}`,
       {
         name: selectedCampaign.value.name,
         status: selectedCampaign.value.status,
       }
     );
+    successMsg.value = res.data?.message ?? "Campaign updated successfully";
+    successModal.value = true;
     openUpdate.value = false;
     await getCampaigns();
+  } catch (error) {
+    console.error("Error in updating campaign, ", error);
+    showToast(error.message ?? "Error in updating campaign", "error");
   } finally {
     isUpdateLoading.value = false;
   }
@@ -414,13 +465,18 @@ const openDeleteConfirm = (campaign) => {
 };
 
 const deleteCampaign = async () => {
+  if (isDeleteLoading.value) return;
   isDeleteLoading.value = true;
   try {
-    await $api.delete(
+    const res = await $api.delete(
       `/api/admin/referral/campaigns/${selectedCampaign.value.id}`
     );
+
     openConfirm.value = false;
+    successMsg.value = res.data?.message ?? "Campaign deleted successfully";
+    successModal.value = true;
     await getCampaigns();
+  } catch (error) {
   } finally {
     isDeleteLoading.value = false;
   }

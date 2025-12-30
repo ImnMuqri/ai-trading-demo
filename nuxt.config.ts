@@ -24,4 +24,7 @@ export default defineNuxtConfig({
       apiBase: process.env.VITE_API_URL,
     },
   },
+  build: {
+    transpile: ["@vuepic/vue-datepicker"],
+  },
 });
