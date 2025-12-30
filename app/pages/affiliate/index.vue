@@ -427,7 +427,7 @@
           <div class="flex flex-row items-center gap-2">
             <div class="relative w-full">
               <UiInput
-                v-model="referralLink"
+                v-model="generatedRef"
                 dark
                 placeholder="Generate your referral link"
                 isReadonly
@@ -455,7 +455,9 @@
               </p>
             </div>
 
-            <UiButton>Generate</UiButton>
+            <UiButton :isLoading="generatingRef" @click="generateRef()"
+              >Generate</UiButton
+            >
           </div>
         </div>
       </template></UiModal
@@ -469,7 +471,7 @@ import { showToast } from "~/composables/useToastMessage";
 definePageMeta({
   layout: "layout",
   middleware: "auth-client",
-  roles: ["affiliate", "admin"],
+  roles: ["affiliate", "admin", "developer"],
 });
 const { $api } = useNuxtApp();
 const activeTab = ref("clients");
@@ -508,11 +510,14 @@ const userColumns = [
   { label: "Expiry Date", key: "expiryDate" },
 ];
 
+const generatingRef = ref(false);
+const generatedRef = ref(null);
+
 const copyLink = async () => {
-  if (!referralLink.value) return;
+  if (!generatedRef.value) return;
 
   try {
-    await navigator.clipboard.writeText(referralLink.value);
+    await navigator.clipboard.writeText(generatedRef.value);
     copied.value = true;
 
     setTimeout(() => {
@@ -641,6 +646,31 @@ const saveChanges = async () => {
     isUpdateLoading.value = false;
     console.error(error);
   }
+};
+
+const generateRef = async () => {
+  if (generatingRef.value) return;
+  generatingRef.value = true;
+
+  try {
+    const payload = {
+      name: "My Referral Link",
+      description: "A referral link for my campaign",
+      destinationUrl: "https://example.com",
+    };
+    const res = await $api.post("/api/affiliate/referral-links", payload);
+
+
+    generatedRef.value = res.data?.data?.referralLink?.referralCode;
+    showToast(res.message ?? "Success in generating refferal code", "success");
+  } catch (error) {
+    console.error("Error in generating referral link"), error;
+    showToast(
+      error.data?.message ?? "Error in generating referral code",
+      "error"
+    );
+  }
+  generatingRef.value = false;
 };
 
 onMounted(() => {

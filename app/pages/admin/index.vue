@@ -11,7 +11,8 @@
           ? 'bg-[#00BDA780] border-[#00BDA7] scale-105'
           : 'bg-[#0D0D0D] border-[#1C1C1C] scale-100 hover:scale-105 hover:bg-[#1A1A1A]',
       ]"
-      @click="goTo(tab.path)">
+      @click="goTo(tab.path)"
+    >
       {{ tab.label }}
     </UiChip>
   </div>
@@ -29,6 +30,7 @@ definePageMeta({
   title: "Admin Panel",
   layout: "layout",
   middleware: "auth-client",
+  roles: ["admin", "developer"],
 });
 
 const router = useRouter();

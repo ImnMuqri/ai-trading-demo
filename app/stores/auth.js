@@ -219,7 +219,6 @@ export const useAuthStore = defineStore("auth", {
           return false;
         }
       }
-      console.log("[AuthStore - EVT] Token Still Valid");
 
       return true;
     },

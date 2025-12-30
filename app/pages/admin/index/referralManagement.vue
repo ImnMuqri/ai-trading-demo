@@ -14,7 +14,8 @@
         :totalItems="referralCampaigns.length"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
-        empty-class="min-h-[400px]">
+        empty-class="min-h-[400px]"
+      >
         <template #header>
           <div class="grid grid-cols-6 gap-2">
             <div
@@ -25,7 +26,8 @@
                 idx < referralColumns.length - 1
                   ? 'border-r border-[#2A2A2A] pr-2'
                   : ''
-              ">
+              "
+            >
               {{ col.label }}
             </div>
           </div>
@@ -33,7 +35,8 @@
 
         <template #row="{ item }">
           <div
-            class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center">
+            class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center"
+          >
             <div
               v-for="(col, idx) in referralColumns"
               :key="col.key"
@@ -43,7 +46,8 @@
                   ? 'border-r border-[#2A2A2A] pr-2'
                   : ''
               "
-              :title="item[col.key]">
+              :title="item[col.key]"
+            >
               <span v-if="col.key === 'createdAt'">
                 {{
                   item[col.key]
@@ -58,25 +62,29 @@
                   item[col.key] === 'active'
                     ? 'text-emerald-500 font-semibold'
                     : 'text-yellow-500 font-semibold'
-                ">
+                "
+              >
                 {{ item[col.key] }}
               </span>
 
               <div
                 v-else-if="col.key === 'actions'"
-                class="flex gap-[2px] justify-center">
+                class="flex gap-[2px] justify-center"
+              >
                 <UiButton
                   variant="icon"
                   icon="cuida:edit-outline"
                   size="sm"
                   custom-class="!px-1 !text-[#00BDA7] !bg-transparent"
-                  @click="openUpdateModal(item)" />
+                  @click="openUpdateModal(item)"
+                />
                 <UiButton
                   variant="icon"
                   icon="bxs:trash"
                   size="sm"
                   custom-class="!px-1 !text-red-500 !bg-transparent"
-                  @click="openDeleteConfirm(item)" />
+                  @click="openDeleteConfirm(item)"
+                />
               </div>
 
               <span v-else>
@@ -89,12 +97,14 @@
           <UiButton
             variant="text"
             class="!text-[11px] !px-2 !mx-2"
-            @click="openCreate = true">
+            @click="openCreate = true"
+          >
             Create Campaign
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-[#00BDA7]" />
+                custom-class="w-4 h-4 !text-[#00BDA7]"
+              />
             </template>
           </UiButton>
         </template>
@@ -104,10 +114,12 @@
       <!-- Add Referral Campaings -->
       <div
         v-if="referralCampaigns.length < 5 && !campaignsLoading"
-        class="flex flex-col gap-[2px] items-center justify-center py-20">
+        class="flex flex-col gap-[2px] items-center justify-center py-20"
+      >
         <UiIcon
           icon="humbleicons:users"
-          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
+          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+        />
         <p>CREATE MORE CAMPAIGNS</p>
         <p class="italic text-[10px] text-[#626262]">
           Click the button below to create a new referral campaign
@@ -115,12 +127,14 @@
         <div class="py-2">
           <UiButton
             class="!rounded-full !text-[11px]"
-            @click="openCreate = true">
+            @click="openCreate = true"
+          >
             Create Campaign
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-white" />
+                custom-class="w-4 h-4 !text-white"
+              />
             </template>
           </UiButton>
         </div>
@@ -131,26 +145,63 @@
     <UiModal
       :show="openCreate"
       title="Create Referral Campaign"
-      @close="openCreate = false">
+      @close="(openCreate = false), clearErrors(), resetNewCampaign()"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
-          <UiInput dark label="Name" v-model="newCampaign.name" />
+          <div class="">
+            <UiInput dark label="Name" v-model="newCampaign.name" />
+            <p
+              v-if="errors.name"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.name }}
+            </p>
+          </div>
+
           <UiInput dark label="Description" v-model="newCampaign.description" />
-          <UiInput
-            dark
-            label="Commission Percentage"
-            type="number"
-            v-model.number="newCampaign.commissionPercentage" />
-          <UiInput
-            dark
-            label="Start Date"
-            type="date"
-            v-model="newCampaign.startDate" />
-          <UiInput
-            dark
-            label="End Date"
-            type="date"
-            v-model="newCampaign.endDate" />
+          <div class="">
+            <UiInput
+              dark
+              label="Commission Percentage"
+              type="number"
+              v-model.number="newCampaign.commissionPercentage"
+            />
+            <p
+              v-if="errors.commissionPercentage"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.commissionPercentage }}
+            </p>
+          </div>
+          <div class="">
+            <UiInput
+              dark
+              label="Start Date"
+              type="date"
+              v-model="newCampaign.startDate"
+            />
+            <p
+              v-if="errors.startDate"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.startDate }}
+            </p>
+          </div>
+          <div class="">
+            <UiInput
+              dark
+              label="End Date"
+              type="date"
+              v-model="newCampaign.endDate"
+            />
+            <p
+              v-if="errors.endDate"
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
+              {{ errors.endDate }}
+            </p>
+          </div>
         </div>
       </template>
 
@@ -158,7 +209,8 @@
         <UiButton
           class="w-full py-2.5 !text-[12px] !rounded-full"
           :isLoading="isCreating"
-          @click="createCampaign">
+          @click="createCampaign"
+        >
           Create Campaign
         </UiButton>
       </template>
@@ -168,7 +220,8 @@
     <UiModal
       :show="openUpdate"
       title="Update Campaign"
-      @close="openUpdate = false">
+      @close="openUpdate = false"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <UiInput dark label="Name" v-model="selectedCampaign.name" />
@@ -181,12 +234,14 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="updateCampaign">
+            @click="updateCampaign"
+          >
             Save Changes
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -201,7 +256,8 @@
       type="confirmAlert"
       :isLoading="isDeleteLoading"
       @confirm="deleteCampaign"
-      @close="openConfirm = false" />
+      @close="openConfirm = false"
+    />
   </div>
 </template>
 
@@ -246,6 +302,66 @@ const newCampaign = ref({
   status: "active",
 });
 
+const errors = ref({
+  name: "",
+  description: "",
+  commissionPercentage: "",
+  startDate: "",
+  endDate: "",
+  status: "",
+});
+
+const resetNewCampaign = () => {
+  newCampaign.value = {
+    name: "",
+    description: "",
+    commissionPercentage: 10,
+    startDate: "",
+    endDate: "",
+    status: "active",
+  };
+};
+
+const clearErrors = () => {
+  errors.value = {
+    name: "",
+    description: "",
+    commissionPercentage: "",
+    startDate: "",
+    endDate: "",
+    status: "",
+  };
+};
+
+const validateForm = (selected) => {
+  clearErrors();
+
+  let isValid = true;
+
+  if (!selected.name) {
+    errors.value.name = "Referral name is required";
+    isValid = false;
+  }
+  if (!selected.commissionPercentage) {
+    errors.value.commissionPercentage = "Commission percentage is required";
+    isValid = false;
+  }
+  if (!selected.startDate) {
+    errors.value.startDate = "Start date is required";
+    isValid = false;
+  }
+  if (!selected.endDate) {
+    errors.value.endDate = "End date is required";
+    isValid = false;
+  }
+  if (!selected.status) {
+    errors.value.status = "Status is required";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 const getCampaigns = async () => {
   campaignsLoading.value = true;
   try {
@@ -258,6 +374,7 @@ const getCampaigns = async () => {
 
 const createCampaign = async () => {
   if (isCreating.value) return;
+  if (!validateForm(newCampaign.value)) return;
   isCreating.value = true;
   try {
     await $api.post("/api/admin/referral/campaigns", newCampaign.value);
@@ -274,6 +391,7 @@ const openUpdateModal = (campaign) => {
 };
 
 const updateCampaign = async () => {
+  if (!validateForm(selectedCampaign.value)) return;
   isUpdateLoading.value = true;
   try {
     await $api.put(

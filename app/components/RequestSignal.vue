@@ -1,5 +1,6 @@
 <template>
   <UiCard
+    :is-gradient="!isRequestingSignal"
     class="flex flex-col justify-between p-4 w-full lg:w-[430px] lg:h-[630px] rounded-lg transition-opacity transition-color duration-300"
     :class="isRequestingSignal ? 'bg-black' : ''"
   >
