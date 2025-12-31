@@ -1,4 +1,5 @@
 <template>
+  <span class="hidden"> {{ progressArray }} </span>
   <div>
     <template v-if="props.type === 'circle'">
       <div
@@ -94,26 +95,45 @@
     </template>
 
     <template v-else>
-      <div class="w-full bg-[#101010] rounded-r h-2 flex overflow-hidden">
+      <div class="flex flex-col gap-4">
         <template v-if="Array.isArray(progressArray)">
           <div
             v-for="(p, index) in progressArray"
             :key="index"
-            class="h-2 transition-all duration-300"
-            :style="{
-              width: p + '%',
-              backgroundColor: color[index % color.length],
-            }"
-          ></div>
+            class="w-full h-2 rounded-r overflow-hidden"
+            :style="{ backgroundColor: props.bgColor }"
+          >
+            <div
+              class="h-full rounded-r transition-all duration-300"
+              :style="{
+                width: p + '%',
+                background: props.gradientColors?.[index]
+                  ? `linear-gradient(to right, ${props.gradientColors[
+                      index
+                    ].join(',')})`
+                  : color[index % color.length],
+              }"
+            ></div>
+          </div>
         </template>
+
         <div
           v-else
-          class="h-2 rounded-r transition-all duration-300"
-          :style="{
-            width: progressArray + '%',
-            backgroundColor: resolvedColor,
-          }"
-        ></div>
+          class="w-full h-2 rounded-r overflow-hidden"
+          :style="{ backgroundColor: props.bgColor }"
+        >
+          <div
+            class="h-full rounded-r transition-all duration-300"
+            :style="{
+              width: progressArray + '%',
+              background: props.gradientColors?.[0]
+                ? `linear-gradient(to right, ${props.gradientColors[0].join(
+                    ','
+                  )})`
+                : resolvedColor,
+            }"
+          ></div>
+        </div>
       </div>
     </template>
   </div>
@@ -123,32 +143,26 @@
 import { computed, onMounted, ref, nextTick, watch } from "vue";
 
 const props = defineProps({
-  type: {
-    type: String,
-    default: "",
-  },
-  progress: {
-    type: [Number, Array],
-    default: 50,
-  },
-  title: {
-    type: String,
-    default: "",
-  },
-  color: {
-    type: Array,
-    default: () => ["#00BDA7", "#FFFFFF"],
-  },
+  type: { type: String, default: "" },
+  progress: { type: [Number, Array], default: 50 },
+  title: { type: String, default: "" },
+  color: { type: Array, default: () => ["#00BDA7", "#FFFFFF"] },
   customClass: { type: String, default: "w-24 h-24" },
   titleClass: { type: String, default: "" },
+  gradientColors: { type: Array, default: null }, //  [["#00AAFF","#00BDA7"], ["#FFAA00","#FF5500"]]
+  bgColor: { type: String, default: "#1C1C1C" },
 });
 
 // const progressArray = computed(() => {
 //   return Array.isArray(props.progress) ? props.progress : props.progress;
 // });
 
+// const progressArray = ref(
+//   Array.isArray(props.progress) ? props.progress.map(() => 0) : 0
+// );
+
 const progressArray = ref(
-  Array.isArray(props.progress) ? props.progress.map(() => 0) : 0
+  Array.isArray(props.progress) ? props.progress.map(() => 0) : [0]
 );
 
 const radii = computed(() => {
@@ -173,22 +187,38 @@ const resolvedColor = computed(() => {
 const radius = 16;
 const circumference = 2 * Math.PI * radius;
 
+// onMounted(() => {
+//   nextTick(() => {
+//     progressArray.value = Array.isArray(props.progress)
+//       ? [...props.progress]
+//       : props.progress;
+//   });
+// });
+
+// watch(
+//   () => props.progress,
+//   (newVal) => {
+//     if (Array.isArray(newVal)) {
+//       progressArray.value = [...newVal];
+//     } else {
+//       progressArray.value = newVal ?? 0;
+//     }
+//   },
+//   { deep: true }
+// );
+
 onMounted(() => {
   nextTick(() => {
     progressArray.value = Array.isArray(props.progress)
       ? [...props.progress]
-      : props.progress;
+      : [props.progress];
   });
 });
 
 watch(
   () => props.progress,
   (newVal) => {
-    if (Array.isArray(newVal)) {
-      progressArray.value = [...newVal];
-    } else {
-      progressArray.value = newVal ?? 0;
-    }
+    progressArray.value = Array.isArray(newVal) ? [...newVal] : [newVal ?? 0];
   },
   { deep: true }
 );

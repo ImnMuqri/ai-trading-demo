@@ -29,16 +29,18 @@
       <div
         v-for="plan in subscriptionPlans"
         :key="plan.id"
-        class="flex flex-col items-center gap-4 h-[400px] p-6 border border-[#2D2D2D] rounded-md"
+        class="flex flex-col items-center gap-4 h-[400px] p-6 border border-[#2D2D2D] rounded-md overflow-hidden"
       >
-        <div class="flex flex-col gap-1 px-16 w-fit items-center">
+        <div class="flex flex-col gap-1 px-16 pb-2 w-fit items-center">
           <UiIcon icon="lucide:coffee" custom-class="w-8 h-8"></UiIcon>
-          <p class="text-lg">{{ plan.name }}</p>
-          <p class="text-[12px] text-gray-400">{{ plan.description }}</p>
+          <p class="text-lg text-center py-2">{{ plan.name }}</p>
+          <p class="text-[12px] text-gray-400 text-center">
+            {{ plan.description }}
+          </p>
         </div>
         <div class="h-fit w-full flex flex-col gap-2">
           <p class="text-md">Request Limit: {{ plan.requestLimit }}</p>
-          <p class="text-md">{{ plan.price }} {{ plan.currency }}</p>
+          <p class="text-md">{{ plan.currency }} {{ plan.price }}</p>
         </div>
         <div class="h-full w-full flex flex-col justify-between">
           <div class="grid grid-cols-1 gap-4 text-left text-sm text-gray-400">

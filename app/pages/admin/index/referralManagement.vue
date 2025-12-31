@@ -451,6 +451,7 @@ const openDeleteConfirm = (campaign) => {
 const deleteCampaign = async () => {
   if (isDeleteLoading.value) return;
   isDeleteLoading.value = true;
+
   try {
     const res = await $api.delete(
       `/api/admin/referral/campaigns/${selectedCampaign.value.id}`
@@ -461,6 +462,14 @@ const deleteCampaign = async () => {
     successModal.value = true;
     await getCampaigns();
   } catch (error) {
+    console.error("Error deleting campaign:", error);
+    openConfirm.value = false;
+    showToast(
+      error.response?.data?.message ??
+        error.message ??
+        "Failed to delete campaign",
+      "error"
+    );
   } finally {
     isDeleteLoading.value = false;
   }

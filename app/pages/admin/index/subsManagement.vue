@@ -1,5 +1,83 @@
 <template>
-  <div class="text-white">
+  <div class="text-white flex flex-col gap-4">
+    <div class="flex flex-col xl:flex-row gap-4">
+      <UiCard isGradient class="p-4 flex flex-col gap-4">
+        <div class="flex items-center gap-2">
+          <UiIcon
+            icon="qlementine-icons:money-16"
+            custom-class="w-3 h-3"
+          ></UiIcon>
+          <span class="text-sm">Subscription Breakdown</span>
+        </div>
+
+        <div
+          class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-10"
+        >
+          <div
+            class="flex flex-col gap-3 w-full max-w-[220px] border-l-[2px] border-[#D9D9D9] py-3"
+          >
+            <UiProgress
+              :progress="planProgress"
+              :gradientColors="[['#00AAFF', '#00BDA7']]"
+            />
+          </div>
+
+          <div class="flex flex-col gap-2 py-4 w-full max-w-[220px]">
+            <div
+              v-for="(name, idx) in planNames"
+              :key="idx"
+              class="flex justify-between text-[12px]"
+            >
+              <p>{{ name }}</p>
+              <p class="text-[#00BDA7]">{{ planProgress[idx] }}</p>
+            </div>
+          </div>
+        </div>
+      </UiCard>
+
+      <UiCard is-gradient class="p-4 flex-1 bg-[#0D0D0D]">
+        <div class="flex gap-2 items-center mb-4">
+          <UiIcon icon="humbleicons:users" custom-class="w-4 h-4"></UiIcon>
+          <p class="text-sm">Subscription Summary</p>
+        </div>
+
+        <div
+          class="flex flex-col lg:flex-row items-center justify-center w-full h-full pb-6 gap-8"
+        >
+          <UiProgress
+            type="circle"
+            :progress="progressData"
+            title="Subscription Revenue"
+            custom-class="max-w-[200px]"
+          />
+
+          <div class="flex flex-col gap-2 text-white">
+            <div>
+              <p class="text-sm text-[#838383]">Total Revenue</p>
+              <p class="text-xl font-semibold text-[#00BDA7]">
+                {{ subAnalytics.totalRevenue ?? "0" }}
+              </p>
+            </div>
+
+            <div>
+              <p class="text-[12px] text-[#838383]">Monthly Revenue</p>
+              <p class="text-sm">{{ subAnalytics.monthlyRevenue ?? "0" }}</p>
+            </div>
+
+            <div
+              class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+            ></div>
+
+            <div>
+              <p class="text-[12px] text-[#838383]">Subscription Growth</p>
+              <p class="text-sm">
+                {{ subAnalytics.subscriptionGrowth ?? "0" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </UiCard>
+    </div>
     <UiCard class="py-2 text-[12px] h-full flex-1">
       <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
         <UiIcon icon="mdi:credit-card-outline" custom-class="w-4 h-4"></UiIcon>
@@ -318,10 +396,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const { $api } = useNuxtApp();
 
+const subAnalytics = ref({});
 const subscriptionPlans = ref([]);
 const plansLoading = ref(false);
 const subscriptionColumns = [
@@ -419,6 +498,37 @@ const validateForm = (plan) => {
   return isValid;
 };
 
+const progressData = computed(() => {
+  const total = subAnalytics.value.totalRevenue ?? 0;
+  const monthly = subAnalytics.value.monthlyRevenue ?? 0;
+
+  const max = Math.max(total, monthly, 1);
+
+  return [
+    Math.min(Math.round((total / max) * 100), 100),
+    Math.min(Math.round((monthly / max) * 100), 100),
+  ];
+});
+
+const planProgress = computed(() => {
+  if (!subAnalytics.value?.planCounts) return [0, 0, 0, 0];
+  return subAnalytics.value.planCounts.map(
+    (plan) => plan.subscriptionCount ?? 0
+  );
+});
+
+const defaultPlans = [
+  { name: "Subscription 1", subscriptionCount: 0 },
+  { name: "Subscription 2", subscriptionCount: 0 },
+  { name: "Subscription 3", subscriptionCount: 0 },
+  { name: "Subscription 4", subscriptionCount: 0 },
+];
+
+const planNames = computed(() => {
+  const plans = subAnalytics.value?.planCounts ?? defaultPlans;
+  return plans.map((plan) => plan.name ?? "");
+});
+
 const getSubscriptionPlans = async () => {
   plansLoading.value = true;
   try {
@@ -429,6 +539,16 @@ const getSubscriptionPlans = async () => {
     console.error("Failed to fetch subscription plans:", error);
   } finally {
     plansLoading.value = false;
+  }
+};
+
+const getSubscriptionAnalysis = async () => {
+  try {
+    const res = await $api.get("/api/admin/subscription/analytics");
+    subAnalytics.value = res.data.data?.analytics;
+  } catch (error) {
+    console.error("Failed to fetch subscription analytics", error);
+  } finally {
   }
 };
 
@@ -560,5 +680,6 @@ const handleRowsPerPageChange = (rpp) => {
 
 onMounted(() => {
   getSubscriptionPlans();
+  getSubscriptionAnalysis();
 });
 </script>

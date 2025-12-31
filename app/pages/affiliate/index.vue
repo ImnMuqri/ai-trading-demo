@@ -15,7 +15,7 @@
           <span class="text-sm">Affiliator Profit</span>
         </div>
         <div
-          class="w-full md:w-[350px] px-6 py-2 flex items-center justify-between gap-8"
+          class="w-full xl:w-[350px] px-6 py-2 flex items-center justify-between gap-8"
         >
           <div>
             <p class="text-sm text-[#838383]">Total Profits</p>
@@ -25,25 +25,22 @@
           </div>
           <div class="flex flex-col items-end">
             <p class="text-sm text-[#838383]">Profits Today</p>
-            <p class="text-xl font-semibold text-white">
+            <p class="text-2xl font-semibold text-white">
               ${{ profitStats.today ?? "0.00" }}
             </p>
           </div>
         </div>
         <div class="px-6">
-          <div class="flex flex-col gap-3 py-3 border-l-[2px]">
-            <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
-              <div
-                class="h-full rounded-r-full bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] transition-all duration-300"
-                :style="{ width: progress + '%' }"
-              ></div>
-            </div>
-            <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
-              <div
-                class="h-full rounded-r-full bg-white transition-all duration-300"
-                :style="{ width: progress + '%' }"
-              ></div>
-            </div>
+          <div class="flex flex-col gap-3 py-3 border-l-[2px] border-[#D9D9D9]">
+            <UiProgress
+              :progress="[
+                profitStats.last7Days ?? 0,
+                profitStats.last30Days ?? 0,
+                profitStats.last60Days ?? 0,
+                profitStats.last90Days ?? 0,
+              ]"
+              :gradientColors="[['#00AAFF', '#00BDA7']]"
+            ></UiProgress>
           </div>
         </div>
         <div class="flex flex-col gap-2 px-6 py-2">
@@ -78,83 +75,87 @@
           <UiIcon icon="humbleicons:users" custom-class="w-4 h-4"></UiIcon>
           <p class="text-sm">Clients Summary</p>
         </div>
-        <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
-          <div class="flex flex-row items-center gap-8">
-            <UiProgress
-              type="circle"
-              :progress="[
-                clientSummary.total ?? 0,
-                clientSummary.newToday ?? 0,
-              ]"
-              title="Total Clients"
-              custom-class="max-w-[150px]"
-            />
+        <div class="flex flex-col lg:flex-row justify-center h-full w-full">
+          <div
+            class="p-10 flex flex-col lg:flex-row justify-around h-full w-full items-center gap-8"
+          >
+            <div class="flex flex-row items-center gap-8">
+              <UiProgress
+                type="circle"
+                :progress="[
+                  clientSummary.total ?? 0,
+                  clientSummary.newToday ?? 0,
+                ]"
+                title="Total Clients"
+                custom-class="max-w-[200px]"
+              />
 
-            <div class="flex flex-col gap-1.5 text-white">
-              <div>
-                <p class="text-sm text-[#838383]">Total Clients</p>
-                <p class="text-xl font-semibold text-[#00BDA7]">
-                  {{ clientSummary.total ?? "0" }}
-                </p>
-              </div>
+              <div class="flex flex-col gap-1.5 text-white">
+                <div>
+                  <p class="text-sm text-[#838383]">Total Clients</p>
+                  <p class="text-xl font-semibold text-[#00BDA7]">
+                    {{ clientSummary.total ?? "0" }}
+                  </p>
+                </div>
 
-              <div>
-                <p class="text-[12px] text-[#838383]">New Clients Today</p>
-                <p class="text-sm">
-                  {{ clientSummary.newToday ?? "0" }}
-                </p>
-              </div>
-              <div
-                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
-              ></div>
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Clients Last 30 Days
-                </p>
-                <p class="text-sm">
-                  {{ clientSummary.newLast30Days ?? "0" }}
-                </p>
-              </div>
+                <div>
+                  <p class="text-[12px] text-[#838383]">New Clients Today</p>
+                  <p class="text-sm">
+                    {{ clientSummary.newToday ?? "0" }}
+                  </p>
+                </div>
+                <div
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+                ></div>
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Clients Last 30 Days
+                  </p>
+                  <p class="text-sm">
+                    {{ clientSummary.newLast30Days ?? "0" }}
+                  </p>
+                </div>
 
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Clients Last 60 Days
-                </p>
-                <p class="text-sm">
-                  {{ clientSummary.newLast60Days ?? "0" }}
-                </p>
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Clients Last 60 Days
+                  </p>
+                  <p class="text-sm">
+                    {{ clientSummary.newLast60Days ?? "0" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-row items-center gap-8 b">
+              <UiProgress
+                type="circle"
+                :progress="[70, 90]"
+                title="Clients Type"
+                custom-class="max-w-[200px]"
+              />
+
+              <div class="flex flex-col gap-1.5 text-white">
+                <div>
+                  <div class="flex gap-1 text-[#838383] mb-1">
+                    <UiIcon icon="mdi:package-variant"></UiIcon>
+                    <p class="text-[12px] text-[#838383]">Basic Package</p>
+                  </div>
+                  <p class="text-sm font-semibold">No Data</p>
+                </div>
+
+                <div>
+                  <div class="flex gap-1 text-[#838383] mb-1">
+                    <UiIcon icon="mdi:package-variant"></UiIcon>
+                    <p class="text-[12px] text-[#838383]">Pro Package</p>
+                  </div>
+                  <p class="text-sm font-semibold">No Data</p>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="flex flex-row items-center gap-8">
-            <UiProgress
-              type="circle"
-              :progress="[70, 90]"
-              title="Clients Type"
-              custom-class="max-w-[150px]"
-            />
-
-            <div class="flex flex-col gap-1.5 text-white">
-              <div>
-                <div class="flex gap-1 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Basic Package</p>
-                </div>
-                <p class="text-sm font-semibold">No Data</p>
-              </div>
-
-              <div>
-                <div class="flex gap-1 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Pro Package</p>
-                </div>
-                <p class="text-sm font-semibold">No Data</p>
-              </div>
-            </div>
-          </div>
-        </div></UiCard
-      >
+        </div>
+      </UiCard>
     </div>
     <div>
       <UiCard class="p-4 text-[12px]">
@@ -246,6 +247,7 @@
             </div>
             <UiTable
               :allItems="usersData"
+              :columns="userColumns"
               :isLoading="userLoading"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
@@ -254,19 +256,6 @@
               @rows-per-page-changed="handleRowsPerPageChange"
               empty-class="min-h-[400px]"
             >
-              <template #header="{ applyBorder }">
-                <div class="grid grid-cols-6 gap-2">
-                  <div
-                    v-for="(col, idx) in userColumns"
-                    :key="col.key"
-                    class="text-gray-300 font-bold"
-                    :class="applyBorder(idx, userColumns.length)"
-                  >
-                    <div>{{ col.label }}</div>
-                  </div>
-                </div>
-              </template>
-
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -663,7 +652,7 @@ const generateRef = async () => {
     };
     const res = await $api.post("/api/affiliate/referral-links", payload);
 
-    generatedRef.value = res.data?.data?.referralLink?.referralCode;
+    generatedRef.value = res.data?.data?.referralLink?.destinationUrl;
     showToast(res.message ?? "Success in generating refferal code", "success");
   } catch (error) {
     console.error("Error in generating referral link"), error;
