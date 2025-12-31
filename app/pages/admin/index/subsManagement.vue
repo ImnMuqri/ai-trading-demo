@@ -8,6 +8,7 @@
 
       <UiTable
         :allItems="subscriptionPlans"
+        :columns="subscriptionColumns"
         :isLoading="plansLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
@@ -16,19 +17,6 @@
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
       >
-        <template #header="{ applyBorder }">
-          <div class="grid grid-cols-6 gap-2">
-            <div
-              v-for="(col, idx) in subscriptionColumns"
-              :key="col.key"
-              class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
-              :class="applyBorder(idx, subscriptionColumns.length)"
-            >
-              {{ col.label }}
-            </div>
-          </div>
-        </template>
-
         <template #row="{ item, applyBorder }">
           <div class="grid grid-cols-6 gap-2 items-center">
             <div
@@ -337,11 +325,11 @@ const { $api } = useNuxtApp();
 const subscriptionPlans = ref([]);
 const plansLoading = ref(false);
 const subscriptionColumns = [
-  { label: "Name", key: "name" },
-  { label: "Request Limit", key: "requestLimit" },
-  { label: "Price", key: "price" },
-  { label: "Duration (days)", key: "duration" },
-  { label: "Active", key: "isActive" },
+  { label: "Name", key: "name", sortable: true },
+  { label: "Request Limit", key: "requestLimit", sortable: true },
+  { label: "Price", key: "price", sortable: true },
+  { label: "Duration (days)", key: "duration", sortable: true },
+  { label: "Active", key: "isActive", sortable: true },
   { label: "Actions", key: "actions" },
 ];
 

@@ -2,7 +2,8 @@
   <div>
     <template v-if="props.type === 'circle'">
       <div
-        :class="['inline-flex justify-center items-center', props.customClass]">
+        :class="['inline-flex justify-center items-center', props.customClass]"
+      >
         <!-- SVG Circle -->
         <svg viewBox="0 0 36 36" class="w-full h-full">
           <template v-if="Array.isArray(progressArray)">
@@ -14,21 +15,23 @@
               :r="16 - i * 3.8"
               stroke-width="2.8"
               fill="none"
-              stroke="#1A1A1AFF" />
+              stroke="#1A1A1AFF"
+            />
             <circle
               v-for="(p, i) in progressArray"
               :key="'fg-' + i"
               cx="18"
               cy="18"
-              :r="16 - i * 3.8"
+              :r="radii[i]"
               stroke-width="2.8"
               fill="none"
               :stroke="color[i % color.length]"
-              :stroke-dasharray="2 * Math.PI * (16 - i * 5)"
-              :stroke-dashoffset="2 * Math.PI * (16 - i * 5) * (1 - p / 100)"
+              :stroke-dasharray="circumferences[i]"
+              :stroke-dashoffset="circumferences[i] * (1 - p / 100)"
               stroke-linecap="round"
               transform="rotate(-90 18 18)"
-              class="transition-all duration-800" />
+              class="transition-all duration-800"
+            />
           </template>
 
           <template v-else>
@@ -39,7 +42,8 @@
               stroke-width="3"
               fill="none"
               class="text-[#1C1C1C]"
-              stroke="currentColor" />
+              stroke="currentColor"
+            />
             <circle
               cx="18"
               cy="18"
@@ -58,7 +62,8 @@
               "
               stroke-linecap="round"
               transform="rotate(-90 18 18)"
-              class="transition-all duration-800" />
+              class="transition-all duration-800"
+            />
           </template>
         </svg>
 
@@ -68,7 +73,8 @@
           :class="[
             'absolute text-center text-[12px] font-medium text-white max-w-[80px]',
             props.titleClass,
-          ]">
+          ]"
+        >
           {{ props.title }}
         </div>
 
@@ -80,7 +86,8 @@
           ]"
           :style="{
             color: Array.isArray(progressArray) ? color[0] : resolvedColor,
-          }">
+          }"
+        >
           {{ Number(props.progress) }}%
         </div>
       </div>
@@ -96,7 +103,8 @@
             :style="{
               width: p + '%',
               backgroundColor: color[index % color.length],
-            }"></div>
+            }"
+          ></div>
         </template>
         <div
           v-else
@@ -104,14 +112,15 @@
           :style="{
             width: progressArray + '%',
             backgroundColor: resolvedColor,
-          }"></div>
+          }"
+        ></div>
       </div>
     </template>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref, nextTick } from "vue";
+import { computed, onMounted, ref, nextTick, watch } from "vue";
 
 const props = defineProps({
   type: {
@@ -142,6 +151,15 @@ const progressArray = ref(
   Array.isArray(props.progress) ? props.progress.map(() => 0) : 0
 );
 
+const radii = computed(() => {
+  if (!Array.isArray(progressArray.value)) return [];
+  return progressArray.value.map((_, i) => 16 - i * 3.8);
+});
+
+const circumferences = computed(() => {
+  return radii.value.map((r) => 2 * Math.PI * r);
+});
+
 const resolvedColor = computed(() => {
   if (props.color && props.color.length > 0) return props.color[0];
   if (progressArray.value >= 100) return "#059669";
@@ -157,7 +175,21 @@ const circumference = 2 * Math.PI * radius;
 
 onMounted(() => {
   nextTick(() => {
-    progressArray.value = props.progress;
+    progressArray.value = Array.isArray(props.progress)
+      ? [...props.progress]
+      : props.progress;
   });
 });
+
+watch(
+  () => props.progress,
+  (newVal) => {
+    if (Array.isArray(newVal)) {
+      progressArray.value = [...newVal];
+    } else {
+      progressArray.value = newVal ?? 0;
+    }
+  },
+  { deep: true }
+);
 </script>

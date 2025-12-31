@@ -8,6 +8,7 @@
 
       <UiTable
         :allItems="referralCampaigns"
+        :columns="referralColumns"
         :isLoading="campaignsLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
@@ -16,23 +17,6 @@
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
       >
-        <template #header>
-          <div class="grid grid-cols-6 gap-2">
-            <div
-              v-for="(col, idx) in referralColumns"
-              :key="col.key"
-              class="flex flex-row items-center justify-center text-gray-300 font-bold h-10"
-              :class="
-                idx < referralColumns.length - 1
-                  ? 'border-r border-[#2A2A2A] pr-2'
-                  : ''
-              "
-            >
-              {{ col.label }}
-            </div>
-          </div>
-        </template>
-
         <template #row="{ item }">
           <div
             class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center"
@@ -291,11 +275,11 @@ const referralCampaigns = ref([]);
 const campaignsLoading = ref(false);
 
 const referralColumns = [
-  { label: "ID", key: "id" },
-  { label: "Name", key: "name" },
-  { label: "Commission %", key: "commissionPercentage" },
-  { label: "Status", key: "status" },
-  { label: "Created", key: "createdAt" },
+  { label: "ID", key: "id", sortable: true },
+  { label: "Name", key: "name", sortable: true },
+  { label: "Commission %", key: "commissionPercentage", sortable: true },
+  { label: "Status", key: "status", sortable: true },
+  { label: "Created", key: "createdAt", sortable: true },
   { label: "Actions", key: "actions" },
 ];
 

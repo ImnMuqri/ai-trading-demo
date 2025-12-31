@@ -82,7 +82,10 @@
           <div class="flex flex-row items-center gap-8">
             <UiProgress
               type="circle"
-              :progress="[70, 80]"
+              :progress="[
+                clientSummary.total ?? 0,
+                clientSummary.newToday ?? 0,
+              ]"
               title="Total Clients"
               custom-class="max-w-[150px]"
             />
@@ -659,7 +662,6 @@ const generateRef = async () => {
       destinationUrl: "https://example.com",
     };
     const res = await $api.post("/api/affiliate/referral-links", payload);
-
 
     generatedRef.value = res.data?.data?.referralLink?.referralCode;
     showToast(res.message ?? "Success in generating refferal code", "success");
