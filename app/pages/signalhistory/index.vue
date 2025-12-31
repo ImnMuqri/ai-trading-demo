@@ -7,18 +7,51 @@
       ]"
     >
       <!-- Header -->
-      <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
-        <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
-        <p class="text-lg font-semibold py-2">Signal History</p>
+      <div class="flex flex-row justify-between">
+        <div
+          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+        >
+          <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
+          <p class="text-lg font-semibold py-2">Signal History</p>
+        </div>
+        <div class="flex flex-wrap justify-end items-center gap-3">
+          <span class="text-[#838383]">Filters : </span>
+          <div class="flex flex-row">
+            <UiSearch v-model="search" dark />
+            <UiFilter
+              v-model="rowsPerPage"
+              icon="proicons:bullet-list-square"
+              :options="rowsPerPageOptions"
+            />
+            <div
+              class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="handleSearchSubmit"
+            >
+              <UiIcon
+                icon="formkit:submit"
+                class="!text-[#00BDA7] hover:!text-white"
+              />
+            </div>
+            <div
+              class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="clearData()"
+            >
+              <UiIcon
+                icon="weui:refresh-filled"
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <UiTable
-        :allItems="historyData"
+        :allItems="filteredData.length ? filteredData : historyData"
         :columns="historyColumns"
         :isLoading="historyLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="historyData.length"
+        :totalItems="(filteredData.length ? filteredData : historyData).length"
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
@@ -329,6 +362,8 @@ definePageMeta({
 
 const { $api } = useNuxtApp();
 const historyData = ref([]);
+const filteredData = ref([]);
+
 const openDetailedAnalysis = ref(false);
 const selectedHistory = ref(null);
 const historyLoading = ref(false);
@@ -342,6 +377,14 @@ const historyColumns = [
 
 const currentPage = ref(1);
 const rowsPerPage = ref(15);
+
+const search = ref(null);
+const rowsPerPageOptions = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "15", value: 15 },
+  { label: "20", value: 20 },
+];
 
 const formatScore = (score) => `${Math.round(score * 100)}%`;
 const formatPrice = (value) => {
@@ -373,12 +416,38 @@ const handlePageChange = (page) => {
 
 const handleRowsPerPageChange = (rpp) => {
   rowsPerPage.value = rpp;
-  currentPage.value = 1; // reset to first page
+  currentPage.value = 1;
 };
 
 onMounted(() => {
   getSignalHistory();
 });
+
+/**
+ * Table shit
+ */
+
+const clearData = () => {
+  rowsPerPage.value = 15;
+  search.value = null;
+  getSignalHistory();
+};
+
+const handleSearchSubmit = () => {
+  const query = search.value?.toLowerCase() || "";
+
+  if (!query) {
+    filteredData.value = [];
+  } else {
+    filteredData.value = historyData.value.filter((item) =>
+      Object.values(item).some((val) =>
+        String(val).toLowerCase().includes(query)
+      )
+    );
+  }
+
+  currentPage.value = 1;
+};
 </script>
 
 <style lang="scss" scoped></style>

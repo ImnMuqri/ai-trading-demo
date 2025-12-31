@@ -8,7 +8,8 @@
       <div
         v-if="open"
         class="absolute z-50 mt-2 rounded-md shadow-lg bg-[#1C1C1C] border border-[#2A2A2A] p-3 text-sm"
-        :class="positionClass">
+        :class="positionClass"
+      >
         <slot />
       </div>
     </transition>

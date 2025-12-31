@@ -7,14 +7,16 @@
       <!-- Left icon slot -->
       <div
         v-if="$slots['icon-left']"
-        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+      >
         <slot name="icon-left"></slot>
       </div>
 
       <!-- Right icon slot -->
       <div
         v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+      >
         <slot name="icon-right"></slot>
       </div>
 
@@ -37,7 +39,8 @@
           dark
             ? 'bg-[#1A1C20] border-[#2A2A2A] text-white'
             : 'bg-white border !text-black',
-        ]" />
+        ]"
+      />
     </div>
 
     <!-- Error message -->
