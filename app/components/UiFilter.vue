@@ -49,6 +49,7 @@ const props = defineProps({
 const emit = defineEmits(["update:modelValue"]);
 
 const open = ref(false);
+const wrapper = ref(null);
 
 const toggleDropdown = () => (open.value = !open.value);
 
@@ -70,6 +71,20 @@ const positionClass = computed(() => {
     default:
       return "mt-2 left-0";
   }
+});
+
+const handleClickOutside = (event) => {
+  if (wrapper.value && !wrapper.value.contains(event.target)) {
+    open.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
