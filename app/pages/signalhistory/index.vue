@@ -7,20 +7,24 @@
       ]"
     >
       <!-- Header -->
-      <div class="flex flex-row justify-between">
+      <div
+        class="flex flex-col sm:flex-row justify-center sm:justify-between sm:border-none border-b border-[#1C1C1C] sm:pb-0 pb-2"
+      >
         <div
-          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+          class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
         >
           <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
           <p class="text-lg font-semibold py-2">Signal History</p>
         </div>
-        <div class="flex flex-wrap justify-end items-center gap-3">
+        <div
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+        >
           <span class="text-[#838383]">Filters : </span>
-          <div class="flex flex-row">
+          <div class="flex flex-wrap">
             <UiSearch v-model="search" dark />
             <UiFilter
               v-model="rowsPerPage"
-              icon="proicons:bullet-list-square"
+              icon="gg:list"
               :options="rowsPerPageOptions"
             />
             <div
@@ -46,12 +50,12 @@
       </div>
 
       <UiTable
-        :allItems="filteredData.length ? filteredData : historyData"
+        :allItems="isSearchingHistory ? filteredData : historyData"
         :columns="historyColumns"
         :isLoading="historyLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="(filteredData.length ? filteredData : historyData).length"
+        :totalItems="(isSearchingHistory ? filteredData : historyData).length"
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
@@ -378,6 +382,7 @@ const historyColumns = [
 const currentPage = ref(1);
 const rowsPerPage = ref(15);
 
+const isSearchingHistory = ref(false);
 const search = ref(null);
 const rowsPerPageOptions = [
   { label: "5", value: 5 },
@@ -430,19 +435,28 @@ onMounted(() => {
 const clearData = () => {
   rowsPerPage.value = 15;
   search.value = null;
+  filteredData.value = [];
+  isSearchingHistory.value = false;
   getSignalHistory();
 };
 
 const handleSearchSubmit = () => {
-  const query = search.value?.toLowerCase() || "";
+  const query = search.value?.toLowerCase().trim();
+
+  isSearchingHistory.value = !!query;
 
   if (!query) {
     filteredData.value = [];
   } else {
+    const searchableKeys = historyColumns
+      .map((col) => col.key)
+      .filter((key) => key !== "actions");
+
     filteredData.value = historyData.value.filter((item) =>
-      Object.values(item).some((val) =>
-        String(val).toLowerCase().includes(query)
-      )
+      searchableKeys.some((key) => {
+        const value = item[key];
+        return value != null && String(value).toLowerCase().includes(query);
+      })
     );
   }
 

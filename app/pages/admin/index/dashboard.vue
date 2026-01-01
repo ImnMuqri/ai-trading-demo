@@ -230,29 +230,71 @@
             custom-class="!rounded-t-none !rounded-tr-lg"
           >
             <div
-              class="flex flex-row justify-between border-b border-[#1C1C1C]"
+              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
             >
-              <div class="flex items-center gap-2 px-4 pb-2">
+              <div
+                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+              >
                 <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
                 <p class="text-lg font-semibold py-2 text-sm">User List</p>
               </div>
-              <div class="flex flex-row justify-center items-center">
-                <div class="">
-                  <span class="!hidden text-[#838383]">Filters :</span>
+              <div
+                class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+              >
+                <span class="text-[#838383]">Filters : </span>
+                <div class="flex flex-wrap">
+                  <UiSearch v-model="userSearch" dark />
+                  <UiFilter
+                    v-model="selectedRole"
+                    icon="fa6-regular:user"
+                    :options="roleOptions"
+                  />
+                  <UiFilter
+                    v-model="rowsPerPage"
+                    icon="gg:list"
+                    :options="rowsPerPageOptions"
+                  />
+
+                  <div
+                    class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+                    @click="searchUsers()"
+                  >
+                    <UiIcon
+                      icon="formkit:submit"
+                      class="!text-[#00BDA7] hover:!text-white"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+                    @click="clearData()"
+                  >
+                    <UiIcon
+                      icon="weui:refresh-filled"
+                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
             <UiTable
-              :allItems="usersData"
+              :allItems="
+                isSearchingUsers || isFilteringByRole
+                  ? filteredUsers
+                  : usersData
+              "
               :columns="userColumns"
               :isLoading="userLoading"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
-              :totalItems="usersData.length"
+              :totalItems="
+                (isSearchingUsers || isFilteringByRole
+                  ? filteredUsers
+                  : usersData
+                ).length
+              "
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
-              empty-class="min-h-[400px]"
             >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
@@ -451,7 +493,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { showToast } from "~/composables/useToastMessage";
 definePageMeta({
   layout: "layout",
@@ -462,7 +504,15 @@ const { $api } = useNuxtApp();
 const activeTab = ref("users");
 
 const usersData = ref([]);
+const filteredUsers = ref([]);
 const transactionsData = ref([]);
+const filteredTransactions = ref([]);
+
+const userSearch = ref(null);
+const isSearchingUsers = ref(false);
+const isFilteringByRole = ref(false);
+const transactionSearch = ref(null);
+
 const openConfirm = ref(false);
 const openUpdate = ref(false);
 const selectedUser = ref({
@@ -482,6 +532,20 @@ const currentPage = ref(1);
 const rowsPerPage = ref(5);
 const transactionCurrentPage = ref(1);
 const transactionRowsPerPage = ref(5);
+
+const selectedRole = ref("Show All");
+const roleOptions = [
+  { label: "Show All", value: "Show All" },
+  { label: "User", value: "User" },
+  { label: "Admin", value: "Admin" },
+];
+
+const rowsPerPageOptions = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "15", value: 15 },
+  { label: "20", value: 20 },
+];
 
 const userColumns = [
   { label: "Name", key: "name", sortable: true },
@@ -694,12 +758,6 @@ const getTransactions = async () => {
   }
 };
 
-onMounted(() => {
-  getUsers();
-  getTransactions();
-  getAnalytics();
-});
-
 const handlePageChange = (page) => {
   currentPage.value = page;
 };
@@ -716,6 +774,72 @@ const transactionandleRowsPerPageChange = (rpp) => {
   transactionRowsPerPage.value = rpp;
   transactionCurrentPage.value = 1; // reset to first page
 };
+
+const clearData = () => {
+  rowsPerPage.value = 5;
+  userSearch.value = null;
+  selectedRole.value = "Show All";
+  filteredUsers.value = [];
+  isSearchingUsers.value = false;
+  isFilteringByRole.value = false;
+  getUsers();
+};
+
+const searchUsers = () => {
+  const query = userSearch.value?.toLowerCase().trim();
+
+  // isSearchingUsers.value = !!query;
+  isSearchingUsers.value = !!query || isFilteringByRole.value;
+
+  if (!query) {
+    filteredUsers.value = [];
+  } else {
+    const searchableKeys = userColumns
+      .map((col) => col.key)
+      .filter((key) => key !== "actions");
+
+    filteredUsers.value = usersData.value.filter((item) =>
+      searchableKeys.some((key) => {
+        const value = item[key];
+        return value != null && String(value).toLowerCase().includes(query);
+      })
+    );
+  }
+
+  currentPage.value = 1;
+};
+
+const filterByRole = (role) => {
+  if (!role || role === "Show All") {
+    isFilteringByRole.value = false;
+
+    filteredUsers.value = isSearchingUsers.value ? filteredUsers.value : [];
+
+    return;
+  }
+
+  isFilteringByRole.value = true;
+
+  const baseData = isSearchingUsers.value
+    ? filteredUsers.value
+    : usersData.value;
+
+  filteredUsers.value = baseData.filter(
+    (user) => user.role?.toLowerCase() === role.toLowerCase()
+  );
+
+  currentPage.value = 1;
+};
+
+onMounted(() => {
+  getUsers();
+  getTransactions();
+  getAnalytics();
+});
+
+watch(selectedRole, (role) => {
+  filterByRole(role);
+});
 </script>
 
 <style lang="scss" scoped></style>
