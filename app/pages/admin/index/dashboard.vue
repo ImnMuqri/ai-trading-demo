@@ -236,7 +236,7 @@
                 class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
               >
                 <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
-                <p class="text-lg font-semibold py-2 text-sm">User List</p>
+                <p class="text-sm font-semibold py-2">User List</p>
               </div>
               <div
                 class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
@@ -355,19 +355,74 @@
           >
             <!-- Table Header -->
             <div
-              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
             >
-              <UiIcon icon="mdi:currency-usd" custom-class="w-4 h-4"></UiIcon>
-              <p class="text-sm font-semibold py-2">Transactions List</p>
+              <div
+                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+              >
+                <UiIcon icon="mdi:currency-usd" custom-class="w-4 h-4"></UiIcon>
+                <p class="text-sm font-semibold py-2">Transactions List</p>
+              </div>
+              <div
+                class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+              >
+                <span class="text-[#838383]">Filters : </span>
+                <div class="flex flex-wrap">
+                  <UiSearch v-model="transactionSearch" dark />
+                  <UiFilter
+                    v-model="selectedType"
+                    icon="fa6-regular:user"
+                    :options="typeOptions"
+                  />
+                  <UiFilter
+                    v-model="selectedTransaction"
+                    icon="mingcute:transfer-line"
+                    :options="transactionOptions"
+                  />
+                  <UiFilter
+                    v-model="transactionRowsPerPage"
+                    icon="gg:list"
+                    :options="rowsPerPageOptions"
+                  />
+
+                  <div
+                    class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+                    @click="searchTransactions()"
+                  >
+                    <UiIcon
+                      icon="formkit:submit"
+                      class="!text-[#00BDA7] hover:!text-white"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+                    @click="clearTransactions()"
+                  >
+                    <UiIcon
+                      icon="weui:refresh-filled"
+                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             <UiTable
-              :allItems="transactionsData"
+              :allItems="
+                isSearchingTransaction || isFilteringStatus || isFilteringType
+                  ? filteredTransactions
+                  : transactionsData
+              "
               :columns="transactionsColumns"
               :isLoading="transactionLoading"
               :currentPage="transactionCurrentPage"
               :rowsPerPage="transactionRowsPerPage"
-              :totalItems="transactionsData.length"
+              :totalItems="
+                (isSearchingTransaction || isFilteringStatus || isFilteringType
+                  ? filteredTransactions
+                  : transactionsData
+                ).length
+              "
               @page-changed="transactionHandlePageChange"
               @rows-per-page-changed="transactionandleRowsPerPageChange"
               empty-class="min-h-[350px]"
@@ -512,6 +567,9 @@ const userSearch = ref(null);
 const isSearchingUsers = ref(false);
 const isFilteringByRole = ref(false);
 const transactionSearch = ref(null);
+const isSearchingTransaction = ref(false);
+const isFilteringType = ref(null);
+const isFilteringStatus = ref(null);
 
 const openConfirm = ref(false);
 const openUpdate = ref(false);
@@ -538,6 +596,22 @@ const roleOptions = [
   { label: "Show All", value: "Show All" },
   { label: "User", value: "User" },
   { label: "Admin", value: "Admin" },
+];
+
+const selectedType = ref("Show All");
+const typeOptions = [
+  { label: "Show All", value: "Show All" },
+  { label: "Completed", value: "Completed" },
+  { label: "Pending", value: "Pending" },
+  { label: "Failed", value: "Failed" },
+];
+
+const selectedTransaction = ref("Show All");
+const transactionOptions = [
+  { label: "Show All", value: "Show All" },
+  { label: "Subscription Payment", value: "subscription_payment" },
+  { label: "Annual Plan Renewal", value: "annual_plan_renewal" },
+  { label: "Others", value: "Others" },
 ];
 
 const rowsPerPageOptions = [
@@ -784,6 +858,16 @@ const clearData = () => {
   isFilteringByRole.value = false;
   getUsers();
 };
+const clearTransactions = () => {
+  transactionRowsPerPage.value = 5;
+  transactionSearch.value = null;
+  selectedType.value = "Show All";
+  selectedTransaction.value = "Show All";
+  filteredTransactions.value = [];
+  isSearchingTransaction.value = false;
+  isFilteringStatus.value = false;
+  getUsers();
+};
 
 const searchUsers = () => {
   const query = userSearch.value?.toLowerCase().trim();
@@ -831,6 +915,81 @@ const filterByRole = (role) => {
   currentPage.value = 1;
 };
 
+/**
+ * Transaction Table
+ */
+
+const searchTransactions = () => {
+  const query = transactionSearch.value?.toLowerCase().trim();
+
+  isSearchingTransaction.value =
+    !!query || isFilteringStatus.value || isFilteringType.value;
+
+  if (!query) {
+    filteredTransactions.value = [];
+  } else {
+    const searchableKeys = transactionsColumns
+      .map((col) => col.key)
+      .filter((key) => key);
+
+    filteredTransactions.value = transactionsData.value.filter((item) =>
+      searchableKeys.some((key) => {
+        const value = item[key];
+        return value != null && String(value).toLowerCase().includes(query);
+      })
+    );
+  }
+
+  transactionCurrentPage.value = 1;
+};
+
+const filterByStatus = (status) => {
+  if (!status || status === "Show All") {
+    isFilteringStatus.value = false;
+
+    filteredTransactions.value = isSearchingTransaction.value
+      ? filteredTransactions.value
+      : [];
+
+    return;
+  }
+
+  isFilteringStatus.value = true;
+
+  const baseData = isSearchingTransaction.value
+    ? filteredTransactions.value
+    : transactionsData.value;
+
+  filteredTransactions.value = baseData.filter(
+    (tx) => tx.paymentStatus?.toLowerCase() === status.toLowerCase()
+  );
+
+  transactionCurrentPage.value = 1;
+};
+
+const filterByType = (type) => {
+  if (!type || type === "Show All") {
+    isFilteringType.value = false;
+
+    filteredTransactions.value = isSearchingTransaction.value
+      ? filteredTransactions.value
+      : [];
+    return;
+  }
+
+  isFilteringType.value = true;
+
+  const baseData = isSearchingTransaction.value
+    ? filteredTransactions.value
+    : transactionsData.value;
+
+  filteredTransactions.value = baseData.filter(
+    (tx) => tx.type === type.toLowerCase()
+  );
+
+  transactionCurrentPage.value = 1;
+};
+
 onMounted(() => {
   getUsers();
   getTransactions();
@@ -839,6 +998,14 @@ onMounted(() => {
 
 watch(selectedRole, (role) => {
   filterByRole(role);
+});
+
+watch(selectedType, (status) => {
+  filterByStatus(status);
+});
+
+watch(selectedTransaction, (type) => {
+  filterByType(type);
 });
 </script>
 
