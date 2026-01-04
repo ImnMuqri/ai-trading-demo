@@ -228,6 +228,7 @@
             v-show="activeTab === 'users'"
             class="py-2 text-[12px] h-full flex-1"
             custom-class="!rounded-t-none !rounded-tr-lg"
+            :class="userLoading ? 'min-h-[350px]' : ''"
           >
             <div
               class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
@@ -295,6 +296,7 @@
               "
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
+              empty-class="min-h-[350px]"
             >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">

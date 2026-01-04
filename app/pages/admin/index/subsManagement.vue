@@ -79,18 +79,57 @@
       </UiCard>
     </div>
     <UiCard class="py-2 text-[12px] h-full flex-1">
-      <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
-        <UiIcon icon="mdi:credit-card-outline" custom-class="w-4 h-4"></UiIcon>
-        <p class="text-sm font-semibold py-2">Package List</p>
+      <div
+        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2"
+      >
+        <div class="flex items-center gap-2 px-4">
+          <UiIcon
+            icon="mdi:credit-card-outline"
+            custom-class="w-4 h-4"
+          ></UiIcon>
+          <p class="text-sm font-semibold py-2">Package List</p>
+        </div>
+
+        <div
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+        >
+          <span class="text-[#838383]">Filters : </span>
+          <div class="flex flex-wrap">
+            <UiSearch v-model="search" dark />
+            <UiFilter
+              v-model="rowsPerPage"
+              icon="gg:list"
+              :options="rowsPerPageOptions"
+            />
+            <div
+              class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="handleSearchSubmit"
+            >
+              <UiIcon
+                icon="formkit:submit"
+                class="!text-[#00BDA7] hover:!text-white"
+              />
+            </div>
+            <div
+              class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="clearData()"
+            >
+              <UiIcon
+                icon="weui:refresh-filled"
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <UiTable
-        :allItems="subscriptionPlans"
+        :allItems="isSearching ? filteredPlans : subscriptionPlans"
         :columns="subscriptionColumns"
         :isLoading="plansLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="subscriptionPlans.length"
+        :totalItems="(isSearching ? filteredPlans : subscriptionPlans).length"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
@@ -402,6 +441,7 @@ const { $api } = useNuxtApp();
 
 const subAnalytics = ref({});
 const subscriptionPlans = ref([]);
+const filteredPlans = ref([]);
 const plansLoading = ref(false);
 const subscriptionColumns = [
   { label: "Name", key: "name", sortable: true },
@@ -422,6 +462,15 @@ const isUpdateLoading = ref(false);
 
 const currentPage = ref(1);
 const rowsPerPage = ref(15);
+const rowsPerPageOptions = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "15", value: 15 },
+  { label: "20", value: 20 },
+];
+
+const isSearching = ref(false);
+const search = ref(null);
 
 const selectedPlan = ref(null);
 const successMsg = ref("Action successfull");
@@ -682,4 +731,36 @@ onMounted(() => {
   getSubscriptionPlans();
   getSubscriptionAnalysis();
 });
+
+const clearData = () => {
+  rowsPerPage.value = 15;
+  search.value = null;
+  filteredPlans.value = [];
+  isSearching.value = false;
+  getSubscriptionPlans();
+  getSubscriptionAnalysis();
+};
+
+const handleSearchSubmit = () => {
+  const query = search.value?.toLowerCase().trim();
+
+  isSearching.value = !!query;
+
+  if (!query) {
+    filteredPlans.value = [];
+  } else {
+    const searchableKeys = subscriptionColumns
+      .map((col) => col.key)
+      .filter((key) => key !== "actions");
+
+    filteredPlans.value = subscriptionPlans.value.filter((item) =>
+      searchableKeys.some((key) => {
+        const value = item[key];
+        return value != null && String(value).toLowerCase().includes(query);
+      })
+    );
+  }
+
+  currentPage.value = 1;
+};
 </script>

@@ -1,18 +1,56 @@
 <template>
   <div class="text-white">
     <UiCard class="py-2 text-[12px] h-full flex-1">
-      <div class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
-        <UiIcon icon="mdi:account-multiple-outline" custom-class="w-4 h-4" />
-        <p class="text-sm font-semibold py-2">Referral Campaigns</p>
+      <div
+        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2"
+      >
+        <div class="flex items-center gap-2 px-4">
+          <UiIcon icon="mdi:account-multiple-outline" custom-class="w-4 h-4" />
+          <p class="text-sm font-semibold py-2">Referral Campaigns</p>
+        </div>
+
+        <div
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3 px-3"
+        >
+          <span class="text-[#838383]">Filters : </span>
+          <div class="flex flex-wrap">
+            <UiSearch v-model="search" dark />
+            <UiFilter
+              v-model="rowsPerPage"
+              icon="gg:list"
+              :options="rowsPerPageOptions"
+            />
+            <div
+              class="flex w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="handleSearchSubmit"
+            >
+              <UiIcon
+                icon="formkit:submit"
+                class="!text-[#00BDA7] hover:!text-white"
+              />
+            </div>
+            <div
+              class="flex w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
+              @click="clearData()"
+            >
+              <UiIcon
+                icon="weui:refresh-filled"
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <UiTable
-        :allItems="referralCampaigns"
+        :allItems="isSearching ? filteredCampaigns : referralCampaigns"
         :columns="referralColumns"
         :isLoading="campaignsLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="referralCampaigns.length"
+        :totalItems="
+          (isSearching ? filteredCampaigns : referralCampaigns).length
+        "
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
@@ -272,6 +310,7 @@ const { $api } = useNuxtApp();
 const fromDate = ref(null);
 
 const referralCampaigns = ref([]);
+const filteredCampaigns = ref([]);
 const campaignsLoading = ref(false);
 
 const referralColumns = [
@@ -285,8 +324,15 @@ const referralColumns = [
 
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
-const transactionCurrentPage = ref(1);
-const transactionRowsPerPage = ref(15);
+const rowsPerPageOptions = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "15", value: 15 },
+  { label: "20", value: 20 },
+];
+
+const isSearching = ref(false);
+const search = ref(null);
 
 const openCreate = ref(false);
 const openUpdate = ref(false);
@@ -483,14 +529,37 @@ const handleRowsPerPageChange = (rpp) => {
   rowsPerPage.value = rpp;
   currentPage.value = 1; // reset to first page
 };
-const transactionHandlePageChange = (page) => {
-  currentPage.value = page;
-};
-
-const transactionandleRowsPerPageChange = (rpp) => {
-  rowsPerPage.value = rpp;
-  currentPage.value = 1; // reset to first page
-};
 
 onMounted(getCampaigns);
+
+const clearData = () => {
+  rowsPerPage.value = 15;
+  search.value = null;
+  filteredCampaigns.value = [];
+  isSearching.value = false;
+  getCampaigns();
+};
+
+const handleSearchSubmit = () => {
+  const query = search.value?.toLowerCase().trim();
+
+  isSearching.value = !!query;
+
+  if (!query) {
+    filteredCampaigns.value = [];
+  } else {
+    const searchableKeys = referralColumns
+      .map((col) => col.key)
+      .filter((key) => key !== "actions");
+
+    filteredCampaigns.value = referralCampaigns.value.filter((item) =>
+      searchableKeys.some((key) => {
+        const value = item[key];
+        return value != null && String(value).toLowerCase().includes(query);
+      })
+    );
+  }
+
+  currentPage.value = 1;
+};
 </script>
