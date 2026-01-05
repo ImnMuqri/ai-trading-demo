@@ -3,11 +3,13 @@
     <UiCard
       class="w-full flex flex-col justify-between mt-4 py-2 text-[12px] bg-[#0F0F0F] !border-none !p-0 !mt-0"
       :style="{ display: windowWidth <= props.tableBreakPoints ? 'none' : '' }"
-      :class="['', customClass]">
+      :class="['', customClass]"
+    >
       <div class="flex-1 h-full">
         <h2
           v-if="title"
-          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2 text-lg font-semibold text-gray-100">
+          class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2 text-lg font-semibold text-gray-100"
+        >
           {{ title }}
         </h2>
 
@@ -18,35 +20,63 @@
         <div
           v-if="isLoading"
           class="flex h-full w-full !text-white place-items-center justify-center"
-          :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]">
+          :class="[classModal ? 'flex-1 h-full w-full' : emptyClass]"
+        >
           <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-4xl" />
         </div>
 
         <div
           v-else-if="allItems.length != 0 && !isLoading"
           class="overflow-hidden w-full h-full flex-1 border-b rounded-b-none border-[#1C1C1C]"
-          :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']">
+          :class="[classModal, $slots.total ? 'rounded-t-md' : 'rounded-md']"
+        >
           <!-- Header -->
           <div
             class="px-4 grid grid-cols-[60px_1fr] gap-2 text-gray-300 font-bold rounded-t-md bg-gradient-to-b from-[#111111] to-[#1C1C1C] h-10"
             :class="[isModal ? (rowsPerPage > 10 ? 'pr-2' : '') : '']"
-            @click="sortCol">
+            @click="sortCol"
+          >
             <div
-              class="flex flex-col col-span-1 justify-center border-r border-[#1C1C1C]">
+              class="flex flex-col col-span-1 justify-center border-r border-[#1C1C1C]"
+            >
               No.
             </div>
             <div class="!h-10">
-              <slot
-                name="header"
-                :handle-sort="handleSort"
-                :sort-key="sortKey"
-                :sort-dir="sortDir"
-                :applyBorder="
-                  (idx, total) =>
-                    idx < total - 1
-                      ? 'border-r border-[#1C1C1C] pr-2 h-10 flex items-center justify-center'
-                      : 'h-10 flex items-center justify-center'
-                " />
+              <div
+                class="grid gap-2"
+                :style="{
+                  gridTemplateColumns: `repeat(${columns.length}, minmax(0,1fr))`,
+                }"
+              >
+                <div
+                  v-for="(col, idx) in columns"
+                  :key="col.key"
+                  class="flex items-center justify-center font-bold text-gray-300 select-none"
+                  :class="[
+                    applyBorder(idx, columns.length),
+                    col.sortable ? 'cursor-pointer' : 'cursor-default',
+                  ]"
+                  @click="handleSort(col)"
+                >
+                  <span class="flex items-center gap-1">
+                    {{ col.label }}
+
+                    <UiIcon
+                      v-if="col.sortable"
+                      :icon="
+                        sortKey === col.key
+                          ? sortDir === 'asc'
+                            ? 'mdi:chevron-up'
+                            : sortDir === 'desc'
+                            ? 'mdi:chevron-down'
+                            : ''
+                          : 'mdi:unfold-more-horizontal'
+                      "
+                      class="w-4 h-4 opacity-60"
+                    />
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -56,10 +86,12 @@
               v-for="(allItems, index) in pagedItems"
               :key="index"
               class="px-4 grid grid-cols-[60px_1fr] gap-2 items-center transition hover:bg-gray-800/20 text-gray-300"
-              :class="[index < allItems.length - 1 || !$slots.total ? '' : '']">
+              :class="[index < allItems.length - 1 || !$slots.total ? '' : '']"
+            >
               <div class="border-r border-[#1C1C1C] h-full grid items-center">
                 <div
-                  class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]">
+                  class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
+                >
                   {{ (currentPage - 1) * rowsPerPage + index + 1 }}
                 </div>
               </div>
@@ -74,7 +106,8 @@
                       idx < total - 1
                         ? 'border-r border-[#1C1C1C] pr-2 h-10 flex items-center justify-center truncate'
                         : 'h-10 flex items-center justify-center truncate'
-                  " />
+                  "
+                />
               </div>
             </div>
           </div>
@@ -82,12 +115,15 @@
         <div
           v-else
           class="w-full h-full text-white grid justify-center items-center rounded-md"
-          :class="[classModal ? 'flex-1 h-full' : emptyClass]">
+          :class="[classModal ? 'flex-1 h-full' : emptyClass]"
+        >
           <div
-            class="flex flex-col gap-[2px] items-center justify-center py-20">
+            class="flex flex-col gap-[2px] items-center justify-center py-20"
+          >
             <UiIcon
               icon="ph:files-duotone"
-              custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
+              custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+            />
             <p>No records found</p>
             <p class="italic text-[10px] text-[#626262]">
               New data will appear here once it becomes available.
@@ -101,7 +137,8 @@
       </div>
       <div
         class="flex items-center mt-2"
-        :class="$slots.actions ? 'justify-between' : 'justify-end'">
+        :class="$slots.actions ? 'justify-between' : 'justify-end'"
+      >
         <div v-if="$slots.actions">
           <slot name="actions"></slot>
         </div>
@@ -115,7 +152,8 @@
               @page-changed="(page) => emit('page-changed', page)"
               @rows-per-page-changed="
                 (rpp) => emit('rows-per-page-changed', rpp)
-              " />
+              "
+            />
           </slot>
         </div>
       </div>
@@ -126,7 +164,8 @@
         class="bg-white p-4 flex flex-col h-full"
         :style="{
           display: props.tableBreakPoints < windowWidth ? 'none' : '',
-        }">
+        }"
+      >
         <!-- Header -->
         <div class="pb-3">
           <slot name="tableHeader" />
@@ -137,7 +176,8 @@
 
           <div
             v-if="allItems.length === 0 && !isLoading"
-            class="text-black grid justify-center items-center border border-gray-200 rounded-md h-[350px]">
+            class="text-black grid justify-center items-center border border-gray-200 rounded-md h-[350px]"
+          >
             <span>Empty Table</span>
           </div>
         </div>
@@ -155,7 +195,8 @@
               @page-changed="(page) => emit('page-changed', page)"
               @rows-per-page-changed="
                 (rpp) => emit('rows-per-page-changed', rpp)
-              " />
+              "
+            />
           </slot>
         </div>
       </UiCard>
@@ -173,6 +214,10 @@ const props = defineProps({
   items: {
     type: Array,
     default: () => [],
+  },
+  columns: {
+    type: Array,
+    required: true,
   },
   currentPage: { type: Number, default: 1 },
   rowsPerPage: { type: Number, default: 5 },
@@ -199,52 +244,37 @@ const sortDir = ref(null);
 
 const hasLoaded = ref(false);
 
-const handleSort = (col) => {
+function handleSort(col) {
+  if (!col.sortable) return;
+
   if (sortKey.value !== col.key) {
-    // first click → descending
     sortKey.value = col.key;
     sortDir.value = "desc";
-  } else if (sortDir.value === "desc") {
-    // second click → ascending
+    return;
+  }
+
+  if (sortDir.value === "desc") {
     sortDir.value = "asc";
   } else if (sortDir.value === "asc") {
-    // third click → default (reset)
     sortKey.value = null;
     sortDir.value = null;
   }
-};
-
+}
 // Determine if border should be applied based on column index
 
 const baseItems = computed(() => props.allItems);
 
 const sortedItems = computed(() => {
-  if (!sortKey.value || !sortDir.value) return baseItems.value;
+  if (!sortKey.value || !sortDir.value) return props.allItems;
 
-  const data = [...baseItems.value];
-  const dir = sortDir.value === "asc" ? 1 : -1;
+  return [...props.allItems].sort((a, b) => {
+    const aVal = a[sortKey.value];
+    const bVal = b[sortKey.value];
 
-  return data.sort((a, b) => {
-    const A = a[sortKey.value];
-    const B = b[sortKey.value];
+    if (aVal === bVal) return 0;
 
-    // Handle nulls first
-    if (A == null && B == null) return 0;
-
-    if (A == null) {
-      return sortDir.value === "desc" ? -1 : 1; // nulls top for desc
-    }
-
-    if (B == null) {
-      return sortDir.value === "desc" ? 1 : -1;
-    }
-
-    // Normal compare
-    if (typeof A === "number" && typeof B === "number") {
-      return (A - B) * dir;
-    }
-
-    return String(A).localeCompare(String(B)) * dir;
+    const res = aVal > bVal ? 1 : -1;
+    return sortDir.value === "asc" ? res : -res;
   });
 });
 
@@ -264,6 +294,12 @@ const windowWidth = ref(null);
 
 function updateWidth() {
   windowWidth.value = window.innerWidth;
+}
+
+function applyBorder(idx, total) {
+  return idx < total - 1
+    ? "border-r border-[#1C1C1C] pr-2 h-10 flex items-center justify-center"
+    : "h-10 flex items-center justify-center";
 }
 
 onMounted(() => {

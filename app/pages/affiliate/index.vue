@@ -10,11 +10,13 @@
         <div class="flex items-center gap-2">
           <UiIcon
             icon="qlementine-icons:money-16"
-            custom-class="w-3 h-3"></UiIcon>
+            custom-class="w-3 h-3"
+          ></UiIcon>
           <span class="text-sm">Affiliator Profit</span>
         </div>
         <div
-          class="w-full md:w-[350px] px-6 py-2 flex items-center justify-between gap-8">
+          class="w-full xl:w-[350px] px-6 py-2 flex items-center justify-between gap-8"
+        >
           <div>
             <p class="text-sm text-[#838383]">Total Profits</p>
             <p class="text-2xl font-semibold text-[#00BDA7]">
@@ -23,23 +25,22 @@
           </div>
           <div class="flex flex-col items-end">
             <p class="text-sm text-[#838383]">Profits Today</p>
-            <p class="text-xl font-semibold text-white">
+            <p class="text-2xl font-semibold text-white">
               ${{ profitStats.today ?? "0.00" }}
             </p>
           </div>
         </div>
         <div class="px-6">
-          <div class="flex flex-col gap-3 py-3 border-l-[2px]">
-            <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
-              <div
-                class="h-full rounded-r-full bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] transition-all duration-300"
-                :style="{ width: progress + '%' }"></div>
-            </div>
-            <div class="w-full h-2 rounded-r-full bg-[#1C1C1C] overflow-hidden">
-              <div
-                class="h-full rounded-r-full bg-white transition-all duration-300"
-                :style="{ width: progress + '%' }"></div>
-            </div>
+          <div class="flex flex-col gap-3 py-3 border-l-[2px] border-[#D9D9D9]">
+            <UiProgress
+              :progress="[
+                profitStats.last7Days ?? 0,
+                profitStats.last30Days ?? 0,
+                profitStats.last60Days ?? 0,
+                profitStats.last90Days ?? 0,
+              ]"
+              :gradientColors="[['#00AAFF', '#00BDA7']]"
+            ></UiProgress>
           </div>
         </div>
         <div class="flex flex-col gap-2 px-6 py-2">
@@ -74,77 +75,87 @@
           <UiIcon icon="humbleicons:users" custom-class="w-4 h-4"></UiIcon>
           <p class="text-sm">Clients Summary</p>
         </div>
-        <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
-          <div class="flex flex-row items-center gap-8">
-            <UiProgress
-              type="circle"
-              :progress="[70, 80]"
-              title="Total Clients"
-              custom-class="max-w-[150px]" />
+        <div class="flex flex-col lg:flex-row justify-center h-full w-full">
+          <div
+            class="p-10 flex flex-col lg:flex-row justify-around h-full w-full items-center gap-8"
+          >
+            <div class="flex flex-row items-center gap-8">
+              <UiProgress
+                type="circle"
+                :progress="[
+                  clientSummary.total ?? 0,
+                  clientSummary.newToday ?? 0,
+                ]"
+                title="Total Clients"
+                custom-class="max-w-[200px]"
+              />
 
-            <div class="flex flex-col gap-1.5 text-white">
-              <div>
-                <p class="text-sm text-[#838383]">Total Clients</p>
-                <p class="text-xl font-semibold text-[#00BDA7]">
-                  {{ clientSummary.total ?? "0" }}
-                </p>
-              </div>
+              <div class="flex flex-col gap-1.5 text-white">
+                <div>
+                  <p class="text-sm text-[#838383]">Total Clients</p>
+                  <p class="text-xl font-semibold text-[#00BDA7]">
+                    {{ clientSummary.total ?? "0" }}
+                  </p>
+                </div>
 
-              <div>
-                <p class="text-[12px] text-[#838383]">New Clients Today</p>
-                <p class="text-sm">
-                  {{ clientSummary.newToday ?? "0" }}
-                </p>
-              </div>
-              <div
-                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"></div>
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Clients Last 30 Days
-                </p>
-                <p class="text-sm">
-                  {{ clientSummary.newLast30Days ?? "0" }}
-                </p>
-              </div>
+                <div>
+                  <p class="text-[12px] text-[#838383]">New Clients Today</p>
+                  <p class="text-sm">
+                    {{ clientSummary.newToday ?? "0" }}
+                  </p>
+                </div>
+                <div
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+                ></div>
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Clients Last 30 Days
+                  </p>
+                  <p class="text-sm">
+                    {{ clientSummary.newLast30Days ?? "0" }}
+                  </p>
+                </div>
 
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Clients Last 60 Days
-                </p>
-                <p class="text-sm">
-                  {{ clientSummary.newLast60Days ?? "0" }}
-                </p>
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Clients Last 60 Days
+                  </p>
+                  <p class="text-sm">
+                    {{ clientSummary.newLast60Days ?? "0" }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-row items-center gap-8 b">
+              <UiProgress
+                type="circle"
+                :progress="[70, 90]"
+                title="Clients Type"
+                custom-class="max-w-[200px]"
+              />
+
+              <div class="flex flex-col gap-1.5 text-white">
+                <div>
+                  <div class="flex gap-1 text-[#838383] mb-1">
+                    <UiIcon icon="mdi:package-variant"></UiIcon>
+                    <p class="text-[12px] text-[#838383]">Basic Package</p>
+                  </div>
+                  <p class="text-sm font-semibold">No Data</p>
+                </div>
+
+                <div>
+                  <div class="flex gap-1 text-[#838383] mb-1">
+                    <UiIcon icon="mdi:package-variant"></UiIcon>
+                    <p class="text-[12px] text-[#838383]">Pro Package</p>
+                  </div>
+                  <p class="text-sm font-semibold">No Data</p>
+                </div>
               </div>
             </div>
           </div>
-
-          <div class="flex flex-row items-center gap-8">
-            <UiProgress
-              type="circle"
-              :progress="[70, 90]"
-              title="Clients Type"
-              custom-class="max-w-[150px]" />
-
-            <div class="flex flex-col gap-1.5 text-white">
-              <div>
-                <div class="flex gap-1 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Basic Package</p>
-                </div>
-                <p class="text-sm font-semibold">No Data</p>
-              </div>
-
-              <div>
-                <div class="flex gap-1 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Pro Package</p>
-                </div>
-                <p class="text-sm font-semibold">No Data</p>
-              </div>
-            </div>
-          </div>
-        </div></UiCard
-      >
+        </div>
+      </UiCard>
     </div>
     <div>
       <UiCard class="p-4 text-[12px]">
@@ -154,7 +165,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Active Users</p>
             </div>
             <p class="text-lg text-[#00BDA7]">
@@ -166,7 +178,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Inactive Users</p>
             </div>
             <p class="text-lg text-red-500">
@@ -178,7 +191,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <div class="flex gap-1 items-center">
                 <p>Client Account Expiring</p>
                 <p class="text-[#838383] text-[11px]">- in 10 days</p>
@@ -200,7 +214,8 @@
                 ? 'bg-[#00BDA7]/50 border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'clients'">
+            @click="activeTab = 'clients'"
+          >
             Clients
           </div>
           <div class="cursor-not-allowed" title="Upcoming Features">
@@ -211,7 +226,8 @@
                   ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
                   : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
               "
-              @click="activeTab = 'transactions'">
+              @click="activeTab = 'transactions'"
+            >
               Affiliate Approval
             </div>
           </div>
@@ -221,33 +237,25 @@
           <UiCard
             v-show="activeTab === 'clients'"
             class="py-2 text-[12px] h-full flex-1"
-            custom-class="!rounded-t-none !rounded-tr-lg">
+            custom-class="!rounded-t-none !rounded-tr-lg"
+          >
             <div
-              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+            >
               <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
               <p class="text-lg font-semibold py-2 text-sm">Clients List</p>
             </div>
             <UiTable
               :allItems="usersData"
+              :columns="userColumns"
               :isLoading="userLoading"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
               :totalItems="usersData.length"
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
-              empty-class="min-h-[400px]">
-              <template #header="{ applyBorder }">
-                <div class="grid grid-cols-6 gap-2">
-                  <div
-                    v-for="(col, idx) in userColumns"
-                    :key="col.key"
-                    class="text-gray-300 font-bold"
-                    :class="applyBorder(idx, userColumns.length)">
-                    <div>{{ col.label }}</div>
-                  </div>
-                </div>
-              </template>
-
+              empty-class="min-h-[400px]"
+            >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -260,7 +268,8 @@
                         ? 'capitalize'
                         : '',
                     ]"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
@@ -271,19 +280,22 @@
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex flex-wrap gap-[2px] justify-center">
+                      class="flex flex-wrap gap-[2px] justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <div v-else>
@@ -306,12 +318,14 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -319,12 +333,14 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email" />
+            v-model="selectedUser.email"
+          />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone" />
+            v-model="selectedUser.phone"
+          />
           <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
       </template>
@@ -333,11 +349,13 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges">
+            @click="saveChanges"
+          >
             Save Changes </UiButton
           ><UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -349,12 +367,14 @@
       :description="`Invite friends to experience AI Trading and receive commission from their subscription.`"
       width="max-w-[600px]"
       @confirm="handleDeleteConfirmed"
-      @close="openReferral = false">
+      @close="openReferral = false"
+    >
       <template #body>
         <div class="grid grid-cols-3 items-center justify-around mt-4">
           <div class="flex flex-col items-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon icon="fa:send-o" custom-class="h-5 w-5 mr-1"></UiIcon>
             </div>
             <p class="text-white text-sm">Send Invitation</p>
@@ -364,10 +384,12 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon
                 icon="fluent:form-multiple-collection-24-regular"
-                custom-class="h-6 w-6"></UiIcon>
+                custom-class="h-6 w-6"
+              ></UiIcon>
             </div>
             <p class="text-white text-sm">Registration</p>
             <p class="text-[11px] text-[#838383] text-center">
@@ -376,7 +398,8 @@
           </div>
           <div class="flex flex-col items-center">
             <div
-              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3">
+              class="flex items-center justify-center h-14 w-14 bg-[#838383] rounded-full mb-3"
+            >
               <UiIcon icon="tabler:coins" custom-class="h-5 w-5 "></UiIcon>
             </div>
             <p class="text-white text-sm">Earn Commission</p>
@@ -396,11 +419,12 @@
           <div class="flex flex-row items-center gap-2">
             <div class="relative w-full">
               <UiInput
-                v-model="referralLink"
+                v-model="generatedRef"
                 dark
                 placeholder="Generate your referral link"
                 isReadonly
-                class="relative">
+                class="relative"
+              >
                 <template #icon-right>
                   <UiIcon
                     icon="solar:copy-bold"
@@ -410,18 +434,22 @@
                         ? 'text-[#00BDA7]'
                         : 'text-[#838383] hover:text-white'
                     "
-                    @click="copyLink" />
+                    @click="copyLink"
+                  />
                 </template>
               </UiInput>
 
               <p
                 v-if="copied"
-                class="absolute -bottom-5 right-0 text-[11px] mt-1 text-[#00BDA7]">
+                class="absolute -bottom-5 right-0 text-[11px] mt-1 text-[#00BDA7]"
+              >
                 Copied to clipboard
               </p>
             </div>
 
-            <UiButton>Generate</UiButton>
+            <UiButton :isLoading="generatingRef" @click="generateRef()"
+              >Generate</UiButton
+            >
           </div>
         </div>
       </template></UiModal
@@ -435,6 +463,7 @@ import { showToast } from "~/composables/useToastMessage";
 definePageMeta({
   layout: "layout",
   middleware: "auth-client",
+  roles: ["affiliate", "admin", "developer"],
 });
 const { $api } = useNuxtApp();
 const activeTab = ref("clients");
@@ -473,11 +502,14 @@ const userColumns = [
   { label: "Expiry Date", key: "expiryDate" },
 ];
 
+const generatingRef = ref(false);
+const generatedRef = ref(null);
+
 const copyLink = async () => {
-  if (!referralLink.value) return;
+  if (!generatedRef.value) return;
 
   try {
-    await navigator.clipboard.writeText(referralLink.value);
+    await navigator.clipboard.writeText(generatedRef.value);
     copied.value = true;
 
     setTimeout(() => {
@@ -606,6 +638,30 @@ const saveChanges = async () => {
     isUpdateLoading.value = false;
     console.error(error);
   }
+};
+
+const generateRef = async () => {
+  if (generatingRef.value) return;
+  generatingRef.value = true;
+
+  try {
+    const payload = {
+      name: "My Referral Link",
+      description: "A referral link for my campaign",
+      destinationUrl: "https://example.com",
+    };
+    const res = await $api.post("/api/affiliate/referral-links", payload);
+
+    generatedRef.value = res.data?.data?.referralLink?.destinationUrl;
+    showToast(res.message ?? "Success in generating refferal code", "success");
+  } catch (error) {
+    console.error("Error in generating referral link"), error;
+    showToast(
+      error.data?.message ?? "Error in generating referral code",
+      "error"
+    );
+  }
+  generatingRef.value = false;
 };
 
 onMounted(() => {

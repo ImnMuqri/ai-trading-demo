@@ -1,9 +1,11 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center overflow-hidden bg-[#0C0E12] text-white">
+    class="min-h-screen flex items-center justify-center overflow-hidden bg-[#0C0E12] text-white"
+  >
     <transition name="fade-up">
       <div
-        class="login-background flex flex-col gap-4 w-full max-w-[400px] p-20 px-12 rounded-lg">
+        class="login-background flex flex-col gap-4 w-full max-w-[400px] p-20 px-12 rounded-lg"
+      >
         <div class="text-center mb-6">
           <!-- <img
             src="~assets/icons/ai-icon.svg"
@@ -20,11 +22,13 @@
               type="text"
               v-model="email"
               placeholder="Username or Email"
-              customClass="h-10">
+              customClass="h-10"
+            >
               <template #icon-left>
                 <UiIcon
                   icon="hugeicons:user-03"
-                  custom-class="text-gray-300" /> </template
+                  custom-class="text-gray-300"
+                /> </template
             ></UiInput>
           </div>
 
@@ -34,34 +38,60 @@
               type="password"
               v-model="password"
               placeholder="Password"
-              customClass="h-10">
+              customClass="h-10"
+            >
               <template #icon-left>
                 <UiIcon
                   icon="heroicons:lock-closed"
-                  custom-class="text-gray-300" /> </template
+                  custom-class="text-gray-300"
+                /> </template
             ></UiInput>
           </div>
-          <div class="pb-12">
+          <div class="flex flex-row justify-between px-1 pb-8 pt-5">
+            <div class="flex items-center gap-2">
+              <label class="flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  v-model="rememberPassword"
+                  class="sr-only peer"
+                />
+
+                <span
+                  class="w-3 h-3 rounded-full border border-gray-400 bg-white peer-checked:bg-[#00BDA7]"
+                ></span>
+              </label>
+
+              <label
+                for="isActive"
+                class="text-[12px] text-[#9B9A9A] font-semibold"
+                >Remember me</label
+              >
+            </div>
             <NuxtLink
               to="/forgotpassword"
-              class="text-[10px] text-[#00BDA7] underline pt-[5px] px-1 cursor-pointer">
-              Forgot Password
+              class="text-[12px] text-[#00BDA7] px-1 cursor-pointer"
+            >
+              Forgot Password?
             </NuxtLink>
           </div>
 
           <UiButton
             :isLoading="isLoading"
             type="submit"
-            class="w-full bg-[#00BDA7] text-white py-2.5 !rounded-full hover:bg-[#00CDB5] transition">
+            class="w-full bg-[#00BDA7] text-white py-2.5 !rounded-full hover:bg-[#00CDB5] transition"
+          >
             Login
           </UiButton>
         </form>
 
-        <div class="flex gap-1 text-[12px] items-center justify-center pt-10">
-          <p>Don't have an account?</p>
+        <div
+          class="flex gap-1 text-[12px] items-center justify-center pb-8 pt-4"
+        >
+          <p class="font-light">Don't have an account?</p>
           <NuxtLink
             to="/register"
-            class="underline text-[#00CDB5] font-semibold cursor-pointer">
+            class="text-[#008E7E] font-light cursor-pointer"
+          >
             Sign Up
           </NuxtLink>
         </div>
@@ -84,6 +114,7 @@ const auth = useAuthStore();
 const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
+const rememberPassword = ref(false);
 
 const handleLogin = async () => {
   isLoading.value = true;

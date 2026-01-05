@@ -1,81 +1,187 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center overflow-hidden">
+  <div
+    class="min-h-screen flex items-center justify-center overflow-hidden bg-[#0C0E12]"
+  >
     <div
-      class="w-full h-full max-w-[400px] px-8 lg:px-10 mx-5 lg:mx-10 py-6 bg-white rounded-md">
-      <h1 class="text-2xl font-semibold text-center my-4 text-gray-800">
-        Create an account
-      </h1>
+      class="register-bg flex flex-col w-full min-h-[657px] max-w-[410px] p-6 lg:px-10 rounded-md"
+    >
+      <div class="flex flex-col justify-center my-4 gap-2">
+        <h1 class="text-4xl font-semibold text-center text-white">Sign Up</h1>
+        <p class="text-[#838383] text-center">Please fill in your details</p>
+      </div>
 
       <form @submit.prevent="handleRegister" class="text-gray-700">
-        <div class="space-y-4 mb-6">
+        <div :class="['mb-6', hasErrors ? 'space-y-3' : 'space-y-6']">
           <div>
             <UiInput
-              label="Name"
+              dark
               v-model="name"
-              placeholder="Enter your name"
+              placeholder="Name"
               :isDisabled="isLoading"
-              type="text" />
+              type="text"
+            >
+              <template #icon-left>
+                <UiIcon icon="hugeicons:user-03" custom-class="text-gray-300" />
+              </template>
+            </UiInput>
+            <p
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+              :class="{
+                hidden: !hasErrors && !errors.name,
+                invisible: hasErrors && !errors.name,
+              }"
+            >
+              {{ errors.name }}
+            </p>
           </div>
           <div>
             <UiInput
-              label="Email"
+              dark
               v-model="email"
-              placeholder="Enter your email"
+              placeholder="Email"
               :isDisabled="isLoading"
-              type="email" />
+              type="email"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="hugeicons:mail-01"
+                  custom-class="text-gray-300"
+                /> </template
+            ></UiInput>
+            <p
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+              :class="{
+                hidden: !hasErrors && !errors.email,
+                invisible: hasErrors && !errors.email,
+              }"
+            >
+              {{ errors.email }}
+            </p>
           </div>
           <div>
             <UiInput
-              label="Password"
+              dark
               v-model="password"
-              placeholder="Enter your password"
+              placeholder="Password"
               :isDisabled="isLoading"
-              type="password" />
+              type="password"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="heroicons:lock-closed"
+                  custom-class="text-gray-300"
+                /> </template
+            ></UiInput>
+            <p
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+              :class="{
+                hidden: !hasErrors && !errors.password,
+                invisible: hasErrors && !errors.password,
+              }"
+            >
+              {{ errors.password }}
+            </p>
           </div>
           <div>
             <UiInput
-              label="Country"
+              dark
               v-model="country"
               placeholder="Malaysia"
               :isDisabled="isLoading"
-              type="text" />
+              type="text"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="hugeicons:globe-02"
+                  custom-class="text-gray-300"
+                /> </template
+            ></UiInput>
+            <p
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+              :class="{
+                hidden: !hasErrors && !errors.country,
+                invisible: hasErrors && !errors.country,
+              }"
+            >
+              {{ errors.country }}
+            </p>
           </div>
-          <div>
+          <div :class="isPhone ? 'hidden' : 'opacity-100'">
             <UiInput
-              label="Phone"
+              dark
               v-model="phone"
-              placeholder="+1234567890"
+              placeholder="Phone Number"
               :isDisabled="isLoading"
-              type="tel" />
+              type="tel"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="heroicons:phone"
+                  custom-class="text-gray-300"
+                /> </template
+            ></UiInput>
+            <p
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+              :class="{
+                hidden: !hasErrors && !errors.phone,
+                invisible: hasErrors && !errors.phone,
+              }"
+            >
+              {{ errors.phone }}
+            </p>
+          </div>
+          <div :class="isPhone ? 'opacity-100' : 'hidden'">
+            <UiInput
+              dark
+              v-model="phone"
+              placeholder="Phone Number"
+              :isDisabled="isLoading"
+              type="tel"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="heroicons:phone"
+                  custom-class="text-gray-300"
+                /> </template
+            ></UiInput>
           </div>
           <div>
             <UiInput
-              label="Referred By"
+              dark
               v-model="referredBy"
-              placeholder="Referral code or email"
+              placeholder="Referral code (optional)"
               :isDisabled="isLoading"
-              type="text" />
+              type="text"
+            >
+              <template #icon-left>
+                <UiIcon
+                  icon="codex:brackets"
+                  custom-class="text-gray-300 text-[20px]"
+                /> </template
+            ></UiInput>
           </div>
         </div>
         <UiButton
           :isLoading="isLoading"
           type="submit"
-          class="w-full bg-[#00BDA7] text-white py-2 rounded-md hover:bg-[#00CDB5] transition">
-          Sign Up
+          class="w-full bg-[#9747FF] hover:bg-[#9747FF] border border-[#E4CFFF] text-white py-4 !rounded-[41px]"
+        >
+          Register
         </UiButton>
       </form>
       <NuxtLink
         to="/login"
-        class="flex gap-1 text-sm items-center justify-center mt-4 text-[#00CDB5] hover:text-[#00CDB5]/70 cursor-pointer">
-        <UiIcon icon="mingcute:arrow-left-fill" customClass="w-4 h-4"></UiIcon>
-        <p class="font-semibold">Back to login</p>
+        class="flex gap-1 text-[12px] items-center justify-center mt-4 text-white cursor-pointer"
+      >
+        <UiIcon icon="weui:back-outlined" customClass="w-2 h-2"></UiIcon>
+        <p class="font-medium">Back to login</p>
       </NuxtLink>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { showToast } from "~/composables/useToastMessage";
 
@@ -92,12 +198,71 @@ const country = ref("");
 const phone = ref("");
 const referredBy = ref(null);
 const isLoading = ref(false);
+const isPhone = ref(false);
+
+const errors = ref({
+  name: "",
+  email: "",
+  password: "",
+  country: "",
+  phone: "",
+});
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const toNull = (value) => {
   return value === "" ? null : value;
 };
 
+const hasErrors = computed(() => Object.values(errors.value).some(Boolean));
+
+const validateForm = () => {
+  // reset errors
+  errors.value = {
+    name: "",
+    email: "",
+    password: "",
+    country: "",
+    phone: "",
+  };
+
+  let isValid = true;
+
+  if (!name.value) {
+    errors.value.name = "Name is required";
+    isValid = false;
+  }
+  if (!country.value) {
+    errors.value.country = "Country is required";
+    isValid = false;
+  }
+  if (!phone.value) {
+    errors.value.phone = "Phone is required";
+    isValid = false;
+  }
+
+  if (!email.value) {
+    errors.value.email = "Email is required";
+    isValid = false;
+  } else if (!emailRegex.test(email.value)) {
+    errors.value.email = "Invalid email format";
+    isValid = false;
+  }
+
+  if (!password.value) {
+    errors.value.password = "Password is required";
+    isValid = false;
+  } else if (password.value.length < 7) {
+    errors.value.password = "Password must be at least 8 characters";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 const handleRegister = async () => {
+  if (!validateForm()) return;
+
   isLoading.value = true;
 
   try {
@@ -120,4 +285,12 @@ const handleRegister = async () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.register-bg {
+  background-image: url("~/assets/bg/registerOverlay.svg"),
+    url("~/assets/bg/registerBg.svg");
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+}
+</style>
