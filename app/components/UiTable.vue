@@ -90,7 +90,7 @@
             >
               <div class="border-r border-[#1C1C1C] h-full grid items-center">
                 <div
-                  class="flex justify-center items-center h-5 w-5 rounded-full text-black bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
+                  class="flex justify-center items-center h-5 w-5 rounded-full text-white bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
                 >
                   {{ (currentPage - 1) * rowsPerPage + index + 1 }}
                 </div>
@@ -161,7 +161,7 @@
 
     <div v-if="$slots.card">
       <UiCard
-        class="bg-white p-4 flex flex-col h-full"
+        class="p-4 flex flex-col h-full border-none"
         :style="{
           display: props.tableBreakPoints < windowWidth ? 'none' : '',
         }"
@@ -176,7 +176,7 @@
 
           <div
             v-if="allItems.length === 0 && !isLoading"
-            class="text-black grid justify-center items-center border border-gray-200 rounded-md h-[350px]"
+            class="text-white grid justify-center items-center rounded-md h-[350px]"
           >
             <span>Empty Table</span>
           </div>
@@ -186,7 +186,7 @@
           <slot name="subtotal"></slot>
         </div>
 
-        <div v-if="$slots.pagination" class="bg-white pt-2 shrink-0">
+        <div v-if="$slots.pagination" class="pt-2 shrink-0">
           <slot name="pagination">
             <UiPagination
               :totalItems="totalItems"
@@ -219,6 +219,7 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+
   currentPage: { type: Number, default: 1 },
   rowsPerPage: { type: Number, default: 5 },
   totalItems: { type: Number, required: false, default: 10 },

@@ -59,6 +59,7 @@
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
+        :table-break-points="1000"
       >
         <template #row="{ item, applyBorder }">
           <div
@@ -110,6 +111,31 @@
             </div>
           </div>
         </template>
+        <template #card="{ item }">
+          <div v-for="(card, idx) in item" :key="idx">
+            <UiListCard
+              :title="card.createdAt"
+              :items="card"
+              :index="(currentPage - 1) * rowsPerPage + idx"
+              :map="historyColumns"
+              class="my-2"
+            >
+              <template #actions>
+                <div
+                  @click="viewSignal(card)"
+                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition"
+                >
+                  <p>View Signal</p>
+                  <UiIcon
+                    icon="ic:round-chevron-right"
+                    custom-class="w-4 h-4"
+                  /></div
+              ></template>
+              <template v-if="card.label"></template>
+              <template v-else> {{ value ?? "No Data" }} </template></UiListCard
+            >
+          </div></template
+        >
         <template #pagination></template>
       </UiTable>
     </UiCard>

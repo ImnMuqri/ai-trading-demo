@@ -4,7 +4,8 @@
       v-if="show"
       ref="root"
       class="px-4 fixed inset-0 z-[999] flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity"
-      :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
+      :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]"
+    >
       <div
         :class="[
           ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white',
@@ -20,7 +21,8 @@
             ? 'bg-[radial-gradient(76.25%_76.25%_at_50%_0%,#008E7E_0%,#282828FF_100%)]'
             : ' bg-[#121212]',
           'rounded-lg',
-        ]">
+        ]"
+      >
         <!-- Loading Overlay -->
 
         <div
@@ -29,14 +31,17 @@
             isLoading && type == null
               ? 'opacity-100'
               : 'opacity-0 pointer-events-none'
-          ">
+          "
+        >
           <div class="relative flex flex-col items-center justify-center">
             <iframe
               src="https://lottie.host/embed/19bbd268-9de6-4b34-87af-9b8597b78ad7/T8RAh3Cqqo.lottie"
-              class="border-0 !w-[500px] !h-[500px]"></iframe>
+              class="border-0 !w-[500px] !h-[500px]"
+            ></iframe>
 
             <p
-              class="absolute text-sm font-semibold text-gray-400 shimmer-text">
+              class="absolute text-sm font-semibold text-gray-400 shimmer-text"
+            >
               Generating Ai Analysis
             </p>
           </div>
@@ -45,7 +50,8 @@
         <!-- Header -->
         <header
           v-if="['successAlert', 'confirmAlert', 'errorAlert'].includes(type)"
-          class="mb-4 text-center">
+          class="mb-4 text-center"
+        >
           <UiIcon :icon="alertIcon" custom-class="w-32 h-32" />
 
           <h2 class="text-xl font-semibold text-white">
@@ -60,7 +66,8 @@
         <header
           v-else
           class="mb-4"
-          :class="headerCenter ? 'text-center' : 'text-left'">
+          :class="headerCenter ? 'text-center' : 'text-left'"
+        >
           <h2 class="text-lg font-semibold text-white">
             {{ title }}
           </h2>
@@ -72,7 +79,8 @@
         <!-- Content -->
         <section
           class="max-h-[70vh] overflow-y-auto hide-scrollbar py-2 opacity-100"
-          :class="{ 'opacity-50': isLoading }">
+          :class="[customBodyClass, { 'opacity-50': isLoading }]"
+        >
           <slot name="body"></slot>
         </section>
 
@@ -82,13 +90,15 @@
             <UiButton
               class="w-full py-3 !rounded-full bg-[#FFAE00] text-white font-semibold hover:bg-[#FFAE00]/80 !text-[12px]"
               @click="confirm"
-              :disabled="isLoading">
+              :disabled="isLoading"
+            >
               I am sure
             </UiButton>
             <UiButton
               class="w-full py-3 !rounded-full bg-gray-700 text-gray-200 font-medium hover:bg-gray-600 !text-[12px]"
               @click="close"
-              :disabled="isLoading">
+              :disabled="isLoading"
+            >
               I change my mind
             </UiButton>
           </div>
@@ -98,7 +108,8 @@
               <UiButton
                 class="w-full py-3 !w-[12vw] !rounded-full text-white !text-[12px] font-semibold hover:bg-[#00BDA7]/80"
                 @click="close"
-                :disabled="isLoading">
+                :disabled="isLoading"
+              >
                 Return
               </UiButton>
             </div>
@@ -108,7 +119,8 @@
             <UiButton
               class="w-full py-3 !rounded-full bg-red-600 text-white !text-[12px] font-semibold hover:bg-red-500"
               @click="close"
-              :disabled="isLoading">
+              :disabled="isLoading"
+            >
               Return
             </UiButton>
           </div>
@@ -117,7 +129,8 @@
             <button
               class="w-full py-3 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-500"
               @click="save"
-              :disabled="isLoading">
+              :disabled="isLoading"
+            >
               Save
             </button>
           </div>
@@ -132,7 +145,8 @@
           v-if="type == 'form' || type == null"
           class="absolute top-2 right-2 bg-gray-700 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm hover:bg-red-500"
           @click="close"
-          :disabled="isLoading">
+          :disabled="isLoading"
+        >
           <UiIcon icon="hugeicons:cancel-01"></UiIcon>
         </button>
       </div>
@@ -164,6 +178,10 @@ const props = defineProps({
     default: null,
   },
   customClass: {
+    type: String,
+    default: "",
+  },
+  customBodyClass: {
     type: String,
     default: "",
   },

@@ -5,7 +5,7 @@
   >
     <div
       v-if="!expanded"
-      class="h-8 w-8 flex items-center justify-center rounded-lg bg-[#1A1C20] border border-[#2A2A2A] cursor-pointer hover:!ring-white hover:ring transition"
+      class="h-8 w-8 flex items-center justify-center rounded-lg bg-[#1A1C20] border border-[#2A2A2A] cursor-pointer hover:!ring-white hover:ring-1 transition"
       @click="expandSearch"
     >
       <UiIcon
@@ -27,7 +27,7 @@
         v-model="localValue"
         :placeholder="placeholder"
         :dark="dark"
-        :customClass="`${customClass ?? ''} h-8 py-1 !ring-white`"
+        :customClass="`${customClass ?? ''} h-8 py-1 !ring-white !ring-1`"
       >
         <template #icon-left>
           <UiIcon

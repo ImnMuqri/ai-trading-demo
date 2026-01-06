@@ -11,7 +11,7 @@
         </div>
 
         <div
-          class="flex flex-col px-10 lg:flex-row h-full justify-center py-10 xl:py-0"
+          class="flex flex-col px-10 lg:flex-row h-full items-center justify-center py-10 xl:py-0"
         >
           <div class="flex flex-row items-center gap-8">
             <UiProgress
@@ -55,8 +55,8 @@
         </div>
       </UiCard>
 
-      <UiCard isGradient class="p-4 flex-1"
-        ><div class="flex gap-2 items-center">
+      <UiCard isGradient class="p-4 flex-1">
+        <div class="flex gap-2 items-center">
           <UiIcon
             icon="qlementine-icons:system-monitor-16"
             custom-class="w-3 h-3"
@@ -64,12 +64,14 @@
           <p class="text-sm">System Analytics</p>
         </div>
         <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
-          <div class="flex flex-row items-center gap-8">
+          <div
+            class="flex flex-row items-center lg:justify-none justify-center gap-8"
+          >
             <UiProgress
               type="circle"
               :progress="userRing"
               title="Users Statistics"
-              custom-class="max-w-[150px]"
+              custom-class="max-w-[150px] min-w-[100px]"
             />
 
             <div class="flex flex-col gap-1.5 text-white">
@@ -110,12 +112,14 @@
             </div>
           </div>
 
-          <div class="flex flex-row items-center gap-8">
+          <div
+            class="flex flex-row items-center lg:justify-none justify-center gap-8"
+          >
             <UiProgress
               type="circle"
               :progress="transactionRing"
               title="Transaction Statistics"
-              custom-class="max-w-[150px]"
+              custom-class="max-w-[150px]  min-w-[100px]"
             />
 
             <div class="flex flex-col gap-1.5 text-white">
@@ -297,6 +301,7 @@
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
               empty-class="min-h-[350px]"
+              :table-break-points="1000"
             >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
@@ -346,6 +351,40 @@
                   </div>
                 </div>
               </template>
+
+              <template #card="{ item }">
+                <div v-for="(card, idx) in item" :key="idx">
+                  <UiListCard
+                    :title="card.email"
+                    :items="card"
+                    :index="(currentPage - 1) * rowsPerPage + idx"
+                    :map="userColumns"
+                    class="my-2"
+                  >
+                    <template #actions>
+                      <div class="flex flex-wrap gap-[2px] justify-center">
+                        <UiButton
+                          variant="icon"
+                          icon="cuida:edit-outline"
+                          size="sm"
+                          custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
+                          @click="updateModal(card)"
+                        />
+                        <UiButton
+                          variant="icon"
+                          icon="bxs:trash"
+                          size="sm"
+                          custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
+                          @click="confirmDelete(card)"
+                        /></div
+                    ></template>
+                    <template v-if="card.label"></template>
+                    <template v-else>
+                      {{ value ?? "No Data" }}
+                    </template></UiListCard
+                  >
+                </div></template
+              >
               <template #pagination></template>
             </UiTable>
           </UiCard>
@@ -428,6 +467,7 @@
               @page-changed="transactionHandlePageChange"
               @rows-per-page-changed="transactionandleRowsPerPageChange"
               empty-class="min-h-[350px]"
+              :table-break-points="1200"
             >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
@@ -488,6 +528,40 @@
                   </div>
                 </div>
               </template>
+              <template #card="{ item }">
+                <div v-for="(card, idx) in item" :key="idx">
+                  <UiListCard
+                    :title="card.User?.email"
+                    :items="card"
+                    :index="(currentPage - 1) * rowsPerPage + idx"
+                    :map="transactionsColumns"
+                    class="my-2"
+                  >
+                    <template #format="{ field, value }">
+                      <span v-if="field.key === 'type'" class="capitalize">
+                        {{ value.replaceAll("_", " ") }}
+                      </span>
+
+                      <span
+                        v-else-if="field.key === 'paymentStatus'"
+                        class="font-semibold capitalize"
+                        :class="{
+                          'text-green-500': value === 'completed',
+                          'text-yellow-500': value === 'pending',
+                          'text-red-500': value === 'failed',
+                        }"
+                      >
+                        {{ value ?? "No Data" }}
+                      </span>
+
+                      <!-- Default -->
+                      <span v-else>
+                        {{ value ?? "No Data" }}
+                      </span>
+                    </template>
+                  </UiListCard>
+                </div></template
+              >
               <template #pagination></template>
             </UiTable>
           </UiCard>
@@ -823,6 +897,7 @@ const getTransactions = async () => {
       endDate: tx.endDate,
       isActive: tx.isActive,
       createdAt: tx.createdAt,
+      User: tx.User,
     }));
     transactionLoading.value = false;
 

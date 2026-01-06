@@ -12,7 +12,8 @@
         :placeholder="placeholder"
         class="w-full bg-[#2A2A2A] border border-[#1C1C1C] text-white rounded-lg px-4 py-[11px] pr-10 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#00BDA7] transition-all"
         @focus="openDropdown"
-        @input="search = $event.target.value" />
+        @input="search = $event.target.value"
+      />
 
       <!-- Chevron icon -->
       <svg
@@ -26,22 +27,26 @@
         stroke="#00BDA7"
         stroke-width="3"
         width="16"
-        height="16">
+        height="16"
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
-          d="M19 9l-7 7-7-7" />
+          d="M19 9l-7 7-7-7"
+        />
       </svg>
 
       <!-- Dropdown options -->
       <ul
         v-if="isOpen"
-        class="absolute z-50 mt-1 w-full max-h-60 overflow-auto bg-[#2A2A2A] border border-[#1C1C1C] rounded-lg shadow-lg text-white text-sm">
+        class="absolute z-50 mt-1 w-full max-h-60 overflow-auto bg-[#2A2A2A] border border-[#1C1C1C] rounded-lg shadow-lg text-white text-sm"
+      >
         <li
           v-for="option in filteredOptions"
           :key="option.value"
           @click="selectOption(option)"
-          class="px-4 py-2 hover:bg-[#00BDA7] hover:text-black cursor-pointer transition">
+          class="px-4 py-2 hover:bg-[#00BDA7] hover:text-black cursor-pointer transition"
+        >
           {{ option.label }}
         </li>
         <li v-if="filteredOptions.length === 0" class="px-4 py-2 text-gray-500">

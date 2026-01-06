@@ -133,6 +133,7 @@
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
+        :table-break-points="600"
       >
         <template #row="{ item, applyBorder }">
           <div class="grid grid-cols-6 gap-2 items-center">
@@ -183,6 +184,54 @@
             </div>
           </div>
         </template>
+        <template #card="{ item }">
+          <div v-for="(card, idx) in item" :key="idx">
+            <UiListCard
+              :title="card.name"
+              :items="card"
+              :index="(currentPage - 1) * rowsPerPage + idx"
+              :map="subscriptionColumns"
+              class="my-2"
+            >
+              <template #format="{ field, value }">
+                <span v-if="field.key === 'price'">
+                  {{ card.currency ?? "" }} {{ value ?? "0" }}
+                </span>
+                <span
+                  v-if="field.key === 'isActive'"
+                  :class="
+                    value
+                      ? 'text-emerald-500 font-semibold'
+                      : 'text-red-500 font-semibold'
+                  "
+                >
+                  {{ value ? "Active" : "Inactive" }}
+                </span>
+              </template>
+              <template #actions>
+                <div class="flex flex-wrap gap-[2px] justify-center">
+                  <UiButton
+                    variant="icon"
+                    icon="cuida:edit-outline"
+                    size="sm"
+                    custom-class="!px-1 !w-fit !text-[#00BDA7] hover:!text-[#00BDA7]/80 !bg-transparent"
+                    @click="openUpdateModal(card)"
+                  />
+                  <UiButton
+                    variant="icon"
+                    icon="bxs:trash"
+                    size="sm"
+                    custom-class="!px-1 !w-fit !text-red-500 hover:!text-red-600 !bg-transparent"
+                    @click="openDeleteConfirm(card)"
+                  /></div
+              ></template>
+              <template v-if="card.label"></template>
+              <template v-else>
+                {{ value ?? "No Data" }}
+              </template></UiListCard
+            >
+          </div></template
+        >
         <template v-if="subscriptionPlans.length >= 5" #actions>
           <UiButton
             variant="text"
