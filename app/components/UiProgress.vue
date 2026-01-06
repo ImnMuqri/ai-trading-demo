@@ -95,7 +95,60 @@
     </template>
 
     <template v-else>
-      <div class="flex flex-col gap-4">
+      <div
+        v-if="props.orientation === 'vertical'"
+        :class="['flex items-end', props.barGap, props.customClass]"
+        :style="{ height: props.barHeight }"
+      >
+        <template v-if="Array.isArray(progressArray)">
+          <div
+            v-for="(p, index) in progressArray"
+            :key="index"
+            class="flex flex-col justify-end rounded-t overflow-hidden flex-1"
+            :style="{
+              backgroundColor: props.bgColor,
+              height: '100%',
+              width: props.barWidth || '8px',
+            }"
+          >
+            <div
+              class="w-full rounded-t transition-all duration-300"
+              :style="{
+                height: p + '%',
+                background: props.gradientColors?.[index]
+                  ? `linear-gradient(to top, ${props.gradientColors[index].join(
+                      ','
+                    )})`
+                  : color[index % color.length],
+              }"
+            ></div>
+          </div>
+        </template>
+
+        <div
+          v-else
+          class="flex flex-col justify-end rounded-t overflow-hidden"
+          :style="{
+            backgroundColor: props.bgColor,
+            height: props.barHeight || '200px',
+            width: props.barWidth || '8px',
+          }"
+        >
+          <div
+            class="w-full rounded-t transition-all duration-300"
+            :style="{
+              height: progressArray[0] + '%',
+              background: props.gradientColors?.[0]
+                ? `linear-gradient(to top, ${props.gradientColors[0].join(
+                    ','
+                  )})`
+                : resolvedColor,
+            }"
+          ></div>
+        </div>
+      </div>
+
+      <div v-else class="flex flex-col gap-4">
         <template v-if="Array.isArray(progressArray)">
           <div
             v-for="(p, index) in progressArray"
@@ -151,6 +204,10 @@ const props = defineProps({
   titleClass: { type: String, default: "" },
   gradientColors: { type: Array, default: null }, //  [["#00AAFF","#00BDA7"], ["#FFAA00","#FF5500"]]
   bgColor: { type: String, default: "#1C1C1C" },
+  orientation: { type: String, default: "horizontal" },
+  barHeight: { type: String, default: "200px" },
+  barWidth: { type: String, default: "8px" },
+  barGap: { type: String, default: "gap-4" },
 });
 
 // const progressArray = computed(() => {

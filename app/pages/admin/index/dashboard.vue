@@ -7,7 +7,7 @@
             icon="qlementine-icons:system-monitor-16"
             custom-class="w-3 h-3"
           ></UiIcon>
-          <span class="text-sm">Trading Analysis</span>
+          <span class="text-sm">Affiliator Summary</span>
         </div>
 
         <div
@@ -24,7 +24,7 @@
             <div class="flex flex-col text-white gap-6">
               <div class="flex flex-col gap-1">
                 <div>
-                  <p class="text-sm text-[#838383]">Completed Transactions</p>
+                  <p class="text-sm text-[#838383]">Total Affiliator</p>
                   <p class="text-xl font-semibold text-[#00BDA7]">
                     {{
                       transactionsData.filter(
@@ -34,8 +34,12 @@
                   </p>
                 </div>
                 <div>
-                  <p class="text-sm text-[#838383]">Other Transactions</p>
-                  <p class="text-xl font-semibold text-white">
+                  <div class="flex flex-row gap-1">
+                    <p class="text-sm text-[#838383]">New Affiliator Today</p>
+                    <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
+                  </div>
+
+                  <p class="text-sm font-medium text-white">
                     {{
                       transactionsData.filter(
                         (tx) => tx.paymentStatus !== "completed"
@@ -43,10 +47,24 @@
                     }}
                   </p>
                 </div>
+
+                <div
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2 w-1/3"
+                ></div>
               </div>
               <div>
-                <p class="text-[12px] text-[#838383]">Total Revenue</p>
-                <p class="text-sm font-semibold text-white">
+                <p class="text-[12px] text-[#838383]">
+                  New Affiliator Last 30 Days
+                </p>
+                <p class="text-[12px] font-medium text-white">
+                  {{ tradingTotalRevenue }} USD
+                </p>
+              </div>
+              <div>
+                <p class="text-[12px] text-[#838383]">
+                  New Affiliator Last 30 Days
+                </p>
+                <p class="text-[12px] font-medium text-white">
                   {{ tradingTotalRevenue }} USD
                 </p>
               </div>
@@ -55,13 +73,13 @@
         </div>
       </UiCard>
 
-      <UiCard isGradient class="p-4 flex-1">
+      <UiCard class="p-4 flex-1 !bg-[#0D0D0D]">
         <div class="flex gap-2 items-center">
           <UiIcon
             icon="qlementine-icons:system-monitor-16"
             custom-class="w-3 h-3"
           ></UiIcon>
-          <p class="text-sm">System Analytics</p>
+          <p class="text-sm">Client Analytics</p>
         </div>
         <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
           <div
@@ -70,43 +88,48 @@
             <UiProgress
               type="circle"
               :progress="userRing"
-              title="Users Statistics"
+              title="Total Client"
               custom-class="max-w-[150px] min-w-[100px]"
             />
 
             <div class="flex flex-col gap-1.5 text-white">
               <div>
-                <p class="text-sm text-[#838383]">Total Users</p>
+                <p class="text-sm text-[#838383]">Total Clients</p>
                 <p class="text-xl font-semibold text-[#00BDA7]">
                   {{ analytics.userStats?.totalUsers ?? "No Data" }}
                 </p>
               </div>
 
               <div>
-                <p class="text-[12px] text-[#838383]">Admin Counts</p>
+                <div class="flex flex-row gap-1">
+                  <p class="text-[12px] text-[#838383]">New Client Today</p>
+                  <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
+                </div>
+
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats?.adminCount ?? "No Data" }}
                 </p>
               </div>
 
+              <div
+                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2 w-1/3"
+              ></div>
+
               <div>
-                <p class="text-[12px] text-[#838383]">Manager Counts</p>
+                <p class="text-[12px] text-[#838383]">
+                  New Clients Last 30 Dats
+                </p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats?.managerCount ?? "No Data" }}
                 </p>
               </div>
 
               <div>
-                <p class="text-[12px] text-[#838383]">Affiliate Counts</p>
+                <p class="text-[12px] text-[#838383]">
+                  New Clients Last 60 Days
+                </p>
                 <p class="text-sm font-semibold">
                   {{ analytics.userStats?.affiliateCount ?? "No Data" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[12px] text-[#838383]">User Counts</p>
-                <p class="text-sm font-semibold">
-                  {{ analytics.userStats?.userCount ?? "No Data" }}
                 </p>
               </div>
             </div>
@@ -118,54 +141,130 @@
             <UiProgress
               type="circle"
               :progress="transactionRing"
-              title="Transaction Statistics"
-              custom-class="max-w-[150px]  min-w-[100px]"
+              title="Client Type"
+              custom-class="max-w-[150px]  min-w-[100px] !text-gray-400"
             />
 
-            <div class="flex flex-col gap-1.5 text-white">
+            <div class="flex flex-col gap-8 text-white">
               <div>
-                <p class="text-sm text-[#838383]">Total Transactions</p>
-                <p class="text-xl font-semibold text-[#00BDA7]">
-                  {{
-                    analytics.transactionStats?.totalTransactions ?? "No Data"
-                  }}
-                </p>
+                <div class="flex gap-2 text-[#838383] mb-1">
+                  <UiIcon icon="mdi:package-variant"></UiIcon>
+                  <p class="text-[12px] text-[#838383]">Basic Package</p>
+                </div>
+                <p class="text-sm font-semibold">No Data</p>
               </div>
 
               <div>
-                <p class="text-[12px] text-[#838383]">AI Analysis Counts</p>
-                <p class="text-sm font-semibold">
-                  {{ analytics.transactionStats?.aiAnalysisCount ?? "No Data" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[12px] text-[#838383]">Payment Counts</p>
-                <p class="text-sm font-semibold">
-                  {{ analytics.transactionStats?.paymentCount ?? "No Data" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[12px] text-[#838383]">Renewal Counts</p>
-                <p class="text-sm font-semibold">
-                  {{ analytics.transactionStats?.renewalCount ?? "No Data" }}
-                </p>
-              </div>
-
-              <div>
-                <p class="text-[12px] text-[#838383]">Total Revenue</p>
-                <p class="text-sm font-semibold">
-                  {{
-                    analytics.transactionStats?.totalRevenue.toFixed(2) ?? "N/A"
-                  }}
-                  USD
-                </p>
+                <div class="flex gap-2 text-[#838383] mb-1">
+                  <UiIcon icon="mdi:package-variant"></UiIcon>
+                  <p class="text-[12px] text-[#838383]">Pro Package</p>
+                </div>
+                <p class="text-sm font-semibold text-[#00BDA7]">No Data</p>
               </div>
             </div>
           </div>
         </div></UiCard
       >
+    </div>
+
+    <div class="flex flex-col xl:flex-row gap-4 w-full">
+      <UiCard class="flex-[1] p-4 flex flex-col gap-4 !bg-[#0D0D0D]">
+        <div class="flex items-center gap-2 justify-start">
+          <UiIcon
+            icon="qlementine-icons:system-monitor-16"
+            custom-class="w-3 h-3"
+          ></UiIcon>
+          <span class="text-sm">Top 5 Affiliator by Profits</span>
+        </div>
+
+        <div
+          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+        ></div>
+
+        <div
+          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
+        >
+          <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
+            <UiList
+              :parameters="topAffiliatorProfits"
+              :isLoading="affiliatorLoading"
+              class="w-full h-full"
+            />
+          </div>
+        </div>
+      </UiCard>
+      <UiCard class="flex-[1] p-4 flex flex-col gap-4 !bg-[#0D0D0D]">
+        <div class="flex items-center gap-2 justify-start">
+          <UiIcon
+            icon="qlementine-icons:system-monitor-16"
+            custom-class="w-3 h-3"
+          ></UiIcon>
+          <span class="text-sm">Top 5 Affiliator by Clients</span>
+        </div>
+
+        <div
+          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+        ></div>
+
+        <div
+          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
+        >
+          <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
+            <UiList
+              :parameters="topAffiliatorClients"
+              :isLoading="affiliatorLoading"
+              class="w-full h-full"
+            />
+          </div></div
+      ></UiCard>
+      <UiCard class="flex-[0.5] flex flex-col !bg-[#0D0D0D]" is-gradient>
+        <div class="p-4 border-b border-[#1C1C1C]">
+          <div class="flex items-center gap-2 justify-start pb-4">
+            <UiIcon
+              icon="qlementine-icons:system-monitor-16"
+              custom-class="w-3 h-3"
+            ></UiIcon>
+            <span class="text-sm">Client Status </span>
+          </div>
+          <div
+            class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+          ></div>
+
+          <div
+            class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-5"
+          >
+            <div
+              class="flex flex-col items-center px-3 max-w-[220px] border-b-[2px] border-[#D9D9D9]"
+            >
+              <UiProgress
+                orientation="vertical"
+                :progress="clientStatusProgress"
+                :gradient-colors="clientStatusGradients"
+                bar-gap="gap-20"
+                custom-class="max-h-[140px] "
+              />
+            </div>
+
+            <div class="flex flex-col gap-2 w-full max-w-[280px]">
+              <div
+                v-for="(status, idx) in clientStatusNames"
+                :key="idx"
+                class="flex justify-between text-[13px]"
+              >
+                <p class="text-white">{{ status }}</p>
+                <p :style="{ color: clientStatusColors[idx] }">
+                  {{ clientStatusProgress[idx] }}%
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-wrap items-center justify-center p-4 text-[#838383] hover:cursor-pointer"
+        >
+          See full details <span class="pl-2 text-[#00BDA7]">></span>
+        </div>
+      </UiCard>
     </div>
 
     <div>
@@ -732,6 +831,80 @@ const analytics = ref({
   },
 });
 
+const affiliatorSummary = ref({});
+const clientSummary = ref({});
+
+const topAffiliatorProfits = ref([
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 321300,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 321300,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 321300,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 321300,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 321300,
+  },
+]);
+const topAffiliatorClients = ref([
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 23,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 21,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 15,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 16,
+  },
+  {
+    text: "Muhammad Hazri",
+    desc: "hazriw@gmail.com",
+    value: 22,
+  },
+]);
+
+const clientStatusNames = ref([
+  "Active Clients",
+  "Inactive Clients",
+  "Expiring Clients",
+]);
+
+const clientStatusProgress = ref([100, 70, 20]);
+
+const clientStatusGradients = ref([
+  ["#00AAFF", "#00BDA7"],
+  ["#DC2626", "#DC2626"],
+  ["#FFFFFF", "#FFFFFF"],
+]);
+
+const clientStatusColors = ref(["#00BDA7", "#DC2626", "#FACC15"]);
+
 const tradingRing = computed(() => {
   const total = transactionsData.value.length;
   if (total === 0) return [0, 100];
@@ -780,6 +953,13 @@ const getAnalytics = async () => {
   analyticsLoading.value = true;
   try {
     const res = await $api.get("/api/admin/analytics");
+    const resp = await $api.get("/api/admin/dashboard-stats");
+    if (resp.data?.affiliatorSummary) {
+      affiliatorSummary.value = resp.data?.affiliatorSummary;
+    }
+    if (resp.data?.clientSummary) {
+      clientSummary.value = resp.data?.clientSummary;
+    }
     analytics.value = res.data.data;
   } catch (err) {
     console.error("Failed to fetch analytics", err);
