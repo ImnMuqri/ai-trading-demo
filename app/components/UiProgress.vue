@@ -13,8 +13,8 @@
               :key="'bg-' + i"
               cx="18"
               cy="18"
-              :r="16 - i * 3.8"
-              stroke-width="2.8"
+              :r="16 - i * 2.8"
+              stroke-width="1.8"
               fill="none"
               stroke="#1A1A1AFF"
             />
@@ -24,7 +24,7 @@
               cx="18"
               cy="18"
               :r="radii[i]"
-              stroke-width="2.8"
+              stroke-width="1.8"
               fill="none"
               :stroke="color[i % color.length]"
               :stroke-dasharray="circumferences[i]"
@@ -224,7 +224,7 @@ const progressArray = ref(
 
 const radii = computed(() => {
   if (!Array.isArray(progressArray.value)) return [];
-  return progressArray.value.map((_, i) => 16 - i * 3.8);
+  return progressArray.value.map((_, i) => 16 - i * 2.8);
 });
 
 const circumferences = computed(() => {

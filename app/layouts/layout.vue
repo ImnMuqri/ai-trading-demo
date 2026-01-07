@@ -150,7 +150,7 @@
       </nav>
 
       <div class="p-3">
-        <div
+        <!-- <div
           class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
           :class="
             isCollapsed
@@ -169,6 +169,33 @@
           >
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
             <span class="text-[11px]">Upgrade to Ai Pro</span>
+          </NuxtLink>
+        </div> -->
+        <div
+          class="border border-[#4C4B4B] rounded-xl p-4 text-center bg-[#1C1C1C] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
+          :class="
+            isCollapsed
+              ? 'max-h-0 opacity-10 scale-y-0'
+              : 'max-h-[500px] opacity-100 scale-y-100'
+          "
+        >
+          <UiIcon
+            icon="material-symbols:diamond-outline-rounded"
+            custom-class="w-10 h-10 text-white"
+          ></UiIcon>
+          <p class="text-[13px] text-white font-medium">
+            Need more for your trade?
+          </p>
+          <p class="text-[12px] text-white mb-3">
+            Upgrade now to unlock more features
+          </p>
+
+          <NuxtLink
+            to="/settings/subscription"
+            class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] rounded-lg py-2 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+            exact
+          >
+            <span class="text-[14px]">Upgrade</span>
           </NuxtLink>
         </div>
         <NuxtLink to="/settings/subscription">

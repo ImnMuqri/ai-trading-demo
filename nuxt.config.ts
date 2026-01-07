@@ -18,6 +18,18 @@ export default defineNuxtConfig({
         dir: "./app/assets/icons",
       },
     ],
+    serverBundle: {
+      externalizeIconsJson: true,
+    },
+    clientBundle: {
+      // scan all components in the project and include icons
+      scan: true,
+
+      // include all custom collections in the client bundle
+      includeCustomCollections: true,
+
+      sizeLimitKb: 2000,
+    },
   },
   runtimeConfig: {
     public: {
