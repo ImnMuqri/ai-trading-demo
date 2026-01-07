@@ -15,6 +15,8 @@
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe"
+          ref="intervalSelect"
+          class="intervalSelect"
         />
         <!-- <UiButton @click="refreshTokenManually" 
           >
@@ -28,6 +30,7 @@
         :symbol="selectedSymbol"
         :interval="selectedInterval"
         @open-analysis-modal="openDetailedAnalysis = true"
+        ref="requestSignalRef"
       />
       <client-only class="w-full lg:h-[630px]">
         <div class="grid grid-cols-1 gap-2">
@@ -207,11 +210,11 @@
 <script setup>
 import { onMounted, watch, ref, nextTick } from "vue";
 import { useAuthStore } from "@/stores/auth";
-import { driver } from "driver.js";
-import "driver.js/dist/driver.css";
 
 const auth = useAuthStore();
 const { $api } = useNuxtApp();
+const { startTour } = useGuidedTour();
+
 definePageMeta({
   title: "Dashboard",
   layout: "layout",
@@ -229,6 +232,8 @@ const symbols = ref([]);
 const selectedSymbol = ref(""); // initially empty
 
 const symbolSelect = ref(null);
+const intervalSelect = ref(null);
+const requestSignalRef = ref(null);
 
 const sentimentIndex = ref({
   percentage: 0,
@@ -374,31 +379,43 @@ onMounted(async () => {
 
   if (process.client) {
     await fetchSymbols();
-
     await nextTick();
     loadTickerTape();
-
     await loadTradingViewScript();
     if (selectedSymbol.value) {
       initWidgetSafe(selectedSymbol.value, selectedInterval.value);
     }
   }
 
-  const driverObj = driver({
-    showProgress: true,
-    steps: [
-      {
-        element: symbolSelect.value?.$el || symbolSelect.value,
-        popover: {
-          title: "Animated Tour Example",
-          description:
-            "Here is the code example showing animated tour. Let's walk you through it.",
-        },
+  startTour([
+    {
+      element: symbolSelect.value?.$el || symbolSelect.value,
+      popover: {
+        description: "Choose your preferred trading pair from this dropdown.",
       },
-    ],
-  });
-
-  driverObj.drive();
+    },
+    {
+      element: intervalSelect.value?.$el || intervalSelect.value,
+      popover: {
+        description: "Select your preferred timeframe for analysis.",
+      },
+    },
+    {
+      element:
+        requestSignalRef.value?.requestSignalButton?.$el ||
+        requestSignalRef.value?.requestSignalButton,
+      popover: {
+        description:
+          "Click this button to request a signal based on options selected",
+      },
+    },
+    {
+      element: "#tradingview-container",
+      popover: {
+        description: "View real-time market data and technical analysis here.",
+      },
+    },
+  ]);
 });
 
 // Watch the selected symbol and interval but **debounce it** to avoid multiple recreations
@@ -428,9 +445,5 @@ watch([selectedSymbol, selectedInterval], ([symbol, interval]) => {
 .fade-leave-to {
   opacity: 0;
   transform: translateY(10px);
-}
-
-.driver-popover-arrow {
-  display: none;
 }
 </style>

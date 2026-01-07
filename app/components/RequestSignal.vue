@@ -178,6 +178,7 @@
             @click="requestSignal"
             class="mt-5 mb-1 !text-[12px] !px-8 !rounded-full"
             :isLoading="isRequestingSignal"
+            ref="requestSignalButton"
             >Request Signal</UiButton
           >
           <div
@@ -501,6 +502,9 @@ const intervalMap = {
   W: "W1",
   M: "MN1",
 };
+
+const requestSignalButton = ref(null);
+
 const props = defineProps({
   symbol: {
     type: String,
@@ -510,6 +514,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+});
+
+defineExpose({
+  requestSignalButton,
 });
 
 const formatPrice = (value) => {
