@@ -56,6 +56,7 @@
             isActive('/dashboard') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
           ]"
+          @click="toggleMobileMenu"
         >
           <UiIcon
             icon="material-symbols:dashboard-outline-rounded"
@@ -86,6 +87,7 @@
               : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
           ]"
+          @click="toggleMobileMenu"
         >
           <UiIcon icon="hugeicons:user" custom-class="w-4 h-4" />
 
@@ -109,6 +111,7 @@
             isActive('/signalhistory') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
           ]"
+          @click="toggleMobileMenu"
         >
           <UiIcon icon="hugeicons:transaction-history" custom-class="w-4 h-4" />
 
@@ -132,6 +135,7 @@
             isActive('/affiliate') ? activeClass : inactiveClass,
             isCollapsed ? 'justify-start' : 'justify-start',
           ]"
+          @click="toggleMobileMenu"
         >
           <UiIcon icon="humbleicons:users" custom-class="w-4 h-4" />
 
@@ -194,6 +198,7 @@
             to="/settings/subscription"
             class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] rounded-lg py-2 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
             exact
+            @click="toggleMobileMenu"
           >
             <span class="text-[14px]">Upgrade</span>
           </NuxtLink>
@@ -258,6 +263,7 @@
                 <NuxtLink
                   to="/settings/basicinfo"
                   class="flex items-center gap-2 px-3 py-2 rounded-md transition"
+                  @click="closePopover"
                 >
                   <UiIcon icon="hugeicons:user-03" custom-class="w-4 h-4" />
 
@@ -332,6 +338,10 @@ const updateIsMobile = () => {
   isMobile.value = window.innerWidth < 768;
   // if switching to desktop, ensure mobile menu is closed
   if (!isMobile.value) isMobileMenuOpen.value = false;
+};
+
+const closePopover = () => {
+  document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 };
 
 onMounted(() => {
