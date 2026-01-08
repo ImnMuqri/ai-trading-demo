@@ -375,6 +375,23 @@ const loadTickerTape = () => {
   tickerContainer.value.appendChild(script);
 };
 
+function waitForElement(getElFn, timeout = 3000) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const check = () => {
+      const el = getElFn();
+      if (el) {
+        resolve(el);
+      } else if (Date.now() - start > timeout) {
+        reject(`Element not found after ${timeout}ms`);
+      } else {
+        requestAnimationFrame(check);
+      }
+    };
+    check();
+  });
+}
+
 onMounted(async () => {
   await nextTick();
 
@@ -415,7 +432,10 @@ onMounted(async () => {
       },
     },
     {
-      element: analysisRef.value?.getFirstAnalysisButton(),
+      element: await waitForElement(
+        () => analysisRef.value?.getFirstAnalysisButton(),
+        5000
+      ),
       popover: {
         description:
           "Generate detail analysis \n Select the icon to generate detail analysis of the section",

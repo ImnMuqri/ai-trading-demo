@@ -1,6 +1,3 @@
-/* =========================================================
-   Imports
-========================================================= */
 @import "driver.js/dist/driver.css";
 
 /* =========================================================
@@ -195,9 +192,24 @@
    Overlay & Z-Index Management
 ========================================================= */
 .driver-overlay {
-  display: hidden !important;
+  /* z-index: 9998 !important; */
 }
 
 .driver-popover {
-  z-index: 10002 !important;
+  /* z-index: 10002 !important; */
+}
+
+/* Highlighted element */
+.driver-active-element {
+  /* z-index: 10000 !important;
+  position: relative !important; */
+}
+
+.driver-active-element ul {
+  /* z-index: 10001 !important; */
+
+}
+
+.driver-active-element * {
+
 }

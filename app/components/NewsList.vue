@@ -258,6 +258,7 @@ const setAnalysisButton = (el, id) => {
 };
 
 const getFirstAnalysisButton = () => {
+  console.log("Get first analysis button");
   return analysisButtons.value.length ? analysisButtons.value[0].el : null;
 };
 

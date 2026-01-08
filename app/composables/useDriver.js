@@ -32,12 +32,26 @@ export const useGuidedTour = () => {
     if (hasSkippedTour()) return;
 
     const driverObj = driver({
+      animate: true,
       showProgress: false,
       allowClose: options.allowClose ?? true,
       nextBtnText: "Next",
       prevBtnText: "Previous",
       doneBtnText: "Done",
       popoverClass: "driverjs-theme",
+      disableActiveInteraction: false,
+      // stagePadding: 10, // Default 10
+      // popoverOffset: 10,
+
+      onHighlightStarted: (element, step, options) => {
+        const { config, driver } = options;
+
+        if (step.customStagePadding !== undefined) {
+          config.stagePadding = step.customStagePadding;
+        } else {
+          config.stagePadding = 10;
+        }
+      },
 
       onPopoverRender: (popover, { config, state }) => {
         setTimeout(() => {
