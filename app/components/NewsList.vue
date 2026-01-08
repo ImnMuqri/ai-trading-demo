@@ -5,19 +5,22 @@
         <div class="flex items-center justify-between gap-2 pb-2">
           <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
           <span
-            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
+          ></span>
         </div>
         <!-- News items for this date -->
         <div
           v-for="(news, index) in group"
           :key="index"
           class="px-4 pt-4 pb-2 mb-4 mt-2 rounded-lg bg-[#0D0D0D] transition"
-          :class="impactBorder(news.tag)">
+          :class="impactBorder(news.tag)"
+        >
           <a
             :href="news.url"
             target="_blank"
             rel="noopener noreferrer"
-            class="flex flex-col md:flex-row gap-6 items-center mb-4">
+            class="flex flex-col md:flex-row gap-6 items-center mb-4"
+          >
             <!-- Show image if available -->
             <img
               v-if="news.image"
@@ -26,7 +29,8 @@
               :class="[
                 'h-auto rounded-md mb-2 col-span-1',
                 index === 0 ? 'w-full md:w-[20vw]' : 'w-full md:w-[10vw]',
-              ]" />
+              ]"
+            />
             <div class="grid grid-cols-1 gap-2">
               <p class="text-[12px] text-gray-500 capitalize">
                 {{ formatTime(news.publishedAt) }}
@@ -46,24 +50,29 @@
                     : news.tag == 'Negative'
                     ? 'bg-red-500'
                     : 'bg-gray-500',
-                ]">
+                ]"
+              >
                 {{ news.tag }}
               </p>
             </div>
           </a>
           <div
             class="overflow-hidden transition-[max-height] duration-300 ease-in"
-            :style="{ maxHeight: openAnalysis === news.id ? '1000px' : '0px' }">
+            :style="{ maxHeight: openAnalysis === news.id ? '1000px' : '0px' }"
+          >
             <!-- Loading state -->
             <div
               class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2 py-2"
-              v-show="isAnalysing">
+              v-show="isAnalysing"
+            >
               <iframe
                 src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
-                class="border-0 !w-16 !h-14">
+                class="border-0 !w-16 !h-14"
+              >
               </iframe>
               <p
-                class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text">
+                class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text"
+              >
                 Generating Ai Analysis
               </p>
             </div>
@@ -71,12 +80,15 @@
             <div
               v-if="analysisData"
               v-show="!isAnalysing"
-              class="bg-[#1C1C1C] text-sm rounded-md mt-2">
+              class="bg-[#1C1C1C] text-sm rounded-md mt-2"
+            >
               <div
-                class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
+                class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2"
+              >
                 <UiIcon
                   icon="icon:ai-icon"
-                  custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                  custom-class="h-9 w-8 text-[#00BDA7]"
+                ></UiIcon>
                 AI Analysis
               </div>
               <div class="flex flex-col gap-2 p-4 text-[12px] text-gray-300">
@@ -101,7 +113,8 @@
                         : analysisData.analysis.sentiment === 'Negative'
                         ? 'bg-red-500/15 text-red-500 border-red-500'
                         : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                    ]">
+                    ]"
+                  >
                     {{ analysisData.analysis?.sentiment }}
                   </UiChip>
 
@@ -113,7 +126,8 @@
                         : analysisData.analysis.impact === 'High'
                         ? 'bg-red-500/15 text-red-500 border-red-500'
                         : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                    ]">
+                    ]"
+                  >
                     {{ analysisData.analysis.impact }}
                   </UiChip>
                 </div>
@@ -121,35 +135,43 @@
             </div>
           </div>
           <div
-            class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1">
+            class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1"
+          >
             <div
               v-if="openAnalysis === news.id"
               @click="closeAnalysis()"
-              class="flex gap-1 items-center cursor-pointer">
+              class="flex gap-1 items-center cursor-pointer"
+            >
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                custom-class="h-9 w-8 text-[#00BDA7]"
+              ></UiIcon>
 
               <span class="flex gap-1 text-[12px]"
                 >Hide analysis
                 <UiIcon
                   icon="ic:round-chevron-right"
-                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
+                  custom-class="w-4 h-4 text-[#00BDA7]"
+                ></UiIcon
               ></span>
             </div>
             <div
               v-else
               @click="newAnalysis(news.id)"
-              class="flex gap-1 items-center cursor-pointer">
+              class="flex gap-1 items-center cursor-pointer"
+              :ref="(el) => setAnalysisButton(el, news.id)"
+            >
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                custom-class="h-9 w-8 text-[#00BDA7]"
+              ></UiIcon>
 
               <span class="flex gap-1 text-[12px]"
                 >See analysis
                 <UiIcon
                   icon="ic:round-chevron-right"
-                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
+                  custom-class="w-4 h-4 text-[#00BDA7]"
+                ></UiIcon
               ></span>
             </div>
           </div>
@@ -170,7 +192,8 @@
               <!-- Image shimmer -->
               <div
                 class="rounded-md bg-gray-700"
-                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"></div>
+                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"
+              ></div>
 
               <!-- Text shimmer -->
               <div class="grid grid-cols-1 gap-2 flex-1">
@@ -183,7 +206,8 @@
 
             <!-- Footer shimmer -->
             <div
-              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3">
+              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3"
+            >
               <div class="h-10 w-10 bg-gray-700 rounded-full"></div>
               <div class="h-4 w-24 bg-gray-600 rounded"></div>
             </div>
@@ -200,13 +224,15 @@
       <div class="flex gap-1 items-center">
         <UiIcon
           icon="healthicons:chart-line-24px"
-          custom-class="text-[#00BDA7]"></UiIcon>
+          custom-class="text-[#00BDA7]"
+        ></UiIcon>
         View Market History
       </div>
       <div class="flex items-center">
         <UiIcon
           icon="ic:round-chevron-right"
-          custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon>
+          custom-class="w-4 h-4 text-[#00BDA7]"
+        ></UiIcon>
         View Recent Headline
       </div>
     </div>
@@ -222,6 +248,22 @@ const isAnalysing = ref(false);
 const analysisData = ref(null);
 const openAnalysis = ref(false);
 const newsList = ref([]);
+
+const analysisButtons = ref([]);
+
+const setAnalysisButton = (el, id) => {
+  if (el) {
+    analysisButtons.value.push({ id, el });
+  }
+};
+
+const getFirstAnalysisButton = () => {
+  return analysisButtons.value.length ? analysisButtons.value[0].el : null;
+};
+
+defineExpose({
+  getFirstAnalysisButton,
+});
 
 // Format time
 const formatTime = (dateString) => {

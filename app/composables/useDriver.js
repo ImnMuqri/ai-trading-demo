@@ -1,7 +1,36 @@
 import { driver } from "driver.js";
 
+const TOUR_STORAGE_KEY = "guided_tour_skipped";
+
+const isTourEnabled = () => {
+  if (process.server) return true;
+  return localStorage.getItem(TOUR_STORAGE_KEY) !== "1";
+};
+
+const setTourEnabled = (enabled) => {
+  if (process.server) return;
+
+  if (enabled) {
+    localStorage.removeItem(TOUR_STORAGE_KEY);
+  } else {
+    localStorage.setItem(TOUR_STORAGE_KEY, "1");
+  }
+};
+
 export const useGuidedTour = () => {
+  const hasSkippedTour = () => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(TOUR_STORAGE_KEY) === "1";
+  };
+
+  const skipTour = (driverObj) => {
+    localStorage.setItem(TOUR_STORAGE_KEY, "1");
+    driverObj.destroy();
+  };
+
   const startTour = (steps, options = {}) => {
+    if (hasSkippedTour()) return;
+
     const driverObj = driver({
       showProgress: false,
       allowClose: options.allowClose ?? true,
@@ -14,12 +43,23 @@ export const useGuidedTour = () => {
         setTimeout(() => {
           updateProgressDots(state.activeIndex, config.steps.length);
         }, 50);
+        const skipButton = document.createElement("button");
+        skipButton.innerText = "Skip Tutorial";
+        skipButton.classList.add("custom-skip-btn");
+        popover.footerButtons.appendChild(skipButton);
+        skipButton.addEventListener("click", () => {
+          skipTour(driverObj);
+        });
       },
       steps: steps,
     });
 
     driverObj.drive();
     return driverObj;
+  };
+
+  const resetTour = () => {
+    localStorage.removeItem(TOUR_STORAGE_KEY);
   };
 
   const updateProgressDots = (currentIndex, totalSteps) => {
@@ -61,5 +101,8 @@ export const useGuidedTour = () => {
 
   return {
     startTour,
+    resetTour,
+    isTourEnabled,
+    setTourEnabled,
   };
 };

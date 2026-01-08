@@ -132,7 +132,7 @@
             </div>
 
             <client-only>
-              <NewsList />
+              <NewsList ref="analysisRef" />
             </client-only>
           </div>
         </div>
@@ -234,6 +234,7 @@ const selectedSymbol = ref(""); // initially empty
 const symbolSelect = ref(null);
 const intervalSelect = ref(null);
 const requestSignalRef = ref(null);
+const analysisRef = ref(null);
 
 const sentimentIndex = ref({
   percentage: 0,
@@ -391,13 +392,16 @@ onMounted(async () => {
     {
       element: symbolSelect.value?.$el || symbolSelect.value,
       popover: {
-        description: "Choose your preferred trading pair from this dropdown.",
+        description:
+          "Select symbol to generate market prediction based on the selected symbol",
       },
     },
     {
       element: intervalSelect.value?.$el || intervalSelect.value,
       popover: {
-        description: "Select your preferred timeframe for analysis.",
+        description:
+          "Select timeframe to generate market prediction based on desired time",
+        side: "right",
       },
     },
     {
@@ -406,13 +410,15 @@ onMounted(async () => {
         requestSignalRef.value?.requestSignalButton,
       popover: {
         description:
-          "Click this button to request a signal based on options selected",
+          "View signal & insights here. \n Select the 'Request Signal' button to view detailed analysis of the symbol",
+        side: "right",
       },
     },
     {
-      element: "#tradingview-container",
+      element: analysisRef.value?.getFirstAnalysisButton(),
       popover: {
-        description: "View real-time market data and technical analysis here.",
+        description:
+          "Generate detail analysis \n Select the icon to generate detail analysis of the section",
       },
     },
   ]);
