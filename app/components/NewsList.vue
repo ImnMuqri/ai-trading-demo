@@ -5,11 +5,9 @@
         <div class="flex items-center justify-between gap-2 pb-2">
           <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
           <span
-            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
-          ></span>
+            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
         </div>
         <!-- News items for this date -->
-
         <div
           v-for="(news, index) in group"
           :key="index"
@@ -20,7 +18,7 @@
               :href="news.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex flex-col md:flex-row gap-6 items-center">
+              class="flex flex-col md:flex-row gap-6 items-center mb-2">
               <!-- Show image if available -->
               <img
                 v-if="news.image"
@@ -56,6 +54,7 @@
             </p>
             <div
               @click="newAnalysis(news.id)"
+              :ref="(el) => setAnalysisButton(el, news.id)"
               class="absolute top-2 right-2 flex gap-1 items-center cursor-pointer"
               :class="isAnalysing ? 'animate-pulse pointer-events-none' : ''">
               <UiIcon
@@ -69,7 +68,7 @@
               }">
               <!-- Loading state -->
               <div
-                class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2 py-2"
+                class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md py-2"
                 v-show="isAnalysing">
                 <iframe
                   src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
@@ -84,14 +83,7 @@
               <div
                 v-if="analysisData"
                 v-show="!isAnalysing"
-                class="relative bg-[#1C1C1C] text-sm rounded-md mt-2">
-                <div
-                  @click="closeAnalysis()"
-                  class="absolute right-2 top-2 flex items-center justify-center h-4 w-4 bg-gray-600 rounded-full cursor-pointer">
-                  <UiIcon
-                    icon="hugeicons:cancel-01"
-                    custom-class="h-3 w-3"></UiIcon>
-                </div>
+                class="bg-[#1C1C1C] text-sm rounded-md">
                 <div
                   class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
                   <UiIcon
@@ -158,8 +150,7 @@
               <!-- Image shimmer -->
               <div
                 class="rounded-md bg-gray-700"
-                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"
-              ></div>
+                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"></div>
 
               <!-- Text shimmer -->
               <div class="grid grid-cols-1 gap-2 flex-1">
@@ -172,8 +163,7 @@
 
             <!-- Footer shimmer -->
             <div
-              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3"
-            >
+              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3">
               <div class="h-10 w-10 bg-gray-700 rounded-full"></div>
               <div class="h-4 w-24 bg-gray-600 rounded"></div>
             </div>
@@ -187,20 +177,18 @@
     </div>
 
     <div class="flex text-[12px] gap-4 items-center justify-center mt-3">
-      <div class="flex gap-1 items-center">
+      <!-- <div class="flex gap-1 items-center">
         <UiIcon
           icon="healthicons:chart-line-24px"
-          custom-class="text-[#00BDA7]"
-        ></UiIcon>
+          custom-class="text-[#00BDA7]"></UiIcon>
         View Market History
       </div>
       <div class="flex items-center">
         <UiIcon
           icon="ic:round-chevron-right"
-          custom-class="w-4 h-4 text-[#00BDA7]"
-        ></UiIcon>
+          custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon>
         View Recent Headline
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

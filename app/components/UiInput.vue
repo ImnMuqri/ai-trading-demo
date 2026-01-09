@@ -3,44 +3,41 @@
     <label v-if="label" class="mb-1 text-[12px] font-medium text-white">
       {{ label }}
     </label>
+
     <div class="relative w-full">
       <!-- Left icon slot -->
       <div
         v-if="$slots['icon-left']"
-        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-      >
+        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
         <slot name="icon-left"></slot>
       </div>
 
       <!-- Right icon slot -->
       <div
         v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-      >
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
         <slot name="icon-right"></slot>
       </div>
 
       <!-- Input -->
       <input
+        v-if="type !== 'textarea'"
         :type="type"
         v-model="inputValue"
         :placeholder="placeholder"
         :disabled="isDisabled"
         :readonly="isReadonly"
-        :class="[
-          'w-full h-10 rounded-lg text-white !text-[11px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]',
-          isDisabled
-            ? 'opacity-50 cursor-not-allowed'
-            : 'border-gray-300 focus:border-[#00BDA7]',
-          $slots['icon-left'] ? 'pl-10' : 'px-4',
-          $slots['icon-right'] ? 'pr-10' : 'px-4',
-          'py-2',
-          customClass,
-          dark
-            ? 'bg-[#1A1C20] border-[#2A2A2A] text-white'
-            : 'bg-white border !text-black',
-        ]"
-      />
+        :class="baseClasses" />
+
+      <!-- Textarea -->
+      <textarea
+        v-else
+        v-model="inputValue"
+        :placeholder="placeholder"
+        :disabled="isDisabled"
+        :readonly="isReadonly"
+        rows="4"
+        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']" />
     </div>
 
     <!-- Error message -->
@@ -51,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 
 const props = defineProps({
   modelValue: String,
@@ -64,7 +61,7 @@ const props = defineProps({
   error: String,
   isDisabled: Boolean,
   isReadonly: Boolean,
-  customClass: String, // new prop for custom classes
+  customClass: String,
   dark: Boolean,
 });
 
@@ -72,20 +69,30 @@ const emit = defineEmits(["update:modelValue"]);
 
 const inputValue = ref(props.modelValue || "");
 
-watch(inputValue, (val) => {
-  emit("update:modelValue", val);
-});
-
+watch(inputValue, (val) => emit("update:modelValue", val));
 watch(
   () => props.modelValue,
-  (val) => {
-    inputValue.value = val;
-  }
+  (val) => (inputValue.value = val)
 );
+
+const baseClasses = computed(() => [
+  "w-full rounded-lg !text-[11px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]",
+  props.isDisabled
+    ? "opacity-50 cursor-not-allowed"
+    : "border-gray-300 focus:border-[#00BDA7]",
+  props.$slots?.["icon-left"] ? "pl-10" : "px-4",
+  props.$slots?.["icon-right"] ? "pr-10" : "px-4",
+  "py-2",
+  props.customClass,
+  props.dark
+    ? "bg-[#1A1C20] border-[#2A2A2A] text-white"
+    : "bg-white border text-black",
+]);
 </script>
 
 <style scoped>
-:deep input:-webkit-autofill {
+:deep(input:-webkit-autofill),
+:deep(textarea:-webkit-autofill) {
   -webkit-box-shadow: 0 0 0px 1000px #1a1c20 inset;
   -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;
