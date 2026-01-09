@@ -2,8 +2,7 @@
   <UiCard
     :is-gradient="!isRequestingSignal"
     class="flex flex-col justify-between p-4 w-full lg:w-[430px] lg:h-[630px] rounded-lg transition-opacity transition-color duration-300"
-    :class="isRequestingSignal ? 'bg-black' : ''"
-  >
+    :class="isRequestingSignal ? 'bg-black' : ''">
     <div>
       <div class="flex gap-1 items-center">
         <p class="text-md">Signal & Insights</p>
@@ -17,40 +16,34 @@
       <div class="grid grid-cols-1 h-fit">
         <div
           class="relative flex flex-col items-center justify-center w-full min-h-[580px]"
-          :class="isRequestingSignal ? 'opacity-100' : 'hidden'"
-        >
+          :class="isRequestingSignal ? 'opacity-100' : 'hidden'">
           <img src="assets/animations/generatingAnalysis.gif" class="" />
           <p
-            class="!hidden absolute text-sm font-semibold text-gray-400 shimmer-text"
-          >
+            class="!hidden absolute text-sm font-semibold text-gray-400 shimmer-text">
             Generating Ai Analysis
           </p>
         </div>
 
         <div
           class="h-fit grid grid-cols-1 gap-2 mt-4"
-          :class="!isRequestingSignal ? 'opacity-100' : 'hidden'"
-        >
+          :class="!isRequestingSignal ? 'opacity-100' : 'hidden'">
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Trend</p>
             <p
               :class="
-                tradingAnalysis?.trend === 'Bullish'
+                trendVolatility?.trend === 'Bullish'
                   ? 'text-emerald-500'
                   : 'text-red-500'
-              "
-            >
-              {{ analysisData?.trend ?? "No Info" }}
+              ">
+              {{ trendVolatility?.trend ?? "No Info" }}
             </p>
           </div>
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Volatility</p>
             <p class="text-yellow-500">
-              {{ analysisData?.volatility ?? "No Info" }}
+              {{ trendVolatility?.volatility ?? "No Info" }}
             </p>
           </div>
           <!-- <div
@@ -66,8 +59,7 @@
         </div>
         <div
           v-if="tradingAnalysis != null && !isRequestingSignal"
-          class="h-fit grid grid-cols-1 gap-2 mt-4"
-        >
+          class="h-fit grid grid-cols-1 gap-2 mt-4">
           <div class="flex gap-1 items-center">
             <UiIcon icon="hugeicons:ai-idea"></UiIcon>
             <p class="text-sm">Trade Idea</p>
@@ -80,24 +72,21 @@
           </div>
           <!-- Signal -->
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Signal</p>
             <p
               :class="
                 tradingAnalysis?.signal === 'BUY'
                   ? 'text-emerald-500'
                   : 'text-red-500'
-              "
-            >
+              ">
               {{ tradingAnalysis?.signal ?? "No Info" }}
             </p>
           </div>
 
           <!-- Timeframe -->
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Timeframe</p>
             <p class="text-emerald-500">
               {{ tradingAnalysis.timeframe ?? "No Info" }}
@@ -106,8 +95,7 @@
 
           <!-- Entry Zone -->
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Entry Zone</p>
             <p v-if="tradingAnalysis.signal == 'SELL'" class="text-yellow-500">
               {{ formatPrice(tradingAnalysis?.entryLower) ?? "--" }}
@@ -121,16 +109,14 @@
             </p>
           </div>
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Stop Loss</p>
             <p class="text-red-500">
               {{ formatPrice(tradingAnalysis?.stopLoss) ?? "No Info" }}
             </p>
           </div>
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Take Profit</p>
             <p class="text-emerald-500">
               {{ formatPrice(tradingAnalysis?.takeProfit) ?? "No Info" }}
@@ -138,8 +124,7 @@
           </div>
           <!-- Risk Level -->
           <div
-            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-          >
+            class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
             <p class="text-[#BCBBBB]">Risk Level</p>
             <p
               :class="
@@ -148,8 +133,7 @@
                   : tradingAnalysis?.risk === 'Medium'
                   ? 'text-yellow-500'
                   : 'text-emerald-500'
-              "
-            >
+              ">
               {{ tradingAnalysis?.risk ?? "No Info" }}
             </p>
           </div>
@@ -157,19 +141,16 @@
         <div
           v-if="!isRequestingSignal"
           class="flex flex-col items-center justify-center gap-1 h-fit mt-2 mb-2 lg:mt-10"
-          :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'"
-        >
+          :class="tradingAnalysis ? 'lg:mt-2' : 'lg:mt-10'">
           <div v-if="!tradingAnalysis" class="relative">
             <UiIcon
               icon="icon:ai-icon"
-              custom-class="h-28 w-48 text-[#00BDA7]"
-            ></UiIcon>
+              custom-class="h-28 w-48 text-[#00BDA7]"></UiIcon>
             <p class="absolute bottom-0 left-8 text-[11px] text-center">
               Need more information?
             </p>
             <p
-              class="absolute -bottom-3.5 left-10 text-[10px] text-[#B4B5B7] text-center italic"
-            >
+              class="absolute -bottom-3.5 left-10 text-[10px] text-[#B4B5B7] text-center italic">
               Click the button below
             </p>
           </div>
@@ -182,8 +163,7 @@
           >
           <div
             v-if="!tradingAnalysis"
-            class="flex gap-1 text-[11px] text-center text-[#B4B5B7]"
-          >
+            class="flex gap-1 text-[11px] text-center text-[#B4B5B7]">
             <p>Signal Left:</p>
             <p class="text-[#00BDA7]">
               {{ limitBalance?.remaining ?? "No Data" }}
@@ -194,28 +174,23 @@
     </div>
     <div
       v-if="tradingAnalysis && !isRequestingSignal"
-      class="flex flex-col md:flex-row gap-2"
-    >
+      class="flex flex-col md:flex-row gap-2">
       <UiCard
         @click="requestSignal"
-        class="relative flex items-center justify-center text-[12px] h-full w-full text-gray-400 text-center !bg-[#00BDA7] !text-black p-2.5 cursor-pointer"
-      >
+        class="relative flex items-center justify-center text-[12px] h-full w-full text-gray-400 text-center !bg-[#00BDA7] !text-black p-2.5 cursor-pointer">
         <p :class="['text-white', { 'opacity-0': isRequestingSignal }]">
           Request Signal
         </p>
         <div
           v-if="isRequestingSignal"
-          class="absolute inset-0 flex items-center justify-center"
-        >
+          class="absolute inset-0 flex items-center justify-center">
           <UiIcon
             icon="svg-spinners:blocks-shuffle-3"
-            class="text-lg text-white"
-          />
+            class="text-lg text-white" />
         </div> </UiCard
       ><UiCard
         @click="openModal"
-        class="flex items-center justify-center text-[12px] py-2 md:py-0 w-full text-gray-400 text-center bg-[#0D0D0D] hover:border-[#00BDA7] transition-colors px-1.5 cursor-pointer"
-      >
+        class="flex items-center justify-center text-[12px] py-2 md:py-0 w-full text-gray-400 text-center bg-[#0D0D0D] hover:border-[#00BDA7] transition-colors px-1.5 cursor-pointer">
         <p>See detailed analysis</p>
       </UiCard>
     </div>
@@ -226,13 +201,11 @@
     description="Here's a detailed analysis of the trading signal."
     :isGradient="false"
     width="max-w-[800px]"
-    @close="openDetailedAnalysis = false"
-  >
+    @close="openDetailedAnalysis = false">
     <template #body>
       <div class="text-gray-300">
         <div
-          class="flex gap-2 items-center justify-around py-3 border rounded-xl"
-        >
+          class="flex gap-2 items-center justify-around py-3 border rounded-xl">
           <div class="flex flex-col gap-1 items-center justify-center text-sm">
             <p>Risk Level</p>
             <p
@@ -241,8 +214,7 @@
                 'text-yellow-500': analysisData.riskLevel === 'Medium',
                 'text-[#00BDA7]': analysisData.riskLevel === 'Low',
                 'text-red-500': analysisData.riskLevel === 'High',
-              }"
-            >
+              }">
               {{ analysisData.riskLevel }}
             </p>
           </div>
@@ -262,8 +234,7 @@
                   (analysisData?.confidenceLevel ?? 0) >= 0.5 &&
                   (analysisData?.confidenceLevel ?? 0) <= 0.79,
                 'text-emerald-500': (analysisData?.confidenceLevel ?? 0) > 0.79,
-              }"
-            >
+              }">
               {{ formatScore(analysisData?.confidenceLevel) ?? "No Data" }}
             </p>
           </div>
@@ -271,8 +242,7 @@
 
         <div class="flex flex-col gap-2 text-sm">
           <div
-            class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2"
-          >
+            class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2">
             <div class="flex items-center gap-1">
               <UiIcon icon="hugeicons:ai-idea" custom-class="h-4 w-4"></UiIcon>
               <h3 class="text-lg font-semibold">AI Analysis</h3>
@@ -334,44 +304,38 @@
               <div class="flex items-center gap-2">
                 <UiIcon
                   icon="hugeicons:book-open-01"
-                  custom-class="h-3.5 w-3.5"
-                ></UiIcon>
+                  custom-class="h-3.5 w-3.5"></UiIcon>
                 <p>Key Insight</p>
               </div>
               <div class="flex flex-col gap-2 mt-2">
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Trend</p>
                   <p
                     :class="
                       analysisData?.trend == 'Bullish'
                         ? 'text-emerald-500'
                         : 'text-red-500'
-                    "
-                  >
+                    ">
                     {{ analysisData?.trend ?? "No Info" }}
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Volatility</p>
                   <p class="text-emerald-500">
                     {{ analysisData?.volatility ?? "No Info" }}
                   </p>
                 </div>
                 <div
-                  class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB] uppercase">Volume Analysis</p>
                   <p>
                     {{ analysisData.volumeAnalysis }}
                   </p>
                 </div>
                 <div
-                  class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB] uppercase">Market Sentiment</p>
                   <p>
                     {{ analysisData.marketSentiment }}
@@ -383,28 +347,24 @@
               <div class="flex items-center gap-1">
                 <UiIcon
                   icon="hugeicons:ai-idea"
-                  custom-class="h-3.5 w-3.5"
-                ></UiIcon>
+                  custom-class="h-3.5 w-3.5"></UiIcon>
                 <p>Trade Idea</p>
               </div>
               <div class="flex flex-col gap-2 mt-2">
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Signal</p>
                   <p
                     :class="
                       tradingAnalysis?.signal === 'BUY'
                         ? 'text-emerald-500'
                         : 'text-red-500'
-                    "
-                  >
+                    ">
                     {{ tradingAnalysis?.signal ?? "No Info" }}
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Entry Zone</p>
                   <p class="text-yellow-500">
                     {{ analysisData?.entryZone.upper ?? "No Info" }}-
@@ -412,32 +372,28 @@
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Stop Loss</p>
                   <p class="text-red-500">
                     {{ formatPrice(analysisData?.stopLoss) ?? "No Info" }}
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 1</p>
                   <p class="text-emerald-500">
                     {{ formatPrice(analysisData.takeProfit1) }}
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 2</p>
                   <p class="text-emerald-500">
                     {{ formatPrice(analysisData.takeProfit2) }}
                   </p>
                 </div>
                 <div
-                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
-                >
+                  class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
                   <p class="text-[#BCBBBB]">Take Profit 3</p>
                   <p class="text-emerald-500">
                     {{ formatPrice(analysisData.takeProfit3) }}
@@ -488,6 +444,11 @@ const analysisData = ref({
   // Key Insight
   volumeAnalysis: null,
   marketSentiment: null,
+});
+
+const trendVolatility = ref({
+  trend: null,
+  volatility: null,
 });
 
 const intervalMap = {
@@ -567,7 +528,29 @@ const getLimitBalance = async () => {
     limitBalanceLoading.value = false;
   }
 };
+const getTrendVolatility = async () => {
+  try {
+    console.log("Fetching symbol:", props.symbol);
+    const res = await $api.get(`/api/ai/market-insight/${props.symbol}`);
 
+    const data = res.data?.data;
+
+    trendVolatility.value = {
+      trend: data?.trend ?? null,
+      volatility: data?.volatility ?? null,
+    };
+
+    return trendVolatility.value;
+  } catch (error) {
+    console.error("Unable to load trend volatility", error);
+    showToast(
+      error.response?.data?.message || "Failed to fetch market insight",
+      "error"
+    );
+    return null;
+  } finally {
+  }
+};
 // Cache structure: { 'SYMBOL_TIMEFRAME': { data, createdAt } }
 const historyCache = ref({});
 
@@ -725,6 +708,15 @@ watch(
 
     // No valid cache, fetch new signal history
     await getSignalHistory();
+  },
+  { immediate: true }
+);
+watch(
+  () => props.symbol,
+  (symbol) => {
+    if (!symbol) return;
+
+    getTrendVolatility(symbol);
   },
   { immediate: true }
 );

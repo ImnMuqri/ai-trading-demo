@@ -152,6 +152,13 @@
                 stroke-linecap="round" />
 
               <!-- progress ring -->
+
+              <path
+                d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
+                fill="none"
+                stroke="#8DADA2"
+                stroke-width="3"
+                stroke-linecap="round" />
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"

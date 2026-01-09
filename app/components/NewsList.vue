@@ -8,149 +8,136 @@
             class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
         </div>
         <!-- News items for this date -->
+
         <div
           v-for="(news, index) in group"
           :key="index"
-          class="px-4 pt-4 pb-2 mb-4 mt-2 rounded-lg bg-[#0D0D0D] transition"
-          :class="impactBorder(news.tag)">
-          <a
-            :href="news.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="flex flex-col md:flex-row gap-6 items-center mb-4">
-            <!-- Show image if available -->
-            <img
-              v-if="news.image"
-              :src="news.image"
-              alt="news image"
-              :class="[
-                'h-auto rounded-md mb-2 col-span-1',
-                index === 0 ? 'w-full md:w-[20vw]' : 'w-full md:w-[10vw]',
-              ]" />
-            <div class="grid grid-cols-1 gap-2">
-              <p class="text-[12px] text-gray-500 capitalize">
-                {{ formatTime(news.publishedAt) }}
-              </p>
-
-              <h3 class="text-sm font-medium text-white">
-                {{ news.title }}
-              </h3>
-              <p class="text-[12px] text-gray-400 text-left mb-3">
-                {{ news.source }}
-              </p>
-              <p
-                class="text-[11px] px-3 py-1 w-fit rounded-full"
+          :class="impactBorder(news.tag)"
+          class="p-[2px] rounded-lg mb-3">
+          <div class="relative px-6 py-3 rounded-lg bg-[#0D0D0D] h-full">
+            <a
+              :href="news.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex flex-col md:flex-row gap-6 items-center">
+              <!-- Show image if available -->
+              <img
+                v-if="news.image"
+                :src="news.image"
+                alt="news image"
                 :class="[
-                  news.tag == 'Positive'
-                    ? 'bg-[#00BDA7]'
-                    : news.tag == 'Negative'
-                    ? 'bg-red-500'
-                    : 'bg-gray-500',
-                ]">
-                {{ news.tag }}
-              </p>
-            </div>
-          </a>
-          <div
-            class="overflow-hidden transition-[max-height] duration-300 ease-in"
-            :style="{ maxHeight: openAnalysis === news.id ? '1000px' : '0px' }">
-            <!-- Loading state -->
-            <div
-              class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2 py-2"
-              v-show="isAnalysing">
-              <iframe
-                src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
-                class="border-0 !w-16 !h-14">
-              </iframe>
-              <p
-                class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text">
-                Generating Ai Analysis
-              </p>
-            </div>
-            <!-- Analysis content -->
-            <div
-              v-if="analysisData"
-              v-show="!isAnalysing"
-              class="bg-[#1C1C1C] text-sm rounded-md mt-2">
-              <div
-                class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
-                <UiIcon
-                  icon="icon:ai-icon"
-                  custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
-                AI Analysis
-              </div>
-              <div class="flex flex-col gap-2 p-4 text-[12px] text-gray-300">
-                <div>
-                  <p class="font-semibold">Analysis</p>
-                  <p>{{ analysisData.analysis?.analysis }}</p>
-                </div>
-                <div>
-                  <p class="font-semibold">Summary</p>
-                  <p>{{ analysisData.analysis?.summary }}</p>
-                </div>
-                <div>
-                  <p class="font-semibold">Trading Signal</p>
-                  <p>{{ analysisData.analysis?.tradingSignal }}</p>
-                </div>
-                <div class="flex gap-2 py-2">
-                  <UiChip
-                    :custom-class="[
-                      'px-3 py-1 text-xs border rounded-full',
-                      analysisData.analysis.sentiment === 'Positive'
-                        ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
-                        : analysisData.analysis.sentiment === 'Negative'
-                        ? 'bg-red-500/15 text-red-500 border-red-500'
-                        : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                    ]">
-                    {{ analysisData.analysis?.sentiment }}
-                  </UiChip>
+                  'h-auto rounded-md mb-2 col-span-1',
+                  index === 0 ? 'w-full md:w-[20vw]' : 'w-full md:w-[10vw]',
+                ]" />
+              <div class="grid grid-cols-1 gap-2">
+                <p class="text-[12px] text-gray-500 capitalize">
+                  {{ formatTime(news.publishedAt) }}
+                </p>
 
-                  <UiChip
-                    :custom-class="[
-                      'px-3 py-1 text-xs border rounded-full',
-                      analysisData.analysis.impact === 'Low'
-                        ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
-                        : analysisData.analysis.impact === 'High'
-                        ? 'bg-red-500/15 text-red-500 border-red-500'
-                        : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                    ]">
-                    {{ analysisData.analysis.impact }}
-                  </UiChip>
-                </div>
+                <h3 class="text-sm font-medium text-white">
+                  {{ news.title }}
+                </h3>
+                <p class="text-[12px] text-gray-400 text-left mb-3">
+                  {{ news.source }}
+                </p>
               </div>
-            </div>
-          </div>
-          <div
-            class="flex gap-[1px] items-center justify-end text-gray-500 border-t border-[#1C1C1C] pt-1">
+            </a>
+            <p
+              class="absolute top-4 right-12 text-[11px] px-3 py-1 w-fit rounded-full"
+              :class="[
+                news.tag == 'Positive'
+                  ? 'bg-[#00BDA7]'
+                  : news.tag == 'Negative'
+                  ? 'bg-red-500'
+                  : 'bg-gray-500',
+              ]">
+              {{ news.tag }}
+            </p>
             <div
-              v-if="openAnalysis === news.id"
-              @click="closeAnalysis()"
-              class="flex gap-1 items-center cursor-pointer">
-              <UiIcon
-                icon="icon:ai-icon"
-                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
-
-              <span class="flex gap-1 text-[12px]"
-                >Hide analysis
-                <UiIcon
-                  icon="ic:round-chevron-right"
-                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
-              ></span>
-            </div>
-            <div
-              v-else
               @click="newAnalysis(news.id)"
-              class="flex gap-1 items-center cursor-pointer">
+              class="absolute top-2 right-2 flex gap-1 items-center cursor-pointer"
+              :class="isAnalysing ? 'animate-pulse pointer-events-none' : ''">
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+            </div>
+            <div
+              class="overflow-hidden transition-[max-height] duration-300 ease-in"
+              :style="{
+                maxHeight: openAnalysis === news.id ? '1000px' : '0px',
+              }">
+              <!-- Loading state -->
+              <div
+                class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md mt-2 py-2"
+                v-show="isAnalysing">
+                <iframe
+                  src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
+                  class="border-0 !w-16 !h-14">
+                </iframe>
+                <p
+                  class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text">
+                  Generating Ai Analysis
+                </p>
+              </div>
+              <!-- Analysis content -->
+              <div
+                v-if="analysisData"
+                v-show="!isAnalysing"
+                class="relative bg-[#1C1C1C] text-sm rounded-md mt-2">
+                <div
+                  @click="closeAnalysis()"
+                  class="absolute right-2 top-2 flex items-center justify-center h-4 w-4 bg-gray-600 rounded-full cursor-pointer">
+                  <UiIcon
+                    icon="hugeicons:cancel-01"
+                    custom-class="h-3 w-3"></UiIcon>
+                </div>
+                <div
+                  class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
+                  <UiIcon
+                    icon="icon:ai-icon"
+                    custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                  AI Analysis
+                </div>
+                <div class="flex flex-col gap-2 p-4 text-[12px] text-gray-300">
+                  <div>
+                    <p class="font-semibold">Analysis</p>
+                    <p>{{ analysisData.analysis?.analysis }}</p>
+                  </div>
+                  <div>
+                    <p class="font-semibold">Summary</p>
+                    <p>{{ analysisData.analysis?.summary }}</p>
+                  </div>
+                  <div>
+                    <p class="font-semibold">Trading Signal</p>
+                    <p>{{ analysisData.analysis?.tradingSignal }}</p>
+                  </div>
+                  <div class="flex gap-2 py-2">
+                    <UiChip
+                      :custom-class="[
+                        'px-3 py-1 text-xs border rounded-full',
+                        analysisData.analysis.sentiment === 'Positive'
+                          ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
+                          : analysisData.analysis.sentiment === 'Negative'
+                          ? 'bg-red-500/15 text-red-500 border-red-500'
+                          : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                      ]">
+                      {{ analysisData.analysis?.sentiment }}
+                    </UiChip>
 
-              <span class="flex gap-1 text-[12px]"
-                >See analysis
-                <UiIcon
-                  icon="ic:round-chevron-right"
-                  custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon
-              ></span>
+                    <UiChip
+                      :custom-class="[
+                        'px-3 py-1 text-xs border rounded-full',
+                        analysisData.analysis.impact === 'Low'
+                          ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
+                          : analysisData.analysis.impact === 'High'
+                          ? 'bg-red-500/15 text-red-500 border-red-500'
+                          : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                      ]">
+                      {{ analysisData.analysis.impact }}
+                    </UiChip>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -331,11 +318,18 @@ const groupedNews = computed(() => {
 });
 // Border colors based on severity
 const impactBorder = (severity) => {
-  if (severity === "Negative") return "border-[2px] border-red-500/50";
-  if (severity === "Neutral") return "border-[2px] border-gray-500/50";
-  if (severity === "Positive") return "border-[2px] border-[#00BDA7]/50  ";
-  return "border border-[#1C1C1C]";
+  if (severity === "Negative") {
+    return "bg-gradient-to-b from-red-500/60 to-[#0D0D0D]";
+  }
+  if (severity === "Neutral") {
+    return "bg-gradient-to-b from-gray-500/60 to-[#0D0D0D]";
+  }
+  if (severity === "Positive") {
+    return "bg-gradient-to-b from-[#00BDA7]/60 to-[#0D0D0D]";
+  }
+  return "bg-gradient-to-b from-[#1C1C1C] to-[#0D0D0D]";
 };
+
 // Run fetch on mount
 onMounted(() => {
   fetchNews();
