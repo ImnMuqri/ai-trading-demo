@@ -10,7 +10,8 @@
               <UiIcon
                 icon="cuida:edit-outline"
                 custom-class="w-4 h-4 text-[#00BDA7]"
-                class="block lg:hidden" />
+                class="block lg:hidden"
+              />
             </div>
             <p class="text-[12px] text-gray-400">{{ profileData.email }}</p>
           </div>
@@ -32,39 +33,51 @@
           >
         </div>
       </div>
-      <div class="grid grid-cols-1 gap-4 w-full mt-4 lg:w-[500px]">
+      <div class="grid grid-cols-1 gap-4 w-full mt-4 lg:w-[500px] !text-white">
         <UiInput
           v-model="profileData.name"
           label="Name"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark></UiInput>
+          dark
+        ></UiInput>
         <UiInput
           v-model="profileData.email"
           label="Email"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark></UiInput>
+          dark
+        ></UiInput>
         <UiInput
           v-model="profileData.phone"
           label="Phone Number"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark></UiInput>
+          dark
+        ></UiInput>
         <UiInput
           v-model="profileData.role"
           label="Role"
           placeholder="Your role"
           custom-class="capitalize"
           isReadonly
-          dark></UiInput>
+          dark
+        ></UiInput>
         <UiInput
           v-model="profileData.country"
           label="Country "
           placeholder="Your country"
           custom-class="pointer-events-none capitalize"
           :isReadonly="!isEditing"
-          dark></UiInput>
+          dark
+        ></UiInput>
+
+        <UiRadio
+          v-model="isTourActive"
+          as-boolean
+          :items="['Tutorial Mode', 'Tutorial Mode']"
+          custom-class="!text-[12px]"
+        />
       </div>
     </div>
     <div class="flex justify-end">
@@ -74,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 definePageMeta({
   title: "Basic Information",
   layout: "layout",
@@ -82,7 +95,11 @@ definePageMeta({
   middleware: "auth-client",
 });
 const { $api } = useNuxtApp();
+
+const { isTourEnabled, setTourEnabled } = useGuidedTour();
+
 const isEditing = ref(false);
+const isTourActive = ref(true);
 
 const profileData = ref({
   id: null,
@@ -140,6 +157,11 @@ const updateUserProfile = async (profileData) => {
 
 onMounted(() => {
   getUserProfile();
+  isTourActive.value = isTourEnabled();
+});
+
+watch(isTourActive, (value) => {
+  setTourEnabled(value);
 });
 </script>
 

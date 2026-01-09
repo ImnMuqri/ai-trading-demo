@@ -1,16 +1,23 @@
 <template>
   <div class="text-white">
     <div
-      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
+      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2"
+    >
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
           :options="symbols"
-          placeholder="Select Instrument" />
+          placeholder="Select Instrument"
+          ref="symbolSelect"
+          class="symbolSelect"
+        />
         <UiSelect
           v-model="selectedInterval"
           :options="intervalOptions"
-          placeholder="Select Timeframe" />
+          placeholder="Select Timeframe"
+          ref="intervalSelect"
+          class="intervalSelect"
+        />
         <!-- <UiButton @click="refreshTokenManually" 
           >
           Refresh Token
@@ -22,7 +29,9 @@
       <RequestSignal
         :symbol="selectedSymbol"
         :interval="selectedInterval"
-        @open-analysis-modal="openDetailedAnalysis = true" />
+        @open-analysis-modal="openDetailedAnalysis = true"
+        ref="requestSignalRef"
+      />
       <client-only class="w-full lg:h-[630px]">
         <div class="grid grid-cols-1 gap-2">
           <UiCard class="px-2">
@@ -42,7 +51,8 @@
     <div class="flex flex-wrap w-full gap-4 mt-4">
       <ContextualFactors
         :selectedSymbol="selectedSymbol"
-        @sentimentIndex="SentimentIndex" />
+        @sentimentIndex="SentimentIndex"
+      />
     </div>
     <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <UiCard class="px-2 py-2 max-h-[600px] w-full overflow-hidden">
@@ -57,7 +67,8 @@
               activeTab === tab
                 ? 'border-b-2 border-emerald-500 text-emerald-600'
                 : 'text-gray-500 hover:text-gray-700',
-            ]">
+            ]"
+          >
             {{ tab }}
           </button>
         </div>
@@ -97,9 +108,11 @@
               <p>Live News</p>
               <span class="relative flex size-2">
                 <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"
+                ></span>
                 <span
-                  class="relative inline-flex size-2 rounded-full bg-red-500"></span>
+                  class="relative inline-flex size-2 rounded-full bg-red-500"
+                ></span>
               </span>
               <UiIcon icon="material-symbols:info-outline-rounded" />
             </div>
@@ -110,7 +123,8 @@
                   <template #icon-left>
                     <UiIcon
                       icon="ic:baseline-search"
-                      custom-class="text-gray-300" />
+                      custom-class="text-gray-300"
+                    />
                   </template>
                 </UiInput>
               </div>
@@ -118,7 +132,7 @@
             </div>
 
             <client-only>
-              <NewsList />
+              <NewsList ref="analysisRef" />
             </client-only>
           </div>
         </div>
@@ -142,14 +156,16 @@
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
-              class="mb-2 mx-auto">
+              class="mb-2 mx-auto"
+            >
               <!-- background ring -->
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#1C1C1C"
                 stroke-width="6.5"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
 
               <!-- progress ring -->
 
@@ -165,14 +181,16 @@
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                :stroke-dasharray="`${sentimentIndex.percentage} 100`" />
+                :stroke-dasharray="`${sentimentIndex.percentage} 100`"
+              />
 
               <!-- centered text -->
               <text
                 x="20"
                 y="11"
                 text-anchor="middle"
-                font-family="Inter, Arial, sans-serif">
+                font-family="Inter, Arial, sans-serif"
+              >
                 <tspan x="20.5" dy="1" font-size="2.8" fill="#10B981">
                   Index
                 </tspan>
@@ -181,7 +199,8 @@
                   dy="8"
                   font-size="7"
                   font-weight="700"
-                  fill="#10B981">
+                  fill="#10B981"
+                >
                   {{ sentimentIndex.percentage }}
                 </tspan>
                 <tspan x="20.4" dy="3.4" font-size="2.2" fill="#6B7280">
@@ -201,6 +220,8 @@ import { useAuthStore } from "@/stores/auth";
 
 const auth = useAuthStore();
 const { $api } = useNuxtApp();
+const { startTour } = useGuidedTour();
+
 definePageMeta({
   title: "Dashboard",
   layout: "layout",
@@ -216,6 +237,11 @@ const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
 
 const symbols = ref([]);
 const selectedSymbol = ref(""); // initially empty
+
+const symbolSelect = ref(null);
+const intervalSelect = ref(null);
+const requestSignalRef = ref(null);
+const analysisRef = ref(null);
 
 const sentimentIndex = ref({
   percentage: 0,
@@ -356,18 +382,73 @@ const loadTickerTape = () => {
   tickerContainer.value.appendChild(script);
 };
 
+function waitForElement(getElFn, timeout = 3000) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    const check = () => {
+      const el = getElFn();
+      if (el) {
+        resolve(el);
+      } else if (Date.now() - start > timeout) {
+        reject(`Element not found after ${timeout}ms`);
+      } else {
+        requestAnimationFrame(check);
+      }
+    };
+    check();
+  });
+}
+
 onMounted(async () => {
+  await nextTick();
+
   if (process.client) {
     await fetchSymbols();
-
     await nextTick();
     loadTickerTape();
-
     await loadTradingViewScript();
     if (selectedSymbol.value) {
       initWidgetSafe(selectedSymbol.value, selectedInterval.value);
     }
   }
+
+  startTour([
+    {
+      element: symbolSelect.value?.$el || symbolSelect.value,
+      popover: {
+        description:
+          "Select symbol to generate market prediction based on the selected symbol",
+      },
+    },
+    {
+      element: intervalSelect.value?.$el || intervalSelect.value,
+      popover: {
+        description:
+          "Select timeframe to generate market prediction based on desired time",
+        side: "right",
+      },
+    },
+    {
+      element:
+        requestSignalRef.value?.requestSignalButton?.$el ||
+        requestSignalRef.value?.requestSignalButton,
+      popover: {
+        description:
+          "View signal & insights here. \n Select the 'Request Signal' button to view detailed analysis of the symbol",
+        side: "right",
+      },
+    },
+    {
+      element: await waitForElement(
+        () => analysisRef.value?.getFirstAnalysisButton(),
+        5000
+      ),
+      popover: {
+        description:
+          "Generate detail analysis \n Select the icon to generate detail analysis of the section",
+      },
+    },
+  ]);
 });
 
 // Watch the selected symbol and interval but **debounce it** to avoid multiple recreations

@@ -25,9 +25,11 @@ export default defineNuxtPlugin(() => {
     const num = Number(cleaned);
     if (!Number.isFinite(num)) return value;
 
+    const decimals = typeof opts.decimals === "number" ? opts.decimals : 2;
+
     return new Intl.NumberFormat(opts.locale || "en-US", {
-      minimumFractionDigits: opts.minFraction ?? 0,
-      maximumFractionDigits: opts.maxFraction ?? 2,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
     }).format(num);
   };
 

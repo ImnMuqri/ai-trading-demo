@@ -4,10 +4,10 @@
       <UiCard isGradient class="p-4 flex flex-col gap-4">
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
-            icon="qlementine-icons:system-monitor-16"
-            custom-class="w-3 h-3"
+            icon="solar:dollar-linear"
+            custom-class="w-4 h-4 mb-0.5"
           ></UiIcon>
-          <span class="text-sm">Affiliator Summary</span>
+          <span class="text-sm font-semibold">Affiliator Summary</span>
         </div>
 
         <div
@@ -17,56 +17,62 @@
             <UiProgress
               type="circle"
               :progress="tradingRing"
-              title="Trading Analysis"
+              title="Total Agents"
               custom-class="max-w-[150px]"
+              title-class="!text-[#838383] !text-[15px]"
             />
 
-            <div class="flex flex-col text-white gap-6">
-              <div class="flex flex-col gap-1">
+            <div class="flex flex-col text-white">
+              <div class="flex flex-col gap-5">
                 <div>
                   <p class="text-sm text-[#838383]">Total Affiliator</p>
                   <p class="text-xl font-semibold text-[#00BDA7]">
-                    {{
-                      transactionsData.filter(
-                        (tx) => tx.paymentStatus === "completed"
-                      ).length
-                    }}
+                    {{ $formatNumber(affiliatorSummary?.total) ?? "No Data" }}
                   </p>
                 </div>
                 <div>
-                  <div class="flex flex-row gap-1">
+                  <div class="flex flex-row">
                     <p class="text-sm text-[#838383]">New Affiliator Today</p>
                     <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
                   </div>
 
                   <p class="text-sm font-medium text-white">
-                    {{
-                      transactionsData.filter(
-                        (tx) => tx.paymentStatus !== "completed"
-                      ).length
-                    }}
+                    {{ $formatNumber(affiliatorSummary?.today) ?? "No Data" }}
                   </p>
                 </div>
 
                 <div
-                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2 w-1/3"
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] mb-6 w-1/3"
                 ></div>
               </div>
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Affiliator Last 30 Days
-                </p>
-                <p class="text-[12px] font-medium text-white">
-                  {{ tradingTotalRevenue }} USD
-                </p>
-              </div>
-              <div>
-                <p class="text-[12px] text-[#838383]">
-                  New Affiliator Last 30 Days
-                </p>
-                <p class="text-[12px] font-medium text-white">
-                  {{ tradingTotalRevenue }} USD
-                </p>
+
+              <div class="flex flex-col gap-5">
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Affiliator Last 30 Days
+                  </p>
+                  <p class="text-[12px] font-medium text-white">
+                    {{
+                      $formatNumber(affiliatorSummary?.last30Days) ?? "No Data"
+                    }}
+                    <span v-if="affiliatorSummary?.last30Days != null">
+                      USD</span
+                    >
+                  </p>
+                </div>
+                <div>
+                  <p class="text-[12px] text-[#838383]">
+                    New Affiliator Last 60 Days
+                  </p>
+                  <p class="text-[12px] font-medium text-white">
+                    {{
+                      $formatNumber(affiliatorSummary?.last60Days) ?? "No Data"
+                    }}
+                    <span v-if="affiliatorSummary?.last60Days != null">
+                      USD</span
+                    >
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -76,10 +82,10 @@
       <UiCard class="p-4 flex-1 !bg-[#0D0D0D]">
         <div class="flex gap-2 items-center">
           <UiIcon
-            icon="qlementine-icons:system-monitor-16"
-            custom-class="w-3 h-3"
+            icon="solar:dollar-linear"
+            custom-class="w-4 h-4 mb-0.5"
           ></UiIcon>
-          <p class="text-sm">Client Analytics</p>
+          <p class="text-sm font-semibold">Client Analytics</p>
         </div>
         <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
           <div
@@ -89,14 +95,15 @@
               type="circle"
               :progress="userRing"
               title="Total Client"
-              custom-class="max-w-[150px] min-w-[100px]"
+              custom-class="min-w-[150px] max-w-[160px]"
+              title-class="!text-[#838383] !text-[15px]"
             />
 
             <div class="flex flex-col gap-1.5 text-white">
               <div>
                 <p class="text-sm text-[#838383]">Total Clients</p>
                 <p class="text-xl font-semibold text-[#00BDA7]">
-                  {{ analytics.userStats?.totalUsers ?? "No Data" }}
+                  {{ $formatNumber(clientSummary?.total) ?? "No Data" }}
                 </p>
               </div>
 
@@ -106,21 +113,21 @@
                   <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
                 </div>
 
-                <p class="text-sm font-semibold">
-                  {{ analytics.userStats?.adminCount ?? "No Data" }}
+                <p class="text-sm font-medium">
+                  {{ $formatNumber(clientSummary?.today) ?? "No Data" }}
                 </p>
               </div>
 
               <div
-                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2 w-1/3"
+                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-4 w-1/3"
               ></div>
 
               <div>
                 <p class="text-[12px] text-[#838383]">
-                  New Clients Last 30 Dats
+                  New Clients Last 30 Days
                 </p>
-                <p class="text-sm font-semibold">
-                  {{ analytics.userStats?.managerCount ?? "No Data" }}
+                <p class="text-sm font-medium">
+                  {{ $formatNumber(clientSummary?.last30Days) ?? "No Data" }}
                 </p>
               </div>
 
@@ -129,7 +136,7 @@
                   New Clients Last 60 Days
                 </p>
                 <p class="text-sm font-semibold">
-                  {{ analytics.userStats?.affiliateCount ?? "No Data" }}
+                  {{ $formatNumber(clientSummary?.last60Days) ?? "No Data" }}
                 </p>
               </div>
             </div>
@@ -142,24 +149,38 @@
               type="circle"
               :progress="transactionRing"
               title="Client Type"
-              custom-class="max-w-[150px]  min-w-[100px] !text-gray-400"
+              custom-class="min-w-[150px] max-w-[160px]"
+              title-class="!text-[#838383] !text-[15px]"
             />
 
             <div class="flex flex-col gap-8 text-white">
               <div>
                 <div class="flex gap-2 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
+                  <UiIcon icon="material-symbols:coffee-outline"></UiIcon>
                   <p class="text-[12px] text-[#838383]">Basic Package</p>
                 </div>
-                <p class="text-sm font-semibold">No Data</p>
+                <p class="text-sm font-semibold">
+                  {{
+                    $formatNumber(
+                      clientSummary?.clientType?.["Basic Package"]
+                    ) ?? "No Data"
+                  }}
+                </p>
               </div>
 
               <div>
                 <div class="flex gap-2 text-[#838383] mb-1">
-                  <UiIcon icon="mdi:package-variant"></UiIcon>
+                  <UiIcon
+                    icon="material-symbols:diamond-outline-rounded"
+                  ></UiIcon>
                   <p class="text-[12px] text-[#838383]">Pro Package</p>
                 </div>
-                <p class="text-sm font-semibold text-[#00BDA7]">No Data</p>
+                <p class="text-sm font-semibold text-[#00BDA7]">
+                  {{
+                    $formatNumber(clientSummary?.clientType?.["Pro Package"]) ??
+                    "No Data"
+                  }}
+                </p>
               </div>
             </div>
           </div>
@@ -171,10 +192,10 @@
       <UiCard class="flex-[1] p-4 flex flex-col gap-4 !bg-[#0D0D0D]">
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
-            icon="qlementine-icons:system-monitor-16"
-            custom-class="w-3 h-3"
+            icon="material-symbols:trophy-outline-rounded"
+            custom-class="w-4 h-4"
           ></UiIcon>
-          <span class="text-sm">Top 5 Affiliator by Profits</span>
+          <span class="text-sm font-semibold">Top 5 Affiliator by Profits</span>
         </div>
 
         <div
@@ -185,21 +206,17 @@
           class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
         >
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
-            <UiList
-              :parameters="topAffiliatorProfits"
-              :isLoading="affiliatorLoading"
-              class="w-full h-full"
-            />
+            <UiList :parameters="topAffiliatorProfits" class="w-full h-full" />
           </div>
         </div>
       </UiCard>
       <UiCard class="flex-[1] p-4 flex flex-col gap-4 !bg-[#0D0D0D]">
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
-            icon="qlementine-icons:system-monitor-16"
-            custom-class="w-3 h-3"
+            icon="material-symbols:trophy-outline-rounded"
+            custom-class="w-4 h-4"
           ></UiIcon>
-          <span class="text-sm">Top 5 Affiliator by Clients</span>
+          <span class="text-sm font-semibold">Top 5 Affiliator by Clients</span>
         </div>
 
         <div
@@ -210,21 +227,17 @@
           class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
         >
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
-            <UiList
-              :parameters="topAffiliatorClients"
-              :isLoading="affiliatorLoading"
-              class="w-full h-full"
-            />
+            <UiList :parameters="topAffiliatorClients" class="w-full h-full" />
           </div></div
       ></UiCard>
       <UiCard class="flex-[0.5] flex flex-col !bg-[#0D0D0D]" is-gradient>
         <div class="p-4 border-b border-[#1C1C1C]">
           <div class="flex items-center gap-2 justify-start pb-4">
             <UiIcon
-              icon="qlementine-icons:system-monitor-16"
-              custom-class="w-3 h-3"
+              icon="material-symbols:trophy-outline-rounded"
+              custom-class="w-4 h-4"
             ></UiIcon>
-            <span class="text-sm">Client Status </span>
+            <span class="text-sm font-semibold">Client Status </span>
           </div>
           <div
             class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
@@ -268,7 +281,7 @@
     </div>
 
     <div>
-      <UiCard class="p-5 text-[12px]">
+      <UiCard class="!hidden p-5 text-[12px]">
         <div class="flex items-center justify-around">
           <div class="text-center flex flex-col gap-2">
             <UiIcon icon="hugeicons:user-03" custom-class="w-5 h-5"></UiIcon>

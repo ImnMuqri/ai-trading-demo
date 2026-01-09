@@ -85,7 +85,7 @@ watch(
 </script>
 
 <style scoped>
-::v-deep input:-webkit-autofill {
+:deep input:-webkit-autofill {
   -webkit-box-shadow: 0 0 0px 1000px #1a1c20 inset;
   -webkit-text-fill-color: white;
   transition: background-color 5000s ease-in-out 0s;

@@ -47,8 +47,9 @@
           <UiProgress
             type="circle"
             :progress="progressData"
-            title="Subscription Revenue"
-            custom-class="max-w-[200px]"
+            title="Subs Revenue"
+            custom-class="min-w-[150px] max-w-[200px]"
+            title-class="!text-[#838383] text-[16px] "
           />
 
           <div class="flex flex-col gap-2 text-white">

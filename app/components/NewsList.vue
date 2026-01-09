@@ -5,7 +5,8 @@
         <div class="flex items-center justify-between gap-2 pb-2">
           <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
           <span
-            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
+          ></span>
         </div>
         <!-- News items for this date -->
 
@@ -157,7 +158,8 @@
               <!-- Image shimmer -->
               <div
                 class="rounded-md bg-gray-700"
-                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"></div>
+                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"
+              ></div>
 
               <!-- Text shimmer -->
               <div class="grid grid-cols-1 gap-2 flex-1">
@@ -170,7 +172,8 @@
 
             <!-- Footer shimmer -->
             <div
-              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3">
+              class="border-t border-gray-700 pt-2 flex items-center justify-end gap-3"
+            >
               <div class="h-10 w-10 bg-gray-700 rounded-full"></div>
               <div class="h-4 w-24 bg-gray-600 rounded"></div>
             </div>
@@ -187,13 +190,15 @@
       <div class="flex gap-1 items-center">
         <UiIcon
           icon="healthicons:chart-line-24px"
-          custom-class="text-[#00BDA7]"></UiIcon>
+          custom-class="text-[#00BDA7]"
+        ></UiIcon>
         View Market History
       </div>
       <div class="flex items-center">
         <UiIcon
           icon="ic:round-chevron-right"
-          custom-class="w-4 h-4 text-[#00BDA7]"></UiIcon>
+          custom-class="w-4 h-4 text-[#00BDA7]"
+        ></UiIcon>
         View Recent Headline
       </div>
     </div>
@@ -209,6 +214,23 @@ const isAnalysing = ref(false);
 const analysisData = ref(null);
 const openAnalysis = ref(false);
 const newsList = ref([]);
+
+const analysisButtons = ref([]);
+
+const setAnalysisButton = (el, id) => {
+  if (el) {
+    analysisButtons.value.push({ id, el });
+  }
+};
+
+const getFirstAnalysisButton = () => {
+  console.log("Get first analysis button");
+  return analysisButtons.value.length ? analysisButtons.value[0].el : null;
+};
+
+defineExpose({
+  getFirstAnalysisButton,
+});
 
 // Format time
 const formatTime = (dateString) => {
