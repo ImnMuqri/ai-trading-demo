@@ -3,8 +3,8 @@
     class="flex flex-col h-full w-full text-center items-center py-40 text-white"
   >
     <div class="flex flex-col gap-2">
-      <h1 class="text-xl font-bold">Payment completed</h1>
-      <p>Your subscription will be updated shortly.</p>
+      <h1 class="text-xl font-bold">Payment failed</h1>
+      <p>Try subscription payment again or contact us for troubleshooting.</p>
     </div>
 
     <UiButton class="mt-6 py-2 rounded max-w-[300px]" @click="goBack">
@@ -24,7 +24,7 @@ const goBack = () => {
 };
 
 if (process.client) {
-  showToast("Payment successful. Returning to page...", "success");
+  showToast("Payment failed. Returning to page...", "error");
 
   setTimeout(() => {
     goBack();
