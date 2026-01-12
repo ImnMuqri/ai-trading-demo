@@ -1,11 +1,15 @@
 <template>
-  <div class="flex flex-col h-full w-full text-center py-40 text-white">
-    <h1 class="text-xl font-bold">Payment completed</h1>
-    <p>Your subscription will be updated shortly.</p>
+  <div
+    class="flex flex-col h-full w-full text-center items-center py-40 text-white"
+  >
+    <div class="flex flex-col gap-2">
+      <h1 class="text-xl font-bold">Payment completed</h1>
+      <p>Your subscription will be updated shortly.</p>
+    </div>
 
-    <button class="mt-6 px-4 py-2 bg-green-600 rounded" @click="goBack">
+    <UiButton class="mt-6 py-2 rounded max-w-[300px]" @click="goBack">
       Return to app
-    </button>
+    </UiButton>
   </div>
 </template>
 
@@ -20,7 +24,7 @@ const goBack = () => {
 };
 
 if (process.client) {
-  showToast("Payment successful. Returning to app in 5 seconds…", "success");
+  showToast("Payment successful. Returning to page...", "success");
 
   setTimeout(() => {
     goBack();
