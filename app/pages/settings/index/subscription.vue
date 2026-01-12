@@ -154,18 +154,18 @@
       :description="
         actionType === 'cancel'
           ? 'Please tell us why you are cancelling'
-          : 'Select payment method for plan subscription.'
+          : 'Confirm purchasing the selected subscription?.'
       "
       custom-body-class="overflow-y-visible"
     >
       <template #body>
-        <div class="flex flex-col px-2 gap-3">
-          <UiSelect
+        <div class="!hidden flex flex-col px-2 gap-3">
+          <!-- <UiSelect
             v-if="actionType !== 'cancel'"
             v-model="selectedPayment"
             :options="paymentOptions"
             placeholder="Select payment method"
-          />
+          /> -->
 
           <UiInput
             v-if="actionType === 'cancel'"
@@ -314,19 +314,23 @@ const fetchCurrent = async () => {
 const subscribePlan = async () => {
   if (isSubscribing.value) return;
   isSubscribing.value = true;
+
   try {
     const payload = {
       planId: selectedPlan.value.id,
-      paymentMethod: selectedPayment.value,
     };
+
     const res = await $api.post("/api/subscription/purchase", payload);
+
     openConfirm.value = false;
-    successMsg.value =
-      res.data?.message ?? "Successfully subscribed to new plan";
-    openSuccess.value = true;
     openSubscribe.value = false;
-    await fetchData();
-    isSubscribing.value = false;
+
+    if (res.data?.success && res.data.data?.checkoutUrl) {
+      window.location.href = res.data.data.checkoutUrl;
+      return;
+    }
+
+    throw new Error("Checkout URL missing");
   } catch (error) {
     console.error("Error in subscribing to plan", error);
     showToast(
@@ -335,10 +339,11 @@ const subscribePlan = async () => {
         "Failed to subscribe to plan",
       "error"
     );
-    openSubscribe.value = false;
+  } finally {
     isSubscribing.value = false;
   }
 };
+
 const renewPlan = async () => {
   if (isSubscribing.value) return;
   isSubscribing.value = true;
