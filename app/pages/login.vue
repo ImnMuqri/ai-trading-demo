@@ -22,7 +22,7 @@
               type="text"
               v-model="email"
               placeholder="Username or Email"
-              customClass="h-10"
+              customClass="h-10 pl-10"
             >
               <template #icon-left>
                 <UiIcon
@@ -38,7 +38,7 @@
               type="password"
               v-model="password"
               placeholder="Password"
-              customClass="h-10"
+              customClass="h-10 pl-10"
             >
               <template #icon-left>
                 <UiIcon

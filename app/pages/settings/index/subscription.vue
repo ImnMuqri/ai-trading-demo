@@ -149,23 +149,28 @@
           ? 'Cancel subscription'
           : actionType === 'renew'
           ? 'Renew subscription'
-          : 'Plan subscription'
-      "
-      :description="
-        actionType === 'cancel'
-          ? 'Please tell us why you are cancelling'
-          : 'Confirm purchasing the selected subscription?.'
+          : 'Confirm Subscription'
       "
       custom-body-class="overflow-y-visible"
     >
       <template #body>
-        <div class="!hidden flex flex-col px-2 gap-3">
-          <!-- <UiSelect
-            v-if="actionType !== 'cancel'"
-            v-model="selectedPayment"
-            :options="paymentOptions"
-            placeholder="Select payment method"
-          /> -->
+        <div class="flex flex-col gap-4 items-center">
+          <div v-if="selectedPlan.id" class="text-left w-full">
+            <p v-if="actionType !== 'cancel'" class="text-white text-sm">
+              Proceed with payment for
+              <span class="font-semibold">{{ selectedPlan.name }}</span>
+              for
+              <span class="font-semibold"
+                >{{ selectedPlan.currency }} {{ selectedPlan.price }}</span
+              >?
+            </p>
+
+            <p v-else class="text-white text-sm py-2">
+              Proceed with cancelling
+              <span class="font-semibold">{{ selectedPlan.name }}</span
+              >?
+            </p>
+          </div>
 
           <UiInput
             v-if="actionType === 'cancel'"
@@ -194,6 +199,7 @@
         </div>
       </template>
     </UiModal>
+
     <UiModal
       :show="openSuccess"
       title="Success"
@@ -362,7 +368,7 @@ const renewPlan = async () => {
   try {
     const payload = {
       subscriptionId: selectedPlan.value.id,
-      paymentMethod: selectedPayment.value,
+      // paymentMethod: selectedPayment.value,
     };
     const res = await $api.post("/api/subscription/renew", payload);
     openConfirm.value = false;
