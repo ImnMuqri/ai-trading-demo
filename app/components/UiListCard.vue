@@ -6,10 +6,11 @@
           class="flex w-[90%] justify-start items-center font-semibold text-lg text_tpt_green place-self-start gap-4"
         >
           <p
-            class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text_tpt_green flex items-center justify-center !shadow-xl"
+            class="w-6 h-6 flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text_tpt_green !shadow-xl text-[13px]"
           >
             {{ index + 1 }}
           </p>
+
           <p class="text-sm">
             {{ isDate(title) ? $formatDate(title, { withTime: true }) : title }}
           </p>
