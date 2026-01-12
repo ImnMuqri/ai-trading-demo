@@ -199,7 +199,14 @@
       title="Success"
       :description="successMsg"
       type="successAlert"
-      @close="openSuccess = false"
+      @close="(openSuccess = false), clearRoute()"
+    ></UiModal>
+    <UiModal
+      :show="openError"
+      title="Failed"
+      :description="errorMsg"
+      type="errorAlert"
+      @close="(openError = false), clearRoute()"
     ></UiModal>
   </div>
 </template>
@@ -213,6 +220,8 @@ definePageMeta({
   layout: "layout",
   middleware: "auth-client",
 });
+
+const route = useRoute();
 
 const { $api } = useNuxtApp();
 const subscriptionPlans = ref([]);
@@ -232,6 +241,9 @@ const cancelReason = ref(null);
 const openConfirm = ref(false);
 const isSubscribing = ref(false);
 const openSubscribe = ref(false);
+
+const openError = ref(false);
+const errorMsg = ref(null);
 
 const isPlansLoading = ref(true);
 
@@ -421,12 +433,31 @@ const openActionModal = (type, plan) => {
   openSubscribe.value = true;
 };
 
+const clearRoute = () => {
+  navigateTo(
+    {
+      path: route.path,
+      query: {},
+    },
+    { replace: true }
+  );
+};
+
 const fetchData = async () => {
   await fetchPlans();
   await fetchCurrent();
 };
 
 onMounted(async () => {
+  if (route.query.payment === "success") {
+    successMsg.value = "Subscription payment was successful";
+    openSuccess.value = true;
+  }
+
+  if (route.query.payment === "failure") {
+    errorMsg.value = "Payment failed. Please try again";
+    openError.value = true;
+  }
   await fetchData();
 });
 </script>
