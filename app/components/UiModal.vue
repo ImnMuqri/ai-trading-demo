@@ -7,7 +7,8 @@
       :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
       <div
         :class="[
-          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white overflow-x-hidden overflow-y-scroll',
+          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white',
+          'modal-scroll hide-scrollbar overflow-y-auto max-h-[90vh]',
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
           width ?? 'max-w-[500px]',
           type === 'successAlert'
@@ -71,7 +72,7 @@
 
         <!-- Content -->
         <section
-          class="max-h-[70vh] overflow-y-auto hide-scrollbar py-2 opacity-100"
+          class="py-2 opacity-100"
           :class="[customBodyClass, { 'opacity-50': isLoading }]">
           <slot name="body"></slot>
         </section>
@@ -266,6 +267,10 @@ watch(
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: shimmer-text 2s infinite linear;
+}
+.modal-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @keyframes shimmer-text {
