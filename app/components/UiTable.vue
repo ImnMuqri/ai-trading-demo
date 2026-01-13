@@ -90,7 +90,7 @@
             >
               <div class="border-r border-[#1C1C1C] h-full grid items-center">
                 <div
-                  class="flex justify-center items-center h-5 w-5 rounded-full text-white bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
+                  class="flex justify-center items-center !h-5 !w-5 !rounded-full text-white bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6]"
                 >
                   {{ (currentPage - 1) * rowsPerPage + index + 1 }}
                 </div>

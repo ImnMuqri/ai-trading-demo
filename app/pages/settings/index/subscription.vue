@@ -149,23 +149,28 @@
           ? 'Cancel subscription'
           : actionType === 'renew'
           ? 'Renew subscription'
-          : 'Plan subscription'
-      "
-      :description="
-        actionType === 'cancel'
-          ? 'Please tell us why you are cancelling'
-          : 'Select payment method for plan subscription.'
+          : 'Confirm Subscription'
       "
       custom-body-class="overflow-y-visible"
     >
       <template #body>
-        <div class="flex flex-col px-2 gap-3">
-          <UiSelect
-            v-if="actionType !== 'cancel'"
-            v-model="selectedPayment"
-            :options="paymentOptions"
-            placeholder="Select payment method"
-          />
+        <div class="flex flex-col gap-4 items-center">
+          <div v-if="selectedPlan.id" class="text-left w-full">
+            <p v-if="actionType !== 'cancel'" class="text-white text-sm">
+              Proceed with payment for
+              <span class="font-semibold">{{ selectedPlan.name }}</span>
+              for
+              <span class="font-semibold"
+                >{{ selectedPlan.currency }} {{ selectedPlan.price }}</span
+              >?
+            </p>
+
+            <p v-else class="text-white text-sm py-2">
+              Proceed with cancelling
+              <span class="font-semibold">{{ selectedPlan.name }}</span
+              >?
+            </p>
+          </div>
 
           <UiInput
             v-if="actionType === 'cancel'"
@@ -194,12 +199,20 @@
         </div>
       </template>
     </UiModal>
+
     <UiModal
       :show="openSuccess"
       title="Success"
       :description="successMsg"
       type="successAlert"
-      @close="openSuccess = false"
+      @close="(openSuccess = false), clearRoute()"
+    ></UiModal>
+    <UiModal
+      :show="openError"
+      title="Failed"
+      :description="errorMsg"
+      type="errorAlert"
+      @close="(openError = false), clearRoute()"
     ></UiModal>
   </div>
 </template>
@@ -213,6 +226,8 @@ definePageMeta({
   layout: "layout",
   middleware: "auth-client",
 });
+
+const route = useRoute();
 
 const { $api } = useNuxtApp();
 const subscriptionPlans = ref([]);
@@ -232,6 +247,9 @@ const cancelReason = ref(null);
 const openConfirm = ref(false);
 const isSubscribing = ref(false);
 const openSubscribe = ref(false);
+
+const openError = ref(false);
+const errorMsg = ref(null);
 
 const isPlansLoading = ref(true);
 
@@ -314,19 +332,23 @@ const fetchCurrent = async () => {
 const subscribePlan = async () => {
   if (isSubscribing.value) return;
   isSubscribing.value = true;
+
   try {
     const payload = {
       planId: selectedPlan.value.id,
-      paymentMethod: selectedPayment.value,
     };
+
     const res = await $api.post("/api/subscription/purchase", payload);
+
     openConfirm.value = false;
-    successMsg.value =
-      res.data?.message ?? "Successfully subscribed to new plan";
-    openSuccess.value = true;
     openSubscribe.value = false;
-    await fetchData();
-    isSubscribing.value = false;
+
+    if (res.data?.success && res.data.data?.checkoutUrl) {
+      window.location.href = res.data.data.checkoutUrl;
+      return;
+    }
+
+    throw new Error("Checkout URL missing");
   } catch (error) {
     console.error("Error in subscribing to plan", error);
     showToast(
@@ -335,17 +357,18 @@ const subscribePlan = async () => {
         "Failed to subscribe to plan",
       "error"
     );
-    openSubscribe.value = false;
+  } finally {
     isSubscribing.value = false;
   }
 };
+
 const renewPlan = async () => {
   if (isSubscribing.value) return;
   isSubscribing.value = true;
   try {
     const payload = {
       subscriptionId: selectedPlan.value.id,
-      paymentMethod: selectedPayment.value,
+      // paymentMethod: selectedPayment.value,
     };
     const res = await $api.post("/api/subscription/renew", payload);
     openConfirm.value = false;
@@ -416,12 +439,31 @@ const openActionModal = (type, plan) => {
   openSubscribe.value = true;
 };
 
+const clearRoute = () => {
+  navigateTo(
+    {
+      path: route.path,
+      query: {},
+    },
+    { replace: true }
+  );
+};
+
 const fetchData = async () => {
   await fetchPlans();
   await fetchCurrent();
 };
 
 onMounted(async () => {
+  if (route.query.payment === "success") {
+    successMsg.value = "Subscription payment was successful";
+    openSuccess.value = true;
+  }
+
+  if (route.query.payment === "failure") {
+    errorMsg.value = "Payment failed. Please try again";
+    openError.value = true;
+  }
   await fetchData();
 });
 </script>

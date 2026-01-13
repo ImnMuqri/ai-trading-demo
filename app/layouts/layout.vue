@@ -154,7 +154,7 @@
       </nav>
 
       <div class="p-3">
-        <!-- <div
+        <div
           class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
           :class="
             isCollapsed
@@ -170,12 +170,13 @@
             to="/settings/subscription"
             class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
             exact
+            @click="toggleMobileMenu"
           >
             <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
             <span class="text-[11px]">Upgrade to Ai Pro</span>
           </NuxtLink>
-        </div> -->
-        <div
+        </div>
+        <!-- <div
           class="border border-[#4C4B4B] rounded-xl p-4 text-center bg-[#1C1C1C] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
           :class="
             isCollapsed
@@ -202,7 +203,7 @@
           >
             <span class="text-[14px]">Upgrade</span>
           </NuxtLink>
-        </div>
+        </div> -->
         <NuxtLink to="/settings/subscription">
           <div
             class="flex justify-center border border-[#0D0D0D] rounded-xl bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] overflow-hidden transform transition-all duration-300 ease-out w-fit"
