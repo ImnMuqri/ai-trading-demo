@@ -154,12 +154,14 @@
       custom-body-class="overflow-y-visible"
     >
       <template #body>
-        <div class="flex flex-col gap-4 items-center">
+        <div
+          class="flex flex-col gap-4 items-center min-h-[60px] max-w-[350px]"
+        >
           <div v-if="selectedPlan.id" class="text-left w-full">
             <p v-if="actionType !== 'cancel'" class="text-white text-sm">
               Proceed with payment for
               <span class="font-semibold">{{ selectedPlan.name }}</span>
-              for
+              with a total of
               <span class="font-semibold"
                 >{{ selectedPlan.currency }} {{ selectedPlan.price }}</span
               >?
@@ -338,13 +340,22 @@ const subscribePlan = async () => {
       planId: selectedPlan.value.id,
     };
 
-    const res = await $api.post("/api/subscription/purchase", payload);
+    // const res = await $api.post("/api/subscription/purchase", payload);
+    const res = await $fetch("/api/subscription/purchase", {
+      method: "POST",
+      body: payload,
+    });
 
     openConfirm.value = false;
     openSubscribe.value = false;
 
-    if (res.data?.success && res.data.data?.checkoutUrl) {
-      window.location.href = res.data.data.checkoutUrl;
+    // if (res.data?.success && res.data.data?.checkoutUrl) {
+    //   window.location.href = res.data.data.checkoutUrl;
+    //   return;
+    // }
+
+    if (res?.checkoutUrl) {
+      window.location.href = res.checkoutUrl;
       return;
     }
 
