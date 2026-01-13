@@ -7,7 +7,7 @@
       :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
       <div
         :class="[
-          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white overflow-x-auto',
+          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white overflow-x-hidden overflow-y-scroll',
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
           width ?? 'max-w-[500px]',
           type === 'successAlert'
