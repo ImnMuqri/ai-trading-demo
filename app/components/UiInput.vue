@@ -8,16 +8,14 @@
       <!-- Left icon slot -->
       <div
         v-if="$slots['icon-left']"
-        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-      >
+        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
         <slot name="icon-left"></slot>
       </div>
 
       <!-- Right icon slot -->
       <div
         v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-      >
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
         <slot name="icon-right"></slot>
       </div>
 
@@ -29,8 +27,7 @@
         :placeholder="placeholder"
         :disabled="isDisabled"
         :readonly="isReadonly"
-        :class="baseClasses"
-      />
+        :class="baseClasses" />
 
       <!-- Textarea -->
       <textarea
@@ -40,8 +37,7 @@
         :disabled="isDisabled"
         :readonly="isReadonly"
         rows="4"
-        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']"
-      />
+        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']" />
     </div>
 
     <!-- Error message -->
@@ -85,7 +81,7 @@ const baseClasses = computed(() => [
     ? "opacity-50 cursor-not-allowed"
     : "border-gray-300 focus:border-[#00BDA7]",
   props.$slots?.["icon-left"] ? "px-4" : "pl-10",
-  props.$slots?.["icon-right"] ? "pr-10" : "px-4",
+  props.$slots?.["icon-right"] ? "px-4" : "pr-10",
   "py-2 ",
   props.customClass,
   props.dark
