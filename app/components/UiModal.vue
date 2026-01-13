@@ -194,8 +194,15 @@ const alertTitle = computed(() => {
 const root = ref(null);
 const isClosing = ref(false);
 
-const lockScroll = () => (document.body.style.overflow = "hidden");
-const unlockScroll = () => (document.body.style.overflow = "");
+const lockScroll = () => {
+  document.body.style.position = "fixed";
+  document.body.style.width = "100%";
+};
+
+const unlockScroll = () => {
+  document.body.style.position = "";
+  document.body.style.width = "";
+};
 
 const close = () => {
   if (props.isLoading) return; // prevent closing while loading
