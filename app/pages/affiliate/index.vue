@@ -3,7 +3,9 @@
     <div class="flex gap-2 justify-end">
       <UiButton variant="outline" @click="openReferral = true"
         >Referral Link</UiButton
-      ><UiButton variant="outline">External Link</UiButton>
+      ><UiButton variant="outline" @click="openExternal = true"
+        >External Link</UiButton
+      >
     </div>
     <div class="flex flex-col xl:flex-row gap-4">
       <UiCard isGradient class="p-4 flex flex-col gap-4">
@@ -395,45 +397,148 @@
             <div
               class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
           </div>
-          <div
-            v-for="link in referralLink.referralLinks"
-            class="overflow-y-auto">
-            <div
-              class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
-              <div>
-                <a :href="link.url" target="_blank" class="w-full text-sm"
-                  >{{ link.name }}
-                </a>
-                <p class="text-[11px]">{{ link.description }}</p>
-              </div>
-              <div class="flex gap-2">
+          <UiList :parameters="referralLink.referralLinks">
+            <template #parameters="{ parameters }">
+              <div v-for="link in parameters" class="overflow-y-auto mb-2">
                 <div
-                  class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
-                  <UiIcon
-                    icon="solar:copy-bold"
-                    custom-class="h-3 w-3  cursor-pointer"
-                    :class="
-                      copied
-                        ? 'text-[#00BDA7]'
-                        : 'text-white hover:text-white/80'
-                    "
-                    @click="copyLink" />
-                </div>
-                <div
-                  class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
-                  <UiIcon
-                    icon="cuida:edit-outline"
-                    custom-class="h-3 w-3  cursor-pointer"
-                    :class="
-                      copied
-                        ? 'text-[#00BDA7]'
-                        : 'text-white hover:text-white/80'
-                    "
-                    @click="copyLink" />
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
+                  <div>
+                    <a :href="link.url" target="_blank" class="w-full text-sm"
+                      >{{ link.name }}
+                    </a>
+                    <p class="text-[11px]">{{ link.description }}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <div
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      <UiIcon
+                        icon="solar:copy-bold"
+                        custom-class="h-3 w-3  cursor-pointer"
+                        :class="
+                          copied
+                            ? 'text-[#00BDA7]'
+                            : 'text-white hover:text-white/80'
+                        "
+                        @click="copyLink" />
+                    </div>
+                    <div
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
+                      <UiIcon
+                        icon="cuida:edit-outline"
+                        custom-class="h-3 w-3  cursor-pointer"
+                        :class="
+                          copied
+                            ? 'text-[#00BDA7]'
+                            : 'text-white hover:text-white/80'
+                        "
+                        @click="copyLink" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </template>
+            <template #pagination></template>
+          </UiList>
+        </div> </template
+    ></UiModal>
+    <UiModal
+      :show="openExternal"
+      title="External Links"
+      :description="`Invite friends to experience AI Trading and receive commission from their subscription.`"
+      width="max-w-[500px]"
+      @close="openExternal = false">
+      <template #body>
+        <div
+          v-if="!referralLink"
+          class="flex flex-col justify-center items-center text-center">
+          <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
+          <div>
+            <p class="capitalize text-sm fonts-semibold">No Link Created</p>
+            <p class="text-[12px]">Create link for your client reference</p>
           </div>
+          <UiButton @click="openExternalForm = true" class="!rounded-full my-4">
+            Create External Link
+            <template #icon-left>
+              <UiIcon
+                icon="hugeicons:add-01"
+                custom-class="w-4 h-4 " /> </template
+          ></UiButton>
+        </div>
+        <div v-if="openExternalForm" class="flex flex-col gap-2 px-2">
+          <div>
+            <p
+              class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              Create New Link
+            </p>
+            <p class="text-[12px] mb-2 italic">
+              Created at:
+              {{
+                $formatDate(new Date().toLocaleDateString(), { withTime: true })
+              }}
+            </p>
+          </div>
+          <UiInput placeholder="Name"></UiInput>
+          <UiInput placeholder="Description" type="textarea"></UiInput>
+          <UiButton class="!rounded-full">Save Link</UiButton>
+        </div>
+        <div v-if="externalLink" class="flex flex-col text-center gap-4 w-full">
+          <img src="assets/bg/LinkPic.svg" class="w-full h-[15vh]" />
+          <div class="grid grid-cols-1 gap-2">
+            <p
+              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              Iman Muqri
+            </p>
+            <p>Id: 66666</p>
+          </div>
+          <div class="flex flex-row gap-4 justify-evenly items-center">
+            <div
+              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"></div>
+            <p class="text-[12px] whitespace-nowrap">Affiliator's Link</p>
+            <div
+              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
+          </div>
+          <UiList :parameters="externalLink.externalLinks">
+            <template #parameters="{ parameters }">
+              <div v-for="link in parameters" class="overflow-y-auto mb-2">
+                <div
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
+                  <div>
+                    <a :href="link.url" target="_blank" class="w-full text-sm"
+                      >{{ link.name }}
+                    </a>
+                    <p class="text-[11px]">{{ link.description }}</p>
+                  </div>
+                  <div class="flex gap-2">
+                    <div
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      <UiIcon
+                        icon="solar:copy-bold"
+                        custom-class="h-3 w-3  cursor-pointer"
+                        :class="
+                          copied
+                            ? 'text-[#00BDA7]'
+                            : 'text-white hover:text-white/80'
+                        "
+                        @click="copyLink" />
+                    </div>
+                    <div
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
+                      <UiIcon
+                        icon="cuida:edit-outline"
+                        custom-class="h-3 w-3  cursor-pointer"
+                        :class="
+                          copied
+                            ? 'text-[#00BDA7]'
+                            : 'text-white hover:text-white/80'
+                        "
+                        @click="copyLink" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <template #pagination></template>
+          </UiList>
         </div> </template
     ></UiModal>
   </div>
@@ -453,6 +558,9 @@ const activeTab = ref("clients");
 const progress = ref(45);
 
 const referralLink = ref(null);
+const externalLink = ref(null);
+const referralLinksLoading = ref(false);
+const externalLinksLoading = ref(false);
 const copied = ref(false);
 
 //Affiliate
@@ -464,6 +572,7 @@ const clientList = ref([]);
 
 const usersData = ref([]);
 const openReferral = ref(false);
+const openExternal = ref(false);
 const openConfirm = ref(false);
 const openUpdate = ref(false);
 const selectedUser = ref({
@@ -488,6 +597,7 @@ const generatingRef = ref(false);
 const generatedRef = ref(null);
 
 const openReferralForm = ref(false);
+const openExternalForm = ref(false);
 
 const copyLink = async () => {
   if (!generatedRef.value) return;
@@ -562,8 +672,6 @@ const getAffiliateStats = async () => {
   }
 };
 
-const referralLinksLoading = ref(false);
-
 const getReferralLinks = async () => {
   referralLinksLoading.value = true;
 
@@ -571,13 +679,31 @@ const getReferralLinks = async () => {
     const res = await $api.get("/api/affiliate/referral-links");
     referralLink.value = res.data?.data ?? [];
   } catch (error) {
+    console.error("Failed to fetch referral links", error);
+    showToast(
+      error.response?.data?.message || "Unable to fetch referral links",
+      "error"
+    );
+  } finally {
+    referralLinksLoading.value = false;
+  }
+};
+
+const getExternalLinks = async () => {
+  externalLinksLoading.value = true;
+
+  try {
+    const res = await $api.get("/api/affiliate/external-links");
+    externalLink.value = res.data?.data ?? [];
+    console.log(externalLink.value);
+  } catch (error) {
     console.error("Failed to fetch external links", error);
     showToast(
       error.response?.data?.message || "Unable to fetch external links",
       "error"
     );
   } finally {
-    referralLinksLoading.value = false;
+    externalLinksLoading.value = false;
   }
 };
 
@@ -670,6 +796,7 @@ const generateRef = async () => {
 onMounted(() => {
   getAffiliateStats();
   getReferralLinks();
+  getExternalLinks();
 });
 
 const handlePageChange = (page) => {

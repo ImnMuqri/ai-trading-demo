@@ -80,13 +80,13 @@ const baseClasses = computed(() => [
   props.isDisabled
     ? "opacity-50 cursor-not-allowed"
     : "border-gray-300 focus:border-[#00BDA7]",
-  props.$slots?.["icon-left"] ? "pl-10" : "px-4",
+  props.$slots?.["icon-left"] ? "px-4" : "pl-10",
   props.$slots?.["icon-right"] ? "pr-10" : "px-4",
-  "py-2",
+  "py-2 ",
   props.customClass,
   props.dark
     ? "bg-[#1A1C20] border-[#2A2A2A] text-white"
-    : "bg-white border text-black",
+    : "bg-white border text-black px-4",
 ]);
 </script>
 
