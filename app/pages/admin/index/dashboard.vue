@@ -975,7 +975,7 @@
       :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
     >
       <template #body>
-        <div class="flex flex-col gap-4 px-2">
+        <div class="flex flex-col gap-6 px-2 pt-4 pb-8">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
           <UiInput
             dark
@@ -989,7 +989,16 @@
             type="text"
             v-model="selectedUser.phone"
           />
-          <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
+          <!-- <UiInput dark label="Role" type="text" v-model="selectedUser.role" /> -->
+          <UiSelect
+            v-model="selectedUser.role"
+            :options="userRoleOptions"
+            placeholder="Select role"
+            label="Role"
+            ref="roleSelect"
+            class="roleSelect"
+            custom-class="!bg-[#1A1C20] !py-1.5 !text-[12px]"
+          />
         </div>
       </template>
       <template #footer>
@@ -1045,6 +1054,14 @@ const selectedUser = ref({
   role: "",
   isActive: "",
 });
+
+const userRoleOptions = [
+  { label: "User", value: "user" },
+  { label: "Admin", value: "admin" },
+  { label: "Affiliate", value: "affiliate" },
+  { label: "Developer", value: "developer" },
+];
+
 const analyticsLoading = ref(false);
 const isUpdateLoading = ref(false);
 const isDeleteLoading = ref(false);

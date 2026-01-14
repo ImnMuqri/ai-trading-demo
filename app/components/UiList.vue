@@ -12,21 +12,25 @@
 
     <div
       v-if="parameters.length > 0 && !isLoading"
-      class="flex flex-col w-full text-[15px] overflow-y-auto">
+      class="flex flex-col w-full text-[15px] overflow-y-auto"
+    >
       <div
         v-if="!$slots.parameters"
         v-for="(parameter, index) in paginatedParameters"
         :key="parameter.id || index"
-        class="w-full px-5">
+        class="w-full px-5"
+      >
         <div class="flex items-center justify-center gap-5 w-full">
           <UiIcon
             v-if="showMedals && globalIndex(index) <= 2"
             :icon="`icon:ai-medal-${globalIndex(index) + 1}`"
-            custom-class="w-6 h-6 flex-shrink-0" />
+            custom-class="w-6 h-6 flex-shrink-0"
+          />
 
           <div
             v-else
-            class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl">
+            class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl"
+          >
             {{ globalIndex(index) + 1 }}
           </div>
 
@@ -52,7 +56,8 @@
         <slot
           name="parameters"
           :parameters="paginatedParameters"
-          :getIndex="globalIndex"></slot>
+          :getIndex="globalIndex"
+        ></slot>
       </div>
       <div>
         <slot name="footer"></slot>
@@ -64,22 +69,23 @@
             :currentPage="currentPage"
             :rowsPerPage="rowsPerPage"
             @page-changed="(page) => emit('page-changed', page)"
-            @rows-per-page-changed="
-              (rpp) => emit('rows-per-page-changed', rpp)
-            " />
+            @rows-per-page-changed="(rpp) => emit('rows-per-page-changed', rpp)"
+          />
         </slot>
       </div>
     </div>
 
     <div
       v-else-if="parameters.length === 0 && !isLoading"
-      class="grid place-items-center h-full w-full py-10">
-      empty state
+      class="grid place-items-center h-full w-full py-10"
+    >
+      No data
     </div>
 
     <div
       v-else-if="isLoading"
-      class="grid place-items-center mb-5 h-full w-full"></div>
+      class="grid place-items-center mb-5 h-full w-full"
+    ></div>
   </div>
 </template>
 

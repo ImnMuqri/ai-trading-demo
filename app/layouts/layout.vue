@@ -77,6 +77,7 @@
         </NuxtLink>
         <!-- Admin Panel -->
         <NuxtLink
+          v-show="['admin', 'developer'].includes(auth.userRole)"
           to="/admin/dashboard"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
           :class="[
@@ -129,6 +130,7 @@
         </NuxtLink>
         <!-- Affiliate Management -->
         <NuxtLink
+          v-show="['affiliate', 'admin', 'developer'].includes(auth.userRole)"
           to="/affiliate"
           class="flex items-center gap-3 px-3 py-2 rounded-md transition"
           :class="[
@@ -311,13 +313,23 @@
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "#app";
 import { useAuth } from "@/composables/auth";
+import { useAuthStore } from "@/stores/auth";
 
 const { logout } = useAuth();
+const auth = useAuthStore();
+const roleReady = computed(() => !!auth.userRole);
+
 const route = useRoute();
 const isCollapsed = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobile = ref(false);
 const confirmLogout = ref(false);
+
+const canAccessPage = (pageRoles) => {
+  if (!auth.userRole) return false; // role not loaded yet
+  if (!Array.isArray(pageRoles)) return true; // no role restriction = public
+  return pageRoles.includes(auth.userRole);
+};
 
 const pageTitles = {
   "/dashboard": "Dashboard",

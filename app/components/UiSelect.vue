@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col relative w-full" ref="wrapper">
-    <label v-if="label" class="mb-2 text-sm font-medium text-gray-300">
+    <label v-if="label" class="mb-2 text-[12px] font-medium text-gray-300">
       {{ label }}
     </label>
 
@@ -11,7 +11,9 @@
         :value="displayValue"
         :placeholder="placeholder"
         class="w-full bg-[#2A2A2A] border border-[#1C1C1C] text-white rounded-lg px-4 py-[11px] pr-10 text-[13px] focus:outline-none focus:ring-2 focus:ring-[#00BDA7] transition-all"
+        :class="props.customClass"
         @focus="openDropdown"
+        :disabled="isDisabled"
         @input="search = $event.target.value"
       />
 
@@ -67,6 +69,11 @@ const props = defineProps({
   options: {
     type: Array,
     required: true,
+  },
+  customClass: String,
+  isDisabled: {
+    type: Boolean,
+    default: false,
   },
 });
 
