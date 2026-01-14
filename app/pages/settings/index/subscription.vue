@@ -341,7 +341,7 @@ const subscribePlan = async () => {
     };
 
     // const res = await $api.post("/api/subscription/purchase", payload);
-    const res = await $fetch("/api/subscription/purchase", {
+    const res = await $fetch("/api/checkout/purchase", {
       method: "POST",
       body: payload,
     });

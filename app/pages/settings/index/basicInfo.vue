@@ -8,9 +8,18 @@
             <div class="flex items-center gap-3">
               <p class="text-xl font-semibold">{{ profileData.name }}</p>
               <UiIcon
+                v-if="!isEditing"
                 icon="cuida:edit-outline"
                 custom-class="w-4 h-4 text-[#00BDA7]"
-                class="block lg:hidden"
+                class="block lg:hidden hover:cursor-pointer hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                @click="editingForm"
+              />
+              <UiIcon
+                v-if="isEditing"
+                icon="cuida:edit-outline"
+                custom-class="w-4 h-4 text-red-500"
+                class="block lg:hidden hover:cursor-pointer hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                @click="closeForm"
               />
             </div>
             <p class="text-[12px] text-gray-400">{{ profileData.email }}</p>
@@ -55,6 +64,7 @@
           :isReadonly="!isEditing"
           dark
         ></UiInput>
+
         <UiInput
           v-model="profileData.role"
           label="Role"
@@ -72,12 +82,18 @@
           dark
         ></UiInput>
 
-        <UiRadio
-          v-model="isTourActive"
-          as-boolean
-          :items="['Tutorial Mode', 'Tutorial Mode']"
-          custom-class="!text-[12px]"
-        />
+        <div
+          title="Option to enable or disable the dashboard tutorial"
+          class="w-fit"
+        >
+          <ClientOnly>
+            <UiRadio
+              v-model="isTourActive"
+              as-boolean
+              :items="['Tutorial Mode*', 'Tutorial Mode*']"
+              custom-class="!text-[12px] !w-fit"
+          /></ClientOnly>
+        </div>
       </div>
     </div>
     <div class="flex justify-end">
@@ -88,6 +104,8 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
+import { showToast } from "~/composables/useToastMessage";
+
 definePageMeta({
   title: "Basic Information",
   layout: "layout",
@@ -100,6 +118,7 @@ const { isTourEnabled, setTourEnabled } = useGuidedTour();
 
 const isEditing = ref(false);
 const isTourActive = ref(true);
+const isUpdating = ref(false);
 
 const profileData = ref({
   id: null,
@@ -110,6 +129,13 @@ const profileData = ref({
   country: null,
   isEmailVerified: null,
 });
+
+const roleOptions = [
+  { label: "User", value: "user" },
+  { label: "Admin", value: "admin" },
+  { label: "Affiliate", value: "affiliate" },
+  { label: "Developer", value: "developer" },
+];
 
 const editingForm = () => (isEditing.value = true);
 const closeForm = () => (isEditing.value = false);
@@ -140,17 +166,27 @@ const getUserProfile = async () => {
   }
 };
 
-const updateUserProfile = async (profileData) => {
+const updateUserProfile = async () => {
+  if (isUpdating.value) return;
+  isUpdating.value = true;
   try {
     const res = await $api.put("/api/user/profile", {
-      name: profileData.name,
-      email: profileData.email,
-      country: profileData.country,
-      phone: profileData.phone,
+      name: profileData.value.name,
+      email: profileData.value.email,
+      country: profileData.value.country,
+      phone: profileData.value.phone,
     });
+    closeForm();
+    showToast("User updated successfully", "success");
+    isUpdating.value = false;
+
     return res.data;
   } catch (error) {
     console.error("Failed to update profile:", error);
+    closeForm();
+    showToast("Failed to update user profile", "error");
+    isUpdating.value = false;
+
     return null;
   }
 };

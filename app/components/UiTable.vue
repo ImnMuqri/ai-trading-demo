@@ -146,7 +146,7 @@
         <div v-if="$slots.pagination" class="h-full">
           <slot name="pagination">
             <UiPagination
-              :totalItems="totalItems"
+              :totalItems="filteredItems.length"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
               @page-changed="(page) => emit('page-changed', page)"
@@ -231,6 +231,8 @@ const props = defineProps({
   isModal: { type: Boolean, default: false },
   emptyClass: { type: String, default: "" },
   allItems: { type: Array, default: () => [] },
+  searchKey: { type: String, default: "" },
+  searchableKeys: { type: Array, default: null },
 });
 
 const emit = defineEmits([
@@ -261,14 +263,27 @@ function handleSort(col) {
     sortDir.value = null;
   }
 }
-// Determine if border should be applied based on column index
 
 const baseItems = computed(() => props.allItems);
 
-const sortedItems = computed(() => {
-  if (!sortKey.value || !sortDir.value) return props.allItems;
+// const sortedItems = computed(() => {
+//   if (!sortKey.value || !sortDir.value) return props.allItems;
 
-  return [...props.allItems].sort((a, b) => {
+//   return [...props.allItems].sort((a, b) => {
+//     const aVal = a[sortKey.value];
+//     const bVal = b[sortKey.value];
+
+//     if (aVal === bVal) return 0;
+
+//     const res = aVal > bVal ? 1 : -1;
+//     return sortDir.value === "asc" ? res : -res;
+//   });
+// });
+
+const sortedItems = computed(() => {
+  if (!sortKey.value || !sortDir.value) return filteredItems.value;
+
+  return [...filteredItems.value].sort((a, b) => {
     const aVal = a[sortKey.value];
     const bVal = b[sortKey.value];
 
@@ -277,6 +292,22 @@ const sortedItems = computed(() => {
     const res = aVal > bVal ? 1 : -1;
     return sortDir.value === "asc" ? res : -res;
   });
+});
+
+const filteredItems = computed(() => {
+  const query = props.searchKey?.toLowerCase().trim();
+  if (!query) return props.allItems;
+
+  const keys =
+    props.searchableKeys ??
+    props.columns.map((c) => c.key).filter((k) => k !== "actions");
+
+  return props.allItems.filter((item) =>
+    keys.some((key) => {
+      const value = item[key];
+      return value != null && String(value).toLowerCase().includes(query);
+    })
+  );
 });
 
 const pagedItems = computed(() => {

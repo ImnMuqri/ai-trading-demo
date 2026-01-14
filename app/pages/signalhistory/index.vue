@@ -50,16 +50,17 @@
       </div>
 
       <UiTable
-        :allItems="isSearchingHistory ? filteredData : historyData"
+        :allItems="historyData"
         :columns="historyColumns"
         :isLoading="historyLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="(isSearchingHistory ? filteredData : historyData).length"
+        :totalItems="historyData.length"
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         :table-break-points="1000"
+        :search-key="search"
       >
         <template #row="{ item, applyBorder }">
           <div
@@ -392,7 +393,6 @@ definePageMeta({
 
 const { $api } = useNuxtApp();
 const historyData = ref([]);
-const filteredData = ref([]);
 
 const openDetailedAnalysis = ref(false);
 const selectedHistory = ref(null);
@@ -408,7 +408,6 @@ const historyColumns = [
 const currentPage = ref(1);
 const rowsPerPage = ref(15);
 
-const isSearchingHistory = ref(false);
 const search = ref(null);
 const rowsPerPageOptions = [
   { label: "5", value: 5 },
@@ -461,33 +460,31 @@ onMounted(() => {
 const clearData = () => {
   rowsPerPage.value = 15;
   search.value = null;
-  filteredData.value = [];
-  isSearchingHistory.value = false;
   getSignalHistory();
 };
 
-const handleSearchSubmit = () => {
-  const query = search.value?.toLowerCase().trim();
+// const handleSearchSubmit = () => {
+//   const query = search.value?.toLowerCase().trim();
 
-  isSearchingHistory.value = !!query;
+//   isSearchingHistory.value = !!query;
 
-  if (!query) {
-    filteredData.value = [];
-  } else {
-    const searchableKeys = historyColumns
-      .map((col) => col.key)
-      .filter((key) => key !== "actions");
+//   if (!query) {
+//     filteredData.value = [];
+//   } else {
+//     const searchableKeys = historyColumns
+//       .map((col) => col.key)
+//       .filter((key) => key !== "actions");
 
-    filteredData.value = historyData.value.filter((item) =>
-      searchableKeys.some((key) => {
-        const value = item[key];
-        return value != null && String(value).toLowerCase().includes(query);
-      })
-    );
-  }
+//     filteredData.value = historyData.value.filter((item) =>
+//       searchableKeys.some((key) => {
+//         const value = item[key];
+//         return value != null && String(value).toLowerCase().includes(query);
+//       })
+//     );
+//   }
 
-  currentPage.value = 1;
-};
+//   currentPage.value = 1;
+// };
 </script>
 
 <style lang="scss" scoped></style>
