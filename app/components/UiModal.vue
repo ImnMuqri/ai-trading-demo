@@ -7,7 +7,7 @@
       :class="[isClosing ? 'opacity-0' : 'opacity-100', customClass]">
       <div
         :class="[
-          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative py-4 px-6 text-white',
+          ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative pt-4 pb-8 px-6 text-white',
           'modal-scroll hide-scrollbar overflow-y-auto max-h-[80vh] md:max-h-[90vh]',
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
           width ?? 'max-w-[500px]',

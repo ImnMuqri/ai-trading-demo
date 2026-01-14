@@ -375,12 +375,20 @@
               class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
               Create Referral Code
             </p>
-            <p class="text-[12px] mb-2 italic">
-              {{ isEditMode ? "Updated At" : "Created at" }}
-              {{
-                $formatDate(new Date().toLocaleDateString(), { withTime: true })
-              }}
-            </p>
+            <div class="flex flex-wrap justify-between">
+              <p class="text-[12px] mb-2 italic">
+                {{ isEditMode ? "Updated At" : "Created at" }}
+                {{
+                  $formatDate(new Date().toLocaleDateString(), {
+                    withTime: true,
+                  })
+                }}
+              </p>
+              <div class="flex items-center gap-1">
+                <p class="text-[12px]">Active</p>
+                <UiSwitch v-model="referralForm.isActive" size="sm"></UiSwitch>
+              </div>
+            </div>
           </div>
           <UiInput v-model="referralForm.name" placeholder="Name"></UiInput>
           <UiInput
@@ -392,7 +400,7 @@
           </UiButton>
           <UiButton
             v-if="isEditMode"
-            @click="deleteReferralLink(editingIndex)"
+            @click="deleteReferralLink(referralEditingId)"
             class="!rounded-full bg-red-500 border border-red-500 hover:bg-red-600">
             Delete Referral</UiButton
           >
@@ -430,35 +438,43 @@
                 <div
                   class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
                   <div>
-                    <a :href="link.url" target="_blank" class="w-full text-sm"
-                      >{{ link.name }}
-                    </a>
+                    <div class="flex items-center gap-2">
+                      <p class="w-fit text-sm">{{ link.name }}</p>
+                      <div
+                        class="w-1.5 h-1.5 rounded-full"
+                        :class="[
+                          link.isActive ? 'bg-emerald-500' : 'bg-red-500',
+                        ]"></div>
+                    </div>
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div class="flex gap-2">
                     <div
                       class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
-                      <UiIcon
-                        icon="solar:copy-bold"
-                        custom-class="h-3 w-3  cursor-pointer"
-                        :class="
-                          copied
-                            ? 'text-[#00BDA7]'
-                            : 'text-white hover:text-white/80'
-                        "
-                        @click="copyLink(link.url)" />
+                      <div class="relative">
+                        <p
+                          v-if="copiedIndex === idx"
+                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg">
+                          Copied
+                        </p>
+
+                        <UiIcon
+                          icon="solar:copy-bold"
+                          custom-class="h-3 w-3 cursor-pointer"
+                          :class="
+                            copiedIndex === idx
+                              ? 'text-white/50'
+                              : 'text-white hover:text-white/80'
+                          "
+                          @click="copyLink(link.destinationUrl, idx)" />
+                      </div>
                     </div>
                     <div
                       class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
-                        :class="
-                          copied
-                            ? 'text-[#00BDA7]'
-                            : 'text-white hover:text-white/80'
-                        "
-                        @click="openEditReferralForm(idx)" />
+                        @click="openEditReferralForm(link)" />
                     </div>
                   </div>
                 </div>
@@ -512,12 +528,20 @@
               class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
               {{ isExternalEdit ? "Update Your Link" : "Create New Link" }}
             </p>
-            <p class="text-[12px] mb-2 italic">
-              {{ isExternalEdit ? "Updated at" : "Created at" }}
-              {{
-                $formatDate(new Date().toLocaleDateString(), { withTime: true })
-              }}
-            </p>
+            <div class="flex flex-wrap justify-between">
+              <p class="text-[12px] mb-2 italic">
+                {{ isExternalEdit ? "Updated at" : "Created at" }}
+                {{
+                  $formatDate(new Date().toLocaleDateString(), {
+                    withTime: true,
+                  })
+                }}
+              </p>
+              <div class="flex items-center gap-1">
+                <p class="text-[12px]">Active</p>
+                <UiSwitch v-model="externalForm.isActive" size="sm"></UiSwitch>
+              </div>
+            </div>
           </div>
           <UiInput v-model="externalForm.name" placeholder="Name"></UiInput>
           <UiInput v-model="externalForm.url" placeholder="Url"></UiInput>
@@ -525,13 +549,13 @@
             v-model="externalForm.description"
             placeholder="Description"
             type="textarea"></UiInput>
-          <UiButton class="!rounded-full" @click="submitExternal">{{
+          <UiButton class="!rounded-full" @click="submitExternal()">{{
             externalButtonLabel
           }}</UiButton>
           <UiButton
             v-if="isExternalEdit"
-            class="!rounded-full bg-red-500 border border-red-500"
-            @click="deleteExternalLink(externalEditingIndex)">
+            class="!rounded-full bg-red-500 hover:bg-red-600 border border-red-500"
+            @click="deleteExternalLink(externalEditingId)">
             Delete Link</UiButton
           >
         </div>
@@ -568,35 +592,43 @@
                 <div
                   class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
                   <div>
-                    <a :href="link.url" target="_blank" class="w-full text-sm"
-                      >{{ link.name }}
-                    </a>
+                    <div class="flex items-center gap-2">
+                      <p class="w-fit text-sm">{{ link.name }}</p>
+                      <div
+                        class="w-1.5 h-1.5 rounded-full"
+                        :class="[
+                          link.isActive ? 'bg-emerald-500' : 'bg-red-500',
+                        ]"></div>
+                    </div>
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div class="flex gap-2">
                     <div
                       class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
-                      <UiIcon
-                        icon="solar:copy-bold"
-                        custom-class="h-3 w-3  cursor-pointer"
-                        :class="
-                          copied
-                            ? 'text-[#00BDA7]'
-                            : 'text-white hover:text-white/80'
-                        "
-                        @click="copyLink(link.url)" />
+                      <div class="relative">
+                        <p
+                          v-if="copiedIndex === idx"
+                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg">
+                          Copied
+                        </p>
+
+                        <UiIcon
+                          icon="solar:copy-bold"
+                          custom-class="h-3 w-3 cursor-pointer"
+                          :class="
+                            copiedIndex === idx
+                              ? 'text-white/50'
+                              : 'text-white hover:text-white/80'
+                          "
+                          @click="copyLink(link.url, idx)" />
+                      </div>
                     </div>
                     <div
                       class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
-                        :class="
-                          copied
-                            ? 'text-[#00BDA7]'
-                            : 'text-white hover:text-white/80'
-                        "
-                        @click="openEditExternal(idx)" />
+                        @click="openEditExternal(link)" />
                     </div>
                   </div>
                 </div>
@@ -668,9 +700,9 @@ const selectedUser = ref({
   role: "",
   isActive: "",
 });
-const copied = ref(false);
-const editingIndex = ref(null);
-const externalEditingIndex = ref(null);
+const copiedIndex = ref(null);
+const referralEditingId = ref(null);
+const externalEditingId = ref(null);
 
 const usersData = ref([]);
 const clientList = ref([]);
@@ -695,24 +727,28 @@ const userColumns = [
 const emptyReferralForm = () => ({ name: "", description: "" });
 const referralForm = ref(emptyReferralForm());
 
-const isEditMode = computed(() => editingIndex.value !== null);
+const isEditMode = computed(() => referralEditingId.value !== null);
 const submitButtonLabel = computed(() =>
   isEditMode.value ? "Update Referral Code" : "Generate Referral Code"
 );
 
 /* ===================== EXTERNAL LINK FORM ===================== */
 const externalForm = ref({ name: "", url: "", description: "" });
-const isExternalEdit = computed(() => externalEditingIndex.value !== null);
+const isExternalEdit = computed(() => externalEditingId.value !== null);
 const externalButtonLabel = computed(() =>
   isExternalEdit.value ? "Update External Link" : "Generate External Link"
 );
 
-const copyLink = async (url) => {
+const copyLink = async (url, idx) => {
   if (!url) return;
+
   try {
     await navigator.clipboard.writeText(url);
-    copied.value = true;
-    setTimeout(() => (copied.value = false), 2000);
+    copiedIndex.value = idx;
+
+    setTimeout(() => {
+      copiedIndex.value = null;
+    }, 500);
   } catch (err) {
     console.error("Failed to copy", err);
   }
@@ -753,32 +789,35 @@ const getReferralLinks = async () => {
   }
 };
 
-const openEditReferralForm = (idx) => {
-  const selected = referralLink.value.referralLinks[idx];
-  if (!selected) return;
-  editingIndex.value = idx;
+const openEditReferralForm = (link) => {
+  referralEditingId.value = link.id;
   referralForm.value = {
-    name: selected.name,
-    description: selected.description,
+    name: link.name,
+    description: link.description,
+    isActive: link.isActive,
   };
   openReferralForm.value = true;
 };
 
 const submitReferral = async () => {
-  if (isReferralSubmitting) return;
+  if (isReferralSubmitting.value) return;
+  if (!referralForm.value.name) {
+    showToast("Name are required", "error");
+    return;
+  }
   isReferralSubmitting.value = true;
-  if (!referralForm.value.name) return;
   try {
     if (isEditMode.value) {
-      const linkId = referralLink.value.referralLinks[editingIndex.value].id;
+      // use ID, not index
+      const linkId = referralEditingId.value;
       await $api.put(
         `/api/affiliate/referral-links/${linkId}`,
         referralForm.value
       );
-      referralLink.value.referralLinks[editingIndex.value] = {
-        ...referralLink.value.referralLinks[editingIndex.value],
-        ...referralForm.value,
-      };
+
+      referralLink.value.referralLinks = referralLink.value.referralLinks.map(
+        (l) => (l.id === linkId ? { ...l, ...referralForm.value } : l)
+      );
     } else {
       const res = await $api.post(
         "/api/affiliate/referral-links",
@@ -786,37 +825,39 @@ const submitReferral = async () => {
       );
       referralLink.value.referralLinks.push(res.data.data);
     }
+
     openReferralForm.value = false;
     referralForm.value = emptyReferralForm();
-    editingIndex.value = null;
+    referralEditingId.value = null;
   } catch (err) {
     console.error("Referral submit failed", err);
   } finally {
+    // optional: refresh the list if needed
+    await getReferralLinks();
     isReferralSubmitting.value = false;
   }
 };
-const deleteReferralLink = async (idx) => {
-  if (isReferralDeleting) return;
+const deleteReferralLink = async (linkId) => {
+  if (isReferralDeleting.value) return;
+  if (!referralEditingId.value) return;
+  const id = linkId;
   isReferralDeleting.value = true;
-  if (idx === null || idx === undefined) return;
-  const link = referralLink.value.referralLinks[idx];
-  if (!link?.id) return;
-
   try {
-    await $api.delete(`/api/affiliate/referral-links/${link.id}`);
-    referralLink.value.referralLinks.splice(idx, 1);
+    await $api.delete(`/api/affiliate/referral-links/${id}`);
+
+    referralLink.value.referralLinks = referralLink.value.referralLinks.filter(
+      (l) => l.id !== id
+    );
+
     showToast("Referral link deleted", "success");
 
-    if (editingIndex.value === idx) {
-      openReferralForm.value = false;
-      editingIndex.value = null;
-      referralForm.value = emptyReferralForm();
-    }
+    openReferralForm.value = false;
+    referralEditingId.value = null;
+    referralForm.value = emptyReferralForm();
   } catch (err) {
-    console.error(err);
     showToast("Failed to delete referral link", "error");
   } finally {
-    isReferralDeleting.value = true;
+    isReferralDeleting.value = false;
   }
 };
 
@@ -834,33 +875,36 @@ const getExternalLinks = async () => {
   }
 };
 
-const openEditExternal = (idx) => {
-  const link = externalLink.value.externalLinks[idx];
-  if (!link) return;
-  externalEditingIndex.value = idx;
+const openEditExternal = (link) => {
+  externalEditingId.value = link.id;
   externalForm.value = {
     name: link.name,
     url: link.url,
     description: link.description,
+    isActive: link.isActive,
   };
   openExternalForm.value = true;
 };
 
 const submitExternal = async () => {
-  if (isExternalSubmitting) return;
+  if (isExternalSubmitting.value) return;
+  if (!externalForm.value.name || !externalForm.value.url) {
+    showToast("Name and URL are required", "error");
+    return;
+  }
   isExternalSubmitting.value = true;
-  if (!externalForm.value.name || !externalForm.value.url) return;
+
   try {
     if (isExternalEdit.value) {
-      const link = externalLink.value.externalLinks[externalEditingIndex.value];
+      const linkId = externalEditingId.value;
       await $api.put(
-        `/api/affiliate/external-links/${link.id}`,
+        `/api/affiliate/external-links/${linkId}`,
         externalForm.value
       );
-      externalLink.value.externalLinks[externalEditingIndex.value] = {
-        ...link,
-        ...externalForm.value,
-      };
+
+      externalLink.value.externalLinks = externalLink.value.externalLinks.map(
+        (l) => (l.id === linkId ? { ...l, ...externalForm.value } : l)
+      );
     } else {
       const res = await $api.post(
         "/api/affiliate/external-links",
@@ -868,33 +912,36 @@ const submitExternal = async () => {
       );
       externalLink.value.externalLinks.push(res.data.data);
     }
+
     openExternalForm.value = false;
-    externalEditingIndex.value = null;
+    externalEditingId.value = null;
     externalForm.value = { name: "", url: "", description: "" };
     showToast("External link saved", "success");
-  } catch {
-    showToast("Failed to save external link", "error");
+  } catch (err) {
+    console.log(err);
+    showToast(err.response.data.message, "error");
   } finally {
+    await getExternalLinks();
     isExternalSubmitting.value = false;
   }
 };
-const deleteExternalLink = async (idx) => {
-  if (isExternalDeleting.value) return;
-  if (idx === null || idx === undefined) return;
 
-  const link = externalLink.value.externalLinks[idx];
-  if (!link?.id) return;
-
+const deleteExternalLink = async (linkId) => {
+  if (isExternalDeleting.value || !linkId) return;
   isExternalDeleting.value = true;
 
   try {
-    await $api.delete(`/api/affiliate/external-links/${link.id}`);
-    externalLink.value.externalLinks.splice(idx, 1);
+    await $api.delete(`/api/affiliate/external-links/${linkId}`);
+
+    externalLink.value.externalLinks = externalLink.value.externalLinks.filter(
+      (l) => l.id !== linkId
+    );
+
     showToast("External link deleted successfully", "success");
 
-    if (externalEditingIndex.value === idx) {
+    if (externalEditingId.value === linkId) {
       openExternalForm.value = false;
-      externalEditingIndex.value = null;
+      externalEditingId.value = null;
       externalForm.value = { name: "", url: "", description: "" };
     }
   } catch (err) {
@@ -909,12 +956,12 @@ const closeModal = (type) => {
   switch (type) {
     case "referral":
       openReferralForm.value = false;
-      editingIndex.value = null;
+      referralEditingId.value = null;
       referralForm.value = emptyReferralForm();
       break;
     case "external":
       openExternalForm.value = false;
-      externalEditingIndex.value = null;
+      externalEditingId.value = null;
       externalForm.value = { name: "", url: "", description: "" };
       break;
   }
