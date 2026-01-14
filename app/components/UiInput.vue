@@ -8,16 +8,14 @@
       <!-- Left icon slot -->
       <div
         v-if="$slots['icon-left']"
-        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-      >
+        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
         <slot name="icon-left"></slot>
       </div>
 
       <!-- Right icon slot -->
       <div
         v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-      >
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
         <slot name="icon-right"></slot>
       </div>
 
@@ -29,8 +27,7 @@
         :placeholder="placeholder"
         :disabled="isDisabled"
         :readonly="isReadonly"
-        :class="baseClasses"
-      />
+        :class="baseClasses" />
 
       <!-- Textarea -->
       <textarea
@@ -40,8 +37,7 @@
         :disabled="isDisabled"
         :readonly="isReadonly"
         rows="4"
-        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']"
-      />
+        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']" />
     </div>
 
     <!-- Error message -->
@@ -52,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, useSlots } from "vue";
 
 const props = defineProps({
   modelValue: String,
@@ -68,7 +64,7 @@ const props = defineProps({
   customClass: String,
   dark: Boolean,
 });
-
+const slots = useSlots();
 const emit = defineEmits(["update:modelValue"]);
 
 const inputValue = ref(props.modelValue || "");
@@ -79,19 +75,24 @@ watch(
   (val) => (inputValue.value = val)
 );
 
-const baseClasses = computed(() => [
-  "w-full rounded-lg !text-[11px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]",
-  props.isDisabled
-    ? "opacity-50 cursor-not-allowed"
-    : "border-gray-300 focus:border-[#00BDA7]",
-  props.$slots?.["icon-left"] ? "pl-10 px-4" : "px-4",
-  props.$slots?.["icon-right"] ? "pr-10 px-4" : "px-4",
-  "py-2",
-  props.customClass,
-  props.dark
-    ? "bg-[#1A1C20] border-[#2A2A2A] text-white"
-    : "bg-white border text-black ",
-]);
+const baseClasses = computed(() => {
+  const hasIconLeft = !!slots["icon-left"]?.();
+  const hasIconRight = !!slots["icon-right"]?.();
+
+  return [
+    "w-full border border-transparent rounded-lg !text-[11px] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#00BDA7]",
+    props.isDisabled
+      ? "opacity-50 cursor-not-allowed"
+      : "border-gray-300 focus:border-[#00BDA7]",
+    hasIconLeft ? "pl-10" : "px-4",
+    hasIconRight ? "pr-10" : "px-4",
+    "py-2",
+    props.customClass,
+    props.dark
+      ? "bg-[#1A1C20] border-[#2A2A2A] text-white"
+      : "bg-white border text-black",
+  ];
+});
 </script>
 
 <style scoped>

@@ -12,15 +12,13 @@
                 icon="cuida:edit-outline"
                 custom-class="w-4 h-4 text-[#00BDA7]"
                 class="block lg:hidden hover:cursor-pointer hover:-translate-y-1 transition-all duration-300 ease-in-out"
-                @click="editingForm"
-              />
+                @click="editingForm" />
               <UiIcon
                 v-if="isEditing"
                 icon="cuida:edit-outline"
                 custom-class="w-4 h-4 text-red-500"
                 class="block lg:hidden hover:cursor-pointer hover:-translate-y-1 transition-all duration-300 ease-in-out"
-                @click="closeForm"
-              />
+                @click="closeForm" />
             </div>
             <p class="text-[12px] text-gray-400">{{ profileData.email }}</p>
           </div>
@@ -48,22 +46,22 @@
           label="Name"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark
-        ></UiInput>
+          :custom-class="isEditing ? 'border !border-[#00BDA7]' : ''"
+          dark></UiInput>
         <UiInput
           v-model="profileData.email"
           label="Email"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark
-        ></UiInput>
+          :custom-class="isEditing ? 'border !border-[#00BDA7]' : ''"
+          dark></UiInput>
         <UiInput
           v-model="profileData.phone"
           label="Phone Number"
           placeholder="Enter here.."
           :isReadonly="!isEditing"
-          dark
-        ></UiInput>
+          :custom-class="isEditing ? 'border !border-[#00BDA7]' : ''"
+          dark></UiInput>
 
         <UiInput
           v-model="profileData.role"
@@ -71,21 +69,17 @@
           placeholder="Your role"
           custom-class="capitalize"
           isReadonly
-          dark
-        ></UiInput>
+          dark></UiInput>
         <UiInput
           v-model="profileData.country"
           label="Country "
           placeholder="Your country"
-          custom-class="pointer-events-none capitalize"
           :isReadonly="!isEditing"
-          dark
-        ></UiInput>
-
+          :custom-class="isEditing ? 'border !border-[#00BDA7]' : ''"
+          dark></UiInput>
         <div
           title="Option to enable or disable the dashboard tutorial"
-          class="w-fit"
-        >
+          class="w-fit">
           <ClientOnly>
             <UiRadio
               v-model="isTourActive"
