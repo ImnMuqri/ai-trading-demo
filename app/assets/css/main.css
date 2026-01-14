@@ -23,7 +23,7 @@ body {
   @apply !p-0  !bg-transparent !rounded-none;
 }
 .Vue-Toastification__progress-bar {
-  @apply mt-3  mx-6 !rounded-full;
+  @apply mt-3 mx-6 !rounded-full;
 }
 
 .Vue-Toastification__close-button,
