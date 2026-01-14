@@ -879,14 +879,24 @@ const submitExternal = async () => {
   }
 };
 const deleteExternalLink = async (idx) => {
-  if (isExternalDeleting) return;
+  if (isExternalDeleting.value) return;
+  if (idx === null || idx === undefined) return;
+
   const link = externalLink.value.externalLinks[idx];
   if (!link?.id) return;
+
   isExternalDeleting.value = true;
+
   try {
     await $api.delete(`/api/affiliate/external-links/${link.id}`);
     externalLink.value.externalLinks.splice(idx, 1);
     showToast("External link deleted successfully", "success");
+
+    if (externalEditingIndex.value === idx) {
+      openExternalForm.value = false;
+      externalEditingIndex.value = null;
+      externalForm.value = { name: "", url: "", description: "" };
+    }
   } catch (err) {
     console.error(err);
     showToast("Failed to delete external link", "error");
