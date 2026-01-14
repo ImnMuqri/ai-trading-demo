@@ -10,8 +10,14 @@
       <hr />
     </div>
 
+    <!-- LOADING -->
+    <div v-if="isLoading" class="grid place-items-center mb-5 h-full w-full">
+      <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-4xl" />
+    </div>
+
+    <!-- DATA -->
     <div
-      v-if="parameters.length > 0 && !isLoading"
+      v-else-if="parameters.length > 0"
       class="flex flex-col w-full text-[15px] overflow-y-auto"
     >
       <div
@@ -37,10 +43,12 @@
           <div class="flex w-full gap-4">
             <div class="flex w-full">
               <div class="flex flex-col justify-center flex-1">
-                <span class="text-white font-semibold">{{
-                  parameter.text
-                }}</span>
-                <span class="text-[#838383] text-sm">{{ parameter.desc }}</span>
+                <span class="text-white font-semibold">
+                  {{ parameter.text }}
+                </span>
+                <span class="text-[#838383] text-sm">
+                  {{ parameter.desc }}
+                </span>
               </div>
             </div>
 
@@ -52,16 +60,19 @@
           </div>
         </div>
       </div>
+
       <div>
         <slot
           name="parameters"
           :parameters="paginatedParameters"
           :getIndex="globalIndex"
-        ></slot>
+        />
       </div>
+
       <div>
-        <slot name="footer"></slot>
+        <slot name="footer" />
       </div>
+
       <div v-if="$props.pagination" class="w-full flex justify-center">
         <slot name="pagination">
           <UiPagination
@@ -75,17 +86,19 @@
       </div>
     </div>
 
-    <div
-      v-else-if="parameters.length === 0 && !isLoading"
-      class="grid place-items-center h-full w-full py-10"
-    >
-      No data
+    <!-- EMPTY -->
+    <div v-else class="grid place-items-center h-full w-full">
+      <div class="flex flex-col gap-[2px] items-center justify-center py-20">
+        <UiIcon
+          icon="ph:files-duotone"
+          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+        />
+        <p>No records found</p>
+        <p class="italic text-[10px] text-[#626262]">
+          New data will appear here once it becomes available.
+        </p>
+      </div>
     </div>
-
-    <div
-      v-else-if="isLoading"
-      class="grid place-items-center mb-5 h-full w-full"
-    ></div>
   </div>
 </template>
 

@@ -225,6 +225,7 @@
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
             <UiList
               :parameters="adminSummary?.topAffiliatesByProfits"
+              :is-loading="listLoading"
               class="w-full h-full"
               ><template #parameters="{ parameters, getIndex }">
                 <div v-for="p in parameters" class="flex gap-4">
@@ -290,6 +291,7 @@
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
             <UiList
               :parameters="adminSummary?.topAffiliatesByClients"
+              :is-loading="listLoading"
               class="w-full h-full"
               ><template #parameters="{ parameters, getIndex }">
                 <div v-for="p in parameters" class="flex gap-4">
@@ -1045,6 +1047,8 @@ const isSearchingTransaction = ref(false);
 const isFilteringType = ref(null);
 const isFilteringStatus = ref(null);
 
+const listLoading = ref(true);
+
 const openConfirm = ref(false);
 const openUpdate = ref(false);
 const selectedUser = ref({
@@ -1209,6 +1213,7 @@ const userRing = computed(() => {
 
 const getAnalytics = async () => {
   analyticsLoading.value = true;
+  listLoading.value = true;
   try {
     const res = await $api.get("/api/admin/analytics");
     const resp = await $api.get("/api/admin/dashboard-stats");
@@ -1219,8 +1224,10 @@ const getAnalytics = async () => {
       clientSummary.value = resp.data?.clientSummary;
     }
     analytics.value = res.data.data;
+    listLoading.value = false;
   } catch (err) {
     console.error("Failed to fetch analytics", err);
+    listLoading.value = false;
   } finally {
     analyticsLoading.value = false;
   }

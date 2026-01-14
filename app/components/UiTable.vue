@@ -178,7 +178,18 @@
             v-if="allItems.length === 0 && !isLoading"
             class="text-white grid justify-center items-center rounded-md h-[350px]"
           >
-            <span>Empty Table</span>
+            <div
+              class="flex flex-col gap-[2px] items-center justify-center py-20"
+            >
+              <UiIcon
+                icon="ph:files-duotone"
+                custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+              />
+              <p>No records found</p>
+              <p class="italic text-[10px] text-[#626262]">
+                New data will appear here once it becomes available.
+              </p>
+            </div>
           </div>
         </div>
 

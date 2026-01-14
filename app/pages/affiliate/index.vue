@@ -12,11 +12,13 @@
         <div class="flex items-center gap-2">
           <UiIcon
             icon="qlementine-icons:money-16"
-            custom-class="w-3 h-3"></UiIcon>
+            custom-class="w-3 h-3"
+          ></UiIcon>
           <span class="text-sm">Affiliator Profit</span>
         </div>
         <div
-          class="w-full xl:w-[350px] px-6 py-2 flex items-center justify-between gap-8">
+          class="w-full xl:w-[350px] px-6 py-2 flex items-center justify-between gap-8"
+        >
           <div>
             <p class="text-sm text-[#838383]">Total Profits</p>
             <p class="text-2xl font-semibold text-[#00BDA7]">
@@ -39,7 +41,8 @@
                 profitStats.last60Days ?? 0,
                 profitStats.last90Days ?? 0,
               ]"
-              :gradientColors="[['#00AAFF', '#00BDA7']]"></UiProgress>
+              :gradientColors="[['#00AAFF', '#00BDA7']]"
+            ></UiProgress>
           </div>
         </div>
         <div class="flex flex-col gap-2 px-6 py-2">
@@ -76,7 +79,8 @@
         </div>
         <div class="flex flex-col lg:flex-row justify-center h-full w-full">
           <div
-            class="p-10 flex flex-col lg:flex-row justify-around h-full w-full items-center gap-8">
+            class="p-10 flex flex-col lg:flex-row justify-around h-full w-full items-center gap-8"
+          >
             <div class="flex flex-row items-center gap-8">
               <UiProgress
                 type="circle"
@@ -85,7 +89,9 @@
                   clientSummary.newToday ?? 0,
                 ]"
                 title="Total Clients"
-                custom-class="max-w-[200px]" />
+                custom-class="max-w-[200px]"
+                title-class="!text-[#838383] !text-[15px]"
+              />
 
               <div class="flex flex-col gap-1.5 text-white">
                 <div>
@@ -102,7 +108,8 @@
                   </p>
                 </div>
                 <div
-                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"></div>
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+                ></div>
                 <div>
                   <p class="text-[12px] text-[#838383]">
                     New Clients Last 30 Days
@@ -123,28 +130,30 @@
               </div>
             </div>
 
-            <div class="flex flex-row items-center gap-8 b">
+            <div class="flex flex-row items-center gap-8">
               <UiProgress
                 type="circle"
-                :progress="[70, 90]"
-                title="Clients Type"
-                custom-class="max-w-[200px]" />
+                :progress="planRingData"
+                title="Sub Analysis"
+                custom-class="max-w-[200px]"
+                title-class="!text-[#838383] !text-[15px]"
+              />
 
-              <div class="flex flex-col gap-1.5 text-white">
-                <div>
+              <div class="flex flex-col gap-4 text-white">
+                <div
+                  v-for="plan in subAnalysis?.analytics?.planCounts || []"
+                  :key="plan.id"
+                >
                   <div class="flex gap-1 text-[#838383] mb-1">
-                    <UiIcon icon="mdi:package-variant"></UiIcon>
-                    <p class="text-[12px] text-[#838383]">Basic Package</p>
+                    <UiIcon icon="mdi:package-variant" />
+                    <p class="text-[12px] text-[#838383]">
+                      {{ plan.name }}
+                    </p>
                   </div>
-                  <p class="text-sm font-semibold">No Data</p>
-                </div>
 
-                <div>
-                  <div class="flex gap-1 text-[#838383] mb-1">
-                    <UiIcon icon="mdi:package-variant"></UiIcon>
-                    <p class="text-[12px] text-[#838383]">Pro Package</p>
-                  </div>
-                  <p class="text-sm font-semibold">No Data</p>
+                  <p class="text-sm font-semibold">
+                    {{ plan.subscriptionCount }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -160,7 +169,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Active Users</p>
             </div>
             <p class="text-lg text-[#00BDA7]">
@@ -172,7 +182,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <p>Inactive Users</p>
             </div>
             <p class="text-lg text-red-500">
@@ -184,7 +195,8 @@
               <UiIcon
                 icon="hugeicons:user-03"
                 class="mb-1"
-                custom-class="w-4 h-4"></UiIcon>
+                custom-class="w-4 h-4"
+              ></UiIcon>
               <div class="flex gap-1 items-center">
                 <p>Client Account Expiring</p>
                 <p class="text-[#838383] text-[11px]">- in 10 days</p>
@@ -206,7 +218,8 @@
                 ? 'bg-[#00BDA7]/50 border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'clients'">
+            @click="activeTab = 'clients'"
+          >
             Clients
           </div>
           <div class="cursor-not-allowed" title="Upcoming Features">
@@ -217,7 +230,8 @@
                   ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
                   : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
               "
-              @click="activeTab = 'transactions'">
+              @click="activeTab = 'transactions'"
+            >
               Affiliate Approval
             </div>
           </div>
@@ -227,9 +241,11 @@
           <UiCard
             v-show="activeTab === 'clients'"
             class="py-2 text-[12px] h-full flex-1"
-            custom-class="!rounded-t-none !rounded-tr-lg">
+            custom-class="!rounded-t-none !rounded-tr-lg"
+          >
             <div
-              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2">
+              class="flex items-center gap-2 px-4 border-b border-[#1C1C1C] pb-2"
+            >
               <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
               <p class="text-lg font-semibold py-2 text-sm">Clients List</p>
             </div>
@@ -242,7 +258,8 @@
               :totalItems="usersData.length"
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
-              empty-class="min-h-[400px]">
+              empty-class="min-h-[400px]"
+            >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -255,7 +272,8 @@
                         ? 'capitalize'
                         : '',
                     ]"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
@@ -266,19 +284,22 @@
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex flex-wrap gap-[2px] justify-center">
+                      class="flex flex-wrap gap-[2px] justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <div v-else>
@@ -301,12 +322,14 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -314,12 +337,14 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email" />
+            v-model="selectedUser.email"
+          />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone" />
+            v-model="selectedUser.phone"
+          />
           <UiInput dark label="Role" type="text" v-model="selectedUser.role" />
         </div>
       </template>
@@ -328,11 +353,13 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges">
+            @click="saveChanges"
+          >
             Save Changes </UiButton
           ><UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -344,11 +371,13 @@
       :description="`Invite friends to experience AI Trading and receive commission from their subscription.`"
       width="max-w-[500px]"
       @confirm="handleDeleteConfirmed"
-      @close="(openReferral = false), (openReferralForm = false)">
+      @close="(openReferral = false), (openReferralForm = false)"
+    >
       <template #body>
         <div
           v-if="!referralLink"
-          class="flex flex-col justify-center items-center text-center">
+          class="flex flex-col justify-center items-center text-center"
+        >
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
             <p class="capitalize text-sm fonts-semibold">
@@ -361,7 +390,8 @@
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 " /> </template
+                custom-class="w-4 h-4 "
+              /> </template
           ></UiButton>
         </div>
         <div v-if="openReferralForm" class="flex flex-col gap-2 px-2">
@@ -370,9 +400,11 @@
               variant="icon"
               icon="weui:back-filled"
               class="border-0 !w-fit !p-0 mb-2"
-              @click="closeModal('referral')"></UiButton>
+              @click="closeModal('referral')"
+            ></UiButton>
             <p
-              class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+            >
               Create Referral Code
             </p>
             <p class="text-[12px] mb-2 italic">
@@ -386,34 +418,40 @@
           <UiInput
             v-model="referralForm.description"
             placeholder="Description"
-            type="textarea"></UiInput>
+            type="textarea"
+          ></UiInput>
           <UiButton class="!rounded-full" @click="submitReferral">
             {{ submitButtonLabel }}
           </UiButton>
           <UiButton
             v-if="isEditMode"
             @click="deleteReferralLink(editingIndex)"
-            class="!rounded-full bg-red-500 border border-red-500 hover:bg-red-600">
+            class="!rounded-full bg-red-500 border border-red-500 hover:bg-red-600"
+          >
             Delete Referral</UiButton
           >
         </div>
         <div
           v-if="referralLink && !openReferralForm"
-          class="flex flex-col text-center gap-4 w-full">
+          class="flex flex-col text-center gap-4 w-full"
+        >
           <img src="assets/bg/referralPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
             <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+            >
               Iman Muqri
             </p>
             <p>Id: 66666</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
-              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"
+            ></div>
             <p class="text-[12px] whitespace-nowrap">Referral Link</p>
             <div
-              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"
+            ></div>
           </div>
           <UiList
             :parameters="referralLink.referralLinks"
@@ -422,13 +460,16 @@
             :rowsPerPage="refRowsPerPage"
             @page-changed="refPageChange"
             @rows-per-page-changed="refRowsChange"
-            pagination>
+            pagination
+          >
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
-                class="overflow-y-auto mb-2">
+                class="overflow-y-auto mb-2"
+              >
                 <div
-                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left"
+                >
                   <div>
                     <a :href="link.url" target="_blank" class="w-full text-sm"
                       >{{ link.name }}
@@ -437,7 +478,8 @@
                   </div>
                   <div class="flex gap-2">
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
+                    >
                       <UiIcon
                         icon="solar:copy-bold"
                         custom-class="h-3 w-3  cursor-pointer"
@@ -446,10 +488,12 @@
                             ? 'text-[#00BDA7]'
                             : 'text-white hover:text-white/80'
                         "
-                        @click="copyLink(link.url)" />
+                        @click="copyLink(link.url)"
+                      />
                     </div>
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]"
+                    >
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
@@ -458,7 +502,8 @@
                             ? 'text-[#00BDA7]'
                             : 'text-white hover:text-white/80'
                         "
-                        @click="openEditReferralForm(idx)" />
+                        @click="openEditReferralForm(idx)"
+                      />
                     </div>
                   </div>
                 </div>
@@ -467,12 +512,14 @@
             <template #footer>
               <UiButton
                 @click="openReferralForm = true"
-                class="!rounded-full my-4 w-full">
+                class="!rounded-full my-4 w-full"
+              >
                 Create Referral Code
                 <template #icon-left>
                   <UiIcon
                     icon="hugeicons:add-01"
-                    custom-class="w-4 h-4 " /> </template></UiButton
+                    custom-class="w-4 h-4 "
+                  /> </template></UiButton
             ></template>
           </UiList>
         </div> </template
@@ -482,11 +529,13 @@
       title="External Links"
       :description="`Invite friends to experience AI Trading and receive commission from their subscription.`"
       width="max-w-[500px]"
-      @close="openExternal = false">
+      @close="openExternal = false"
+    >
       <template #body>
         <div
           v-if="!externalLink"
-          class="flex flex-col justify-center items-center text-center">
+          class="flex flex-col justify-center items-center text-center"
+        >
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
             <p class="capitalize text-sm fonts-semibold">No Link Created</p>
@@ -497,7 +546,8 @@
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 " /> </template
+                custom-class="w-4 h-4 "
+              /> </template
           ></UiButton>
         </div>
 
@@ -507,9 +557,11 @@
               variant="icon"
               icon="weui:back-filled"
               class="border-0 !w-fit !p-0 mb-2"
-              @click="closeModal('external')"></UiButton>
+              @click="closeModal('external')"
+            ></UiButton>
             <p
-              class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              class="text-xl mb-1 font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+            >
               {{ isExternalEdit ? "Update Your Link" : "Create New Link" }}
             </p>
             <p class="text-[12px] mb-2 italic">
@@ -524,34 +576,40 @@
           <UiInput
             v-model="externalForm.description"
             placeholder="Description"
-            type="textarea"></UiInput>
+            type="textarea"
+          ></UiInput>
           <UiButton class="!rounded-full" @click="submitExternal">{{
             externalButtonLabel
           }}</UiButton>
           <UiButton
             v-if="isExternalEdit"
             class="!rounded-full bg-red-500 border border-red-500"
-            @click="deleteExternalLink(externalEditingIndex)">
+            @click="deleteExternalLink(externalEditingIndex)"
+          >
             Delete Link</UiButton
           >
         </div>
         <div
           v-if="externalLink && !openExternalForm"
-          class="flex flex-col text-center gap-4 w-full">
+          class="flex flex-col text-center gap-4 w-full"
+        >
           <img src="assets/bg/LinkPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
             <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+            >
               Iman Muqri
             </p>
             <p>Id: 66666</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
-              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"
+            ></div>
             <p class="text-[12px] whitespace-nowrap">External Link</p>
             <div
-              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"
+            ></div>
           </div>
           <UiList
             :parameters="externalLink.externalLinks"
@@ -560,13 +618,16 @@
             :rowsPerPage="extRowsPerPage"
             @page-changed="extPageChange"
             @rows-per-page-changed="extRowsChange"
-            pagination>
+            pagination
+          >
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
-                class="overflow-y-auto mb-2">
+                class="overflow-y-auto mb-2"
+              >
                 <div
-                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left"
+                >
                   <div>
                     <a :href="link.url" target="_blank" class="w-full text-sm"
                       >{{ link.name }}
@@ -575,7 +636,8 @@
                   </div>
                   <div class="flex gap-2">
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
+                    >
                       <UiIcon
                         icon="solar:copy-bold"
                         custom-class="h-3 w-3  cursor-pointer"
@@ -584,10 +646,12 @@
                             ? 'text-[#00BDA7]'
                             : 'text-white hover:text-white/80'
                         "
-                        @click="copyLink(link.url)" />
+                        @click="copyLink(link.url)"
+                      />
                     </div>
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00BDA780] border-[1px] border-[#00BDA7]"
+                    >
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
@@ -596,7 +660,8 @@
                             ? 'text-[#00BDA7]'
                             : 'text-white hover:text-white/80'
                         "
-                        @click="openEditExternal(idx)" />
+                        @click="openEditExternal(idx)"
+                      />
                     </div>
                   </div>
                 </div>
@@ -605,12 +670,14 @@
             <template #footer>
               <UiButton
                 @click="openExternalForm = true"
-                class="!rounded-full my-4 w-full">
+                class="!rounded-full my-4 w-full"
+              >
                 Create New Link
                 <template #icon-left>
                   <UiIcon
                     icon="hugeicons:add-01"
-                    custom-class="w-4 h-4 " /> </template></UiButton
+                    custom-class="w-4 h-4 "
+                  /> </template></UiButton
             ></template>
             <template #pagination></template>
           </UiList>
@@ -671,6 +738,9 @@ const selectedUser = ref({
 const copied = ref(false);
 const editingIndex = ref(null);
 const externalEditingIndex = ref(null);
+
+const subLoading = ref(false);
+const subAnalysis = ref(null);
 
 const usersData = ref([]);
 const clientList = ref([]);
@@ -738,6 +808,28 @@ const getAffiliateStats = async () => {
     userLoading.value = false;
   }
 };
+
+const getSubStats = async () => {
+  subLoading.value = true;
+  try {
+    const res = await $api.get("/api/admin/subscription/analytics");
+    subAnalysis.value = res.data.data ?? null;
+    console.log(subAnalysis.value);
+  } catch (error) {
+    console.error("Error in fetching sub analysis stats: ", error);
+  }
+};
+
+const planRingData = computed(() => {
+  const plans = subAnalysis.value?.analytics?.planCounts ?? [];
+  if (!plans.length) return [];
+
+  const max = Math.max(...plans.map((p) => p.subscriptionCount ?? 0), 1);
+
+  return plans.map((p) =>
+    Math.min(Math.round(((p.subscriptionCount ?? 0) / max) * 100), 100)
+  );
+});
 
 // Referral
 const getReferralLinks = async () => {
@@ -988,6 +1080,7 @@ const extRowsChange = (rpp) => {
 
 onMounted(() => {
   getAffiliateStats();
+  getSubStats();
   getReferralLinks();
   getExternalLinks();
 });
