@@ -347,7 +347,7 @@
       @close="(openReferral = false), (openReferralForm = false)">
       <template #body>
         <div
-          v-if="!referralLink"
+          v-if="!referralLink.referralLinks.length && !openReferralForm"
           class="flex flex-col justify-center items-center text-center">
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
@@ -406,15 +406,20 @@
           >
         </div>
         <div
-          v-if="referralLink && !openReferralForm"
+          v-if="referralLink.referralLinks.length > 0 && !openReferralForm"
           class="flex flex-col text-center gap-4 w-full">
           <img src="assets/bg/referralPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
-            <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
-              Iman Muqri
-            </p>
-            <p>Id: 66666</p>
+            <div class="text-center">
+              <p
+                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+                {{ affiliateInfo.name }}
+              </p>
+              <p class="text-sm font-semibold">
+                {{ affiliateInfo.email }}
+              </p>
+            </div>
+            <p>Id: {{ affiliateInfo.id }}</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
@@ -501,7 +506,7 @@
       @close="openExternal = false">
       <template #body>
         <div
-          v-if="!externalLink"
+          v-if="!externalLink.externalLinks.length && !openExternalForm"
           class="flex flex-col justify-center items-center text-center">
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
@@ -560,15 +565,20 @@
           >
         </div>
         <div
-          v-if="externalLink && !openExternalForm"
+          v-if="externalLink.externalLinks.length > 0 && !openExternalForm"
           class="flex flex-col text-center gap-4 w-full">
           <img src="assets/bg/LinkPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
-            <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
-              Iman Muqri
-            </p>
-            <p>Id: 66666</p>
+            <div class="text-center">
+              <p
+                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+                {{ affiliateInfo.name }}
+              </p>
+              <p class="text-sm font-semibold">
+                {{ affiliateInfo.email }}
+              </p>
+            </div>
+            <p>Id: {{ affiliateInfo.id }}</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
@@ -831,6 +841,7 @@ const submitReferral = async () => {
     referralEditingId.value = null;
   } catch (err) {
     console.error("Referral submit failed", err);
+    showToast("Referral submit failed", "error");
   } finally {
     // optional: refresh the list if needed
     await getReferralLinks();
