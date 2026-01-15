@@ -844,7 +844,7 @@ const clientTypeChart = computed(() => {
   const plans = subAnalysis.value?.planCounts ?? [];
 
   if (!Array.isArray(plans) || plans.length === 0) {
-    return [];
+    return [0, 0];
   }
 
   const max = Math.max(...plans.map((p) => p.subscriptionCount ?? 0), 1);

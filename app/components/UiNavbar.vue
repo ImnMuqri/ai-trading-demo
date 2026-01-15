@@ -1,7 +1,7 @@
 <template>
   <header class="fixed h-28 top-0 left-0 w-full z-50 backdrop-blur">
     <nav class="mx-auto px-20 h-20 flex items-end justify-between">
-      <p class="text-lg font-bold italic text-white">SIGNALWISE</p>
+      <p class="text-lg font-bold italic text-white">BULLISE</p>
 
       <div class="hidden md:flex items-center gap-8 text-sm text-[#BCBBBB]">
         <!-- Home -->

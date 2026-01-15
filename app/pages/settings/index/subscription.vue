@@ -5,13 +5,11 @@
     <!-- Current subscription info -->
     <div
       v-if="isPlansLoading"
-      class="flex flex-wrap text-center items-center justify-center gap-4 p-4 border border-[#00BDA7] rounded-md animate-pulse"
-    >
+      class="flex flex-wrap text-center items-center justify-center gap-4 p-4 border border-[#00BDA7] rounded-md animate-pulse">
       <div
         v-for="n in 4"
         :key="n"
-        class="flex-1 min-w-[120px] flex flex-col gap-2"
-      >
+        class="flex-1 min-w-[120px] flex flex-col gap-2">
         <div class="h-5 bg-gray-700 rounded w-1/4 mx-auto"></div>
         <div class="h-4 bg-gray-700 rounded w-2/4 mx-auto"></div>
       </div>
@@ -19,22 +17,21 @@
 
     <div
       v-else
-      class="flex flex-wrap text-center items-center justify-center gap-4 p-4 border border-[#00BDA7] rounded-md"
-    >
+      class="flex flex-wrap text-center items-center justify-center gap-4 p-4 border border-[#00BDA7] rounded-md">
       <div class="flex-1 min-w-[120px]">
-        <p class="text-lg">{{ currentPlan.name ?? "Free Plan" }}</p>
+        <p class="text-md">{{ currentPlan.name ?? "Free Plan" }}</p>
         <p class="text-[12px] text-gray-400">Current plan</p>
       </div>
       <div class="flex-1 min-w-[120px]">
-        <p class="text-lg">{{ currentPlan.storageUsed ?? "N/A" }}</p>
+        <p class="text-md">{{ currentPlan.storageUsed ?? "N/A" }}</p>
         <p class="text-[12px] text-gray-400">Requests Used</p>
       </div>
       <div class="flex-1 min-w-[120px]">
-        <p class="text-lg">{{ currentPlan.requestRemaining ?? "N/A" }}</p>
+        <p class="text-md">{{ currentPlan.requestRemaining ?? "N/A" }}</p>
         <p class="text-[12px] text-gray-400">Request Remaining</p>
       </div>
       <div class="flex-1 min-w-[120px]">
-        <p class="text-lg">
+        <p class="text-md">
           {{
             $formatDate(currentPlan.nextBilling, { withTime: true }) ?? "N/A"
           }}
@@ -49,8 +46,7 @@
         <div
           v-for="n in 4"
           :key="n"
-          class="flex-1 min-w-[250px] flex flex-col gap-4 p-6 border border-[#2D2D2D] rounded-md animate-pulse"
-        >
+          class="flex-1 min-w-[250px] flex flex-col gap-4 p-6 border border-[#2D2D2D] rounded-md animate-pulse">
           <div class="h-8 w-8 bg-gray-700 rounded-full mx-auto"></div>
 
           <div class="h-4 w-32 bg-gray-700 rounded mx-auto"></div>
@@ -79,8 +75,7 @@
           :class="[
             'flex-1 min-w-[250px] flex flex-col p-6 rounded-md',
             isCurrentPlan(plan) ? '!border-[#00BDA7]' : 'border-[#2D2D2D]',
-          ]"
-        >
+          ]">
           <div class="flex flex-col gap-1 items-center pb-4">
             <UiIcon icon="lucide:coffee" class="w-8 h-8"></UiIcon>
             <p class="text-lg text-center py-2">{{ plan.name }}</p>
@@ -107,8 +102,7 @@
               class="flex-1"
               variant="outline"
               :isDisabled="isCurrentPlan(plan) || !plan.isActive"
-              @click="handlePlanClick(plan)"
-            >
+              @click="handlePlanClick(plan)">
               {{ getPlanButtonText(plan) }}
             </UiButton>
             <UiButton
@@ -117,16 +111,14 @@
               :isDisabled="!isCurrentPlan(plan) || !plan.isActive"
               size="sm"
               class="!border !border-[#00BDA7] !text-[#00BDA7] hover:bg-[#00BDA7] hover:!text-white bg-transparent"
-              @click="openActionModal('renew', plan)"
-            />
+              @click="openActionModal('renew', plan)" />
             <UiButton
               v-if="isCurrentPlan(plan)"
               variant="icon"
               icon="bxs:trash"
               size="sm"
               class="!border !border-red-500 !text-red-500 hover:bg-red-500 hover:!text-white bg-transparent"
-              @click="openActionModal('cancel', plan)"
-            />
+              @click="openActionModal('cancel', plan)" />
           </div>
         </div>
       </template>
@@ -139,8 +131,7 @@
       :isLoading="isSubscribing"
       @confirm="openConfirm = !openConfirm"
       @close="openConfirm = !openConfirm"
-      type="confirmAlert"
-    ></UiModal>
+      type="confirmAlert"></UiModal>
     <UiModal
       :show="openSubscribe"
       @close="openSubscribe = false"
@@ -151,12 +142,10 @@
           ? 'Renew subscription'
           : 'Confirm Subscription'
       "
-      custom-body-class="overflow-y-visible"
-    >
+      custom-body-class="overflow-y-visible">
       <template #body>
         <div
-          class="flex flex-col gap-4 items-center min-h-[60px] max-w-[350px]"
-        >
+          class="flex flex-col gap-4 items-center min-h-[60px] max-w-[350px]">
           <div v-if="selectedPlan.id" class="text-left w-full">
             <p v-if="actionType !== 'cancel'" class="text-white text-sm">
               Proceed with payment for
@@ -178,8 +167,7 @@
             v-if="actionType === 'cancel'"
             dark
             v-model="cancelReason"
-            placeholder="Enter cancellation reason"
-          />
+            placeholder="Enter cancellation reason" />
         </div>
       </template>
 
@@ -188,14 +176,12 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isSubscribing"
-            @click="handleSubmitClick"
-          >
+            @click="handleSubmitClick">
             Confirm
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openSubscribe = false"
-          >
+            @click="openSubscribe = false">
             Cancel
           </UiButton>
         </div>
@@ -207,15 +193,13 @@
       title="Success"
       :description="successMsg"
       type="successAlert"
-      @close="(openSuccess = false), clearRoute()"
-    ></UiModal>
+      @close="(openSuccess = false), clearRoute()"></UiModal>
     <UiModal
       :show="openError"
       title="Failed"
       :description="errorMsg"
       type="errorAlert"
-      @close="(openError = false), clearRoute()"
-    ></UiModal>
+      @close="(openError = false), clearRoute()"></UiModal>
   </div>
 </template>
 

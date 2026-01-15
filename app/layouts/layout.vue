@@ -17,192 +17,63 @@
           :aria-expanded="isMobile ? isMobileMenuOpen : !isCollapsed"
           aria-label="Toggle menu">
           <UiIcon
-            v-if="isMobile && isMobileMenuOpen"
-            icon="meteor-icons:xmark"
-            custom-class="text-white w-[25px] h-[40px]" />
-          <UiIcon
-            v-else-if="isMobile && !isMobileMenuOpen"
-            icon="stash:burger-classic-duotone"
-            custom-class="text-white w-[25px] h-[40px]" />
-          <UiIcon
-            v-else
-            icon="stash:burger-classic-duotone"
+            :icon="
+              isMobile && isMobileMenuOpen
+                ? 'meteor-icons:xmark'
+                : 'stash:burger-classic-duotone'
+            "
             custom-class="text-white w-[25px] h-[40px]" />
         </button>
 
         <span
-          class="inline-block transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap"
+          class="inline-block transition-all duration-300 ease-in-out overflow-hidden whitespace-nowrap ml-4"
           :class="
             !isCollapsed
-              ? 'opacity-100 translate-x-0 max-w-[180px]'
-              : 'opacity-0 -translate-x-4 max-w-0 '
+              ? 'opacity-100 translate-x-0 max-w-[130px]'
+              : 'opacity-0 -translate-x-4 max-w-0'
           ">
-          <UiIcon icon="icon:tpt-logo" custom-class="w-[180px] h-[40px]" />
+          <UiIcon icon="icon:bullise-logo" custom-class="w-[130px] h-[30px]" />
         </span>
       </div>
 
       <nav class="flex-1 p-3 space-y-2 pt-4 overflow-hidden">
-        <!-- Dashboard -->
-        <NuxtLink
-          to="/dashboard"
-          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          :class="[
-            isActive('/dashboard') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-          @click="toggleMobileMenu">
-          <UiIcon
-            icon="material-symbols:dashboard-outline-rounded"
-            custom-class="w-4 h-4" />
-
-          <!-- Smooth slide/fade text -->
-          <span
-            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-            :class="
-              !isCollapsed
-                ? 'opacity-100 translate-x-0 max-w-[120px]'
-                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            ">
-            Dashboard
-          </span>
-        </NuxtLink>
-        <!-- Admin Panel -->
-        <NuxtLink
-          v-show="['admin', 'developer'].includes(auth.userRole)"
-          to="/admin/dashboard"
-          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          :class="[
-            isActive('/admin/dashboard') ||
-            isActive('/admin/subsmanagement') ||
-            isActive('/admin/referralmanagement')
-              ? activeClass
-              : inactiveClass,
-            isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-          @click="toggleMobileMenu">
-          <UiIcon icon="hugeicons:user" custom-class="w-4 h-4" />
-
-          <!-- Smooth slide/fade text -->
-          <span
-            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-            :class="
-              !isCollapsed
-                ? 'opacity-100 translate-x-0 max-w-[120px]'
-                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            ">
-            Admin Panel
-          </span>
-        </NuxtLink>
-        <!-- Signal History -->
-        <NuxtLink
-          to="/signalhistory"
-          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          :class="[
-            isActive('/signalhistory') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-          @click="toggleMobileMenu">
-          <UiIcon icon="hugeicons:transaction-history" custom-class="w-4 h-4" />
-
-          <!-- Smooth slide/fade text -->
-          <span
-            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-            :class="
-              !isCollapsed
-                ? 'opacity-100 translate-x-0 max-w-[120px]'
-                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            ">
-            Signal History
-          </span>
-        </NuxtLink>
-        <!-- Affiliate Management -->
-        <NuxtLink
-          v-show="['affiliate', 'admin', 'developer'].includes(auth.userRole)"
-          to="/affiliate"
-          class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-          :class="[
-            isActive('/affiliate') ? activeClass : inactiveClass,
-            isCollapsed ? 'justify-start' : 'justify-start',
-          ]"
-          @click="toggleMobileMenu">
-          <UiIcon icon="humbleicons:users" custom-class="w-4 h-4" />
-
-          <!-- Smooth slide/fade text -->
-          <span
-            class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-            :class="
-              !isCollapsed
-                ? 'opacity-100 translate-x-0 max-w-[200px]'
-                : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-            ">
-            Affiliate Management
-          </span>
-        </NuxtLink>
+        <SidebarLink
+          v-for="link in links"
+          :key="link.path"
+          :link="link"
+          :is-collapsed="isCollapsed"
+          :is-active="isActive(link.path)"
+          @click="toggleMobileMenu" />
       </nav>
 
-      <div class="p-3">
-        <div
-          class="border border-[#0D0D0D] rounded-xl p-4 text-center bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
-          :class="
-            isCollapsed
-              ? 'max-h-0 opacity-10 scale-y-0'
-              : 'max-h-[500px] opacity-100 scale-y-100'
-          ">
-          <p class="text-[12px] text-white mb-3">
-            Feels Limited? Upgrade to Ai Pro to unlock more exciting features!
-          </p>
+      <!-- Upgrade block -->
+      <div
+        class="mx-4 my-4 border border-[#4C4B4B] rounded-xl p-4 text-center bg-[#1C1C1C] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
+        :class="
+          isCollapsed
+            ? 'max-h-0 opacity-10 scale-y-0'
+            : 'max-h-[500px] opacity-100 scale-y-100'
+        ">
+        <UiIcon
+          icon="material-symbols:diamond-outline-rounded"
+          custom-class="w-10 h-10 text-white"></UiIcon>
+        <p class="text-[13px] text-white font-medium">
+          Need more for your trade?
+        </p>
+        <p class="text-[12px] text-white mb-3">
+          Upgrade now to unlock more features
+        </p>
 
-          <NuxtLink
-            to="/settings/subscription"
-            class="flex items-center justify-center gap-2 bg-black rounded-lg py-2.5 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
-            exact
-            @click="toggleMobileMenu">
-            <UiIcon icon="heroicons:bolt" class="w-5 h-5"></UiIcon>
-            <span class="text-[11px]">Upgrade to Ai Pro</span>
-          </NuxtLink>
-        </div>
-        <!-- <div
-          class="border border-[#4C4B4B] rounded-xl p-4 text-center bg-[#1C1C1C] shadow-sm overflow-hidden transform origin-bottom-left transition-all duration-500 ease-out"
-          :class="
-            isCollapsed
-              ? 'max-h-0 opacity-10 scale-y-0'
-              : 'max-h-[500px] opacity-100 scale-y-100'
-          "
-        >
-          <UiIcon
-            icon="material-symbols:diamond-outline-rounded"
-            custom-class="w-10 h-10 text-white"
-          ></UiIcon>
-          <p class="text-[13px] text-white font-medium">
-            Need more for your trade?
-          </p>
-          <p class="text-[12px] text-white mb-3">
-            Upgrade now to unlock more features
-          </p>
-
-          <NuxtLink
-            to="/settings/subscription"
-            class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] rounded-lg py-2 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
-            exact
-            @click="toggleMobileMenu"
-          >
-            <span class="text-[14px]">Upgrade</span>
-          </NuxtLink>
-        </div> -->
-        <NuxtLink to="/settings/subscription">
-          <div
-            class="flex justify-center border border-[#0D0D0D] rounded-xl bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] overflow-hidden transform transition-all duration-300 ease-out w-fit"
-            :class="
-              isCollapsed
-                ? 'max-h-[48px] opacity-100 scale-20 p-2'
-                : 'max-h-0 opacity-0 scale-10 p-0'
-            ">
-            <UiIcon
-              icon="heroicons:bolt"
-              class="w-5 h-5 text-white"></UiIcon></div
-        ></NuxtLink>
+        <NuxtLink
+          to="/settings/subscription"
+          class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#2A8E9E] to-[#00BDA7] rounded-lg py-2 px-2 text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+          exact
+          @click="toggleMobileMenu">
+          <span class="text-[14px]">Upgrade</span>
+        </NuxtLink>
       </div>
     </aside>
+
     <!-- Main Content -->
     <main
       :style="mainStyle"
@@ -210,7 +81,6 @@
       <div class="flex justify-between items-start">
         <div>
           <div class="flex gap-2">
-            <!-- show burger on small screens -->
             <button
               class="md:hidden text-white"
               @click="toggleMobileMenu"
@@ -220,10 +90,12 @@
                 custom-class="w-6 h-6" />
             </button>
             <h2 class="text-2xl font-semibold text-[#00BDA7]">
-              {{ currentTitle }}
+              {{ currentPage.title }}
             </h2>
           </div>
-          <p class="text-gray-200 mt-2 mb-2 text-sm">Welcome to Ai Trading</p>
+          <p class="text-gray-200 mt-2 mb-2 text-sm">
+            {{ currentPage.description }}
+          </p>
         </div>
 
         <div class="flex gap-4 items-center">
@@ -236,41 +108,37 @@
               <div class="p-1 border bg-white rounded-full cursor-pointer">
                 <UiIcon
                   icon="quill:user-happy"
-                  custom-class="text-black w-7 h-7"></UiIcon>
+                  custom-class="text-black w-7 h-7" />
               </div>
             </template>
 
             <div class="text-[#BCBBBB] w-[150px] flex flex-col justify-start">
-              <div class="hover:bg-gray-800 rounded-md group cursor-pointer">
-                <NuxtLink
-                  to="/settings/basicinfo"
-                  class="flex items-center gap-2 px-3 py-2 rounded-md transition"
-                  @click="closePopover">
-                  <UiIcon icon="hugeicons:user-03" custom-class="w-4 h-4" />
+              <NuxtLink
+                to="/settings/basicinfo"
+                class="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800"
+                @click="closePopover">
+                <UiIcon icon="hugeicons:user-03" custom-class="w-4 h-4" />
+                <span class="text-[12px] whitespace-nowrap overflow-hidden">
+                  User Profile
+                </span>
+              </NuxtLink>
 
-                  <span
-                    class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out">
-                    User Profile
-                  </span>
-                </NuxtLink>
-              </div>
               <div class="h-[2px]" />
-              <div class="hover:bg-red-500 rounded-md group cursor-pointer">
-                <UiButton
-                  variant="text"
-                  @click="confirmLogout = true"
-                  class="w-full !justify-start inline-block text-red-500 group-hover:text-white !border-none">
-                  Logout
-                  <template #icon-left>
-                    <UiIcon
-                      icon="solar:exit-linear"
-                      custom-class="w-3 h-3" /></template
-                ></UiButton>
-              </div>
+
+              <UiButton
+                variant="text"
+                @click="confirmLogout = true"
+                class="w-full !justify-start inline-block text-red-500 hover:text-white !border-none">
+                Logout
+                <template #icon-left>
+                  <UiIcon icon="solar:exit-linear" custom-class="w-3 h-3" />
+                </template>
+              </UiButton>
             </div>
           </UiPopover>
         </div>
       </div>
+
       <slot />
     </main>
 
@@ -289,47 +157,21 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useRoute } from "#app";
 import { useAuth } from "@/composables/auth";
 import { useAuthStore } from "@/stores/auth";
+import SidebarLink from "@/components/SidebarLink.vue";
 
 const { logout } = useAuth();
 const auth = useAuthStore();
-const roleReady = computed(() => !!auth.userRole);
-
 const route = useRoute();
+
 const isCollapsed = ref(false);
 const isMobileMenuOpen = ref(false);
 const isMobile = ref(false);
 const confirmLogout = ref(false);
 
-const canAccessPage = (pageRoles) => {
-  if (!auth.userRole) return false; // role not loaded yet
-  if (!Array.isArray(pageRoles)) return true; // no role restriction = public
-  return pageRoles.includes(auth.userRole);
-};
-
-const pageTitles = {
-  "/dashboard": "Dashboard",
-  "/dailybias": "Daily Bias",
-  "/admin/dashboard": "Admin Panel - Dashboard",
-  "/admin/referralmanagement": "Admin Panel - Referral Management",
-  "/admin/subsmanagement": "Admin Panel - Subscription Management",
-  "/signalhistory": "Signal History",
-  "/affiliate": "Affiliate Dashboard",
-  "/settings/subscription": "Subscription",
-  // add other routes here
-};
-
-const currentTitle = computed(() => pageTitles[route.path] || "Dashboard");
-
-// detect mobile client side only, keep reactive on resize
 const updateIsMobile = () => {
   if (typeof window === "undefined") return;
   isMobile.value = window.innerWidth < 768;
-  // if switching to desktop, ensure mobile menu is closed
   if (!isMobile.value) isMobileMenuOpen.value = false;
-};
-
-const closePopover = () => {
-  document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
 };
 
 onMounted(() => {
@@ -342,16 +184,20 @@ onUnmounted(() => {
     window.removeEventListener("resize", updateIsMobile);
 });
 
-// helper classes
-const activeClass = "bg-[#A0CCE740] text-white font-medium";
-const inactiveClass = "text-[#BCBBBB] hover:bg-blue-50 hover:text-black";
+// Sidebar toggle
+function toggleSidebarOrMenu() {
+  if (isMobile.value) isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  else isCollapsed.value = !isCollapsed.value;
+}
 
-// computed classes for aside, prevents conflicting translate classes
+function toggleMobileMenu() {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+}
+
 const asideClasses = computed(() => {
   const base =
-    "fixed top-0 left-0 h-full bg-[#0D0D0D] shadow-md border-r border-[#1C1C1C] flex flex-col z-50 transition-all transition-discrete duration-300 md:translate-x-0";
+    "fixed top-0 left-0 h-full bg-[#0D0D0D] shadow-md border-r border-[#1C1C1C] flex flex-col z-50 transition-all duration-300";
   const width = isCollapsed.value ? "w-16" : "w-60";
-  // on mobile and closed, hide it off-canvas
   const mobileTranslate =
     isMobile.value && !isMobileMenuOpen.value
       ? "-translate-x-full"
@@ -359,32 +205,93 @@ const asideClasses = computed(() => {
   return [base, width, mobileTranslate].join(" ");
 });
 
-// main content spacing, keep the sidebar space on desktop only
 const mainStyle = computed(() => {
   if (isMobile.value) return { marginLeft: "0" };
   return { marginLeft: isCollapsed.value ? "4rem" : "15rem" };
 });
 
-// helpers and actions
-const isActive = (path) => route.path === path;
-
-function toggleSidebarOrMenu() {
-  if (isMobile.value) {
-    isMobileMenuOpen.value = !isMobileMenuOpen.value;
-  } else {
-    isCollapsed.value = !isCollapsed.value;
-  }
-}
-
-function toggleMobileMenu() {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value;
-}
-
-const handleLogout = async () => {
-  await logout();
+const pageMeta = {
+  "/dashboard": {
+    title: "Dashboard",
+    description:
+      "Overview of your trading performance, signals, and market insights.",
+  },
+  "/dailybias": {
+    title: "Daily Bias",
+    description:
+      "AI driven market direction analysis to guide your trading decisions.",
+  },
+  "/signalhistory": {
+    title: "Signal History",
+    description:
+      "Review past AI signals and track their performance over time.",
+  },
+  "/affiliate": {
+    title: "Affiliate Dashboard",
+    description:
+      "Track referrals, commissions, and affiliate performance metrics.",
+  },
+  "/settings/subscription": {
+    title: "Subscription",
+    description:
+      "Manage your plan, billing details, and subscription preferences.",
+  },
+  "/admin/dashboard": {
+    title: "Admin Panel",
+    description:
+      "System overview, platform metrics, and administrative controls.",
+  },
+  "/admin/referralmanagement": {
+    title: "Referral Management",
+    description:
+      "Manage affiliate referrals, payouts, and referral performance.",
+  },
+  "/admin/subsmanagement": {
+    title: "Subscription Management",
+    description: "Monitor active subscriptions, revenue, and plan analytics.",
+  },
 };
-</script>
 
-<style scoped>
-/* no extra styles required, tailwind handles layout and transitions */
-</style>
+const currentPage = computed(
+  () =>
+    pageMeta[route.path] || {
+      title: "Dashboard",
+      description: "Welcome to AI Trading.",
+    }
+);
+
+const links = [
+  {
+    path: "/dashboard",
+    icon: "material-symbols:dashboard-outline-rounded",
+    label: "Dashboard",
+  },
+  {
+    path: "/signalhistory",
+    icon: "hugeicons:transaction-history",
+    label: "Signal History",
+  },
+  {
+    path: "/affiliate",
+    icon: "humbleicons:users",
+    label: "Affiliate Management",
+    roles: ["affiliate", "admin", "developer"],
+  },
+  {
+    path: "/admin/dashboard",
+    icon: "hugeicons:user",
+    label: "Admin Panel",
+    roles: ["admin", "developer"],
+  },
+];
+
+const isActive = (path) => {
+  if (Array.isArray(path)) return path.includes(route.path);
+  return route.path === path;
+};
+
+const closePopover = () =>
+  document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+
+const handleLogout = async () => await logout();
+</script>
