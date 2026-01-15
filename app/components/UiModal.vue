@@ -10,6 +10,7 @@
           ' w-full border border-[#1C1C1C] shadow-xl transition-transform relative pt-4 pb-8 px-6 text-white',
           'modal-scroll hide-scrollbar overflow-y-auto max-h-[80vh] md:max-h-[90vh]',
           isClosing ? 'scale-95 opacity-0' : 'scale-100 opacity-100',
+          isLoading ? 'h-[80vh]' : '',
           width ?? 'max-w-[500px]',
           type === 'successAlert'
             ? 'success-background h-[420px] !w-[400px] !rounded-3xl border-none py-8 flex flex-col items-center justify-center'
@@ -25,19 +26,18 @@
         <!-- Loading Overlay -->
 
         <div
-          class="absolute inset-0 bg-[#1C1C1C] flex items-center justify-center rounded-lg z-50 transition-opacity duration-300"
+          class="absolute inset-0 bg-[#1C1C1C]/90 flex items-center justify-center rounded-lg z-50 transition-opacity duration-300"
           :class="
             isLoading && type == null
               ? 'opacity-100'
               : 'opacity-0 pointer-events-none'
           ">
-          <div class="relative flex flex-col items-center justify-center">
+          <div class="flex flex-col items-center justify-center">
             <iframe
-              src="https://lottie.host/embed/19bbd268-9de6-4b34-87af-9b8597b78ad7/T8RAh3Cqqo.lottie"
-              class="border-0 !w-[500px] !h-[500px]"></iframe>
-
-            <p
-              class="absolute text-sm font-semibold text-gray-400 shimmer-text">
+              src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
+              class="border-0 !w-40 !h-40">
+            </iframe>
+            <p class="text-sm font-semibold text-gray-400 shimmer-text">
               Generating Ai Analysis
             </p>
           </div>

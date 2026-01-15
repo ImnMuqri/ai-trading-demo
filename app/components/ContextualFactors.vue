@@ -24,7 +24,7 @@
     <p class="text-sm text-gray-300">{{ CFsummary }}</p>
     <div class="grid grid-cols-1 mt-2 flex-1 overflow-hidden hide-scrollbar">
       <div
-        class="grid grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 justify-items-center px-10 py-6 mb-4">
         <template v-if="isLoadingContextual">
           <div
             v-for="i in 4"
@@ -36,36 +36,6 @@
           </div>
         </template>
         <template v-else>
-          <!-- <div
-            v-for="(meter, index) in meters"
-            :key="index"
-            class="!hidden flex flex-col items-center">
-            <svg width="100" height="100" viewBox="0 0 36 36" class="mb-2">
-              <path
-                class="text-gray-700/20"
-                stroke="currentColor"
-                stroke-width="3"
-                fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-              <path
-                :stroke="meter.fillColor"
-                stroke-width="3"
-                :stroke-dasharray="`${meter.value}, 100`"
-                stroke-linecap="round"
-                fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-
-              <text
-                x="19"
-                y="21"
-                class="text-[8px] font-semibold"
-                :fill="meter.fillColor"
-                text-anchor="middle">
-                {{ meter.value }}%
-              </text>
-            </svg>
-            <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
-          </div> -->
           <div
             v-for="(meter, index) in meters"
             :key="index"

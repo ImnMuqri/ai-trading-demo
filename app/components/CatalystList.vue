@@ -74,17 +74,19 @@
     <div v-if="newsList.length === 0" class="p-4 text-gray-500">
       No news available.
     </div>
-    <UiModal
-      v-if="analysisData"
+    <!-- <UiModal
+      v-if="openAnalysisModal"
       :show="openAnalysisModal"
-      :title="analysisData?.economicEvent.report_name"
-      :description="analysisData?.economicEvent.country"
+      :title="!isAnalysing ? analysisData?.economicEvent.report_name : ''"
+      :description="!isAnalysing ? analysisData?.economicEvent.country : ''"
       :isGradient="true"
       :isLoading="isAnalysing"
       width="max-w-[800px]"
       @close="openAnalysisModal = false">
       <template #body>
-        <div class="text-gray-300">
+        <div
+          v-if="mountAnalysisContent && analysisData && !isAnalysing"
+          class="text-gray-300">
           <div
             class="flex gap-2 items-center justify-around py-3 border rounded-xl">
             <div
@@ -147,18 +149,118 @@
           </div>
         </div>
       </template>
+    </UiModal> -->
+    <UiModal
+      v-if="openAnalysisModal"
+      :show="openAnalysisModal"
+      :title="!isAnalysing ? analysisData?.economicEvent.report_name : ''"
+      :description="!isAnalysing ? analysisData?.economicEvent.country : ''"
+      :isGradient="false"
+      :isLoading="isAnalysing"
+      width="max-w-[800px]"
+      @close="openAnalysisModal = false">
+      <template #body>
+        <div
+          v-if="!isAnalysing"
+          class="modal-body text-gray-300 overflow-y-auto max-h-[70vh] pr-2"
+          style="will-change: transform">
+          <div
+            class="flex flex-col gap-2 px-4 py-4 mb-4 border border-[#00BDA7] bg-gradient-to-tl from-[#00BDA7] rounded-lg">
+            <div class="flex items-center justify-between gap-1 mb-2">
+              <div class="flex items-center gap-2">
+                <UiIcon
+                  icon="hugeicons:ai-idea"
+                  custom-class="h-5 w-5 text-yellow-500"></UiIcon>
+                <p class="text-xl font-semibold">Ai Analysis</p>
+              </div>
+              <div
+                class="flex gap-2 items-center justify-around py-2 px-6 border rounded-lg text-[12px]">
+                <div
+                  class="flex flex-col gap-[1px] items-center justify-center">
+                  <p>Actual</p>
+                  <p class="font-semibold">Pending</p>
+                </div>
+                <div
+                  class="flex flex-col gap-[1px] items-center justify-center">
+                  <p>Forecast</p>
+                  <p class="font-semibold">
+                    {{ analysisData.prediction.predictedActual }}
+                  </p>
+                </div>
+                <div
+                  class="flex flex-col gap-[1px] items-center justify-center">
+                  <p>Predicted</p>
+                  <p class="font-semibold">
+                    {{ analysisData.prediction.predictedActual }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="flex gap-4 mb-2">
+              <div class="flex flex-col gap-1">
+                <p>Predicted Actual</p>
+                <p class="font-semibold text-lg text-[#00BDA7]">
+                  {{ analysisData.prediction.predictedActual }}
+                </p>
+              </div>
+              <div class="flex flex-col gap-1">
+                <p>Confidence Score</p>
+                <p class="font-semibold text-lg text-[#00BDA7]">
+                  {{ formatScore(analysisData.prediction.confidenceScore) }}
+                </p>
+              </div>
+            </div>
+            <div>
+              <p class="font-semibold">Possible Impact</p>
+              <p class="text-sm">{{ analysisData.prediction.impact }}</p>
+            </div>
+          </div>
+          <!-- Event Details Section -->
+          <UiCollapsible title="Event Details">
+            <div class="flex flex-col gap-2 p-2">
+              <p class="font-semibold">Event Details</p>
+              <p class="text-sm">
+                {{ analysisData.prediction.analysis.eventDetails }}
+              </p>
+              <p class="font-semibold">Event Significance</p>
+              <p class="text-sm">
+                {{ analysisData.prediction.analysis.eventSignificance }}
+              </p>
+            </div>
+          </UiCollapsible>
+
+          <!-- Market Analysis Section -->
+          <UiCollapsible title="Market Analysis">
+            <div class="flex flex-col gap-2 p-2">
+              <p class="font-semibold">Market Analysis</p>
+              <p class="text-sm">
+                {{ analysisData.prediction.analysis.marketAnalysis }}
+              </p>
+              <p class="font-semibold">Market Expectations</p>
+              <p class="text-sm">
+                {{ analysisData.prediction.analysis.marketExpectations }}
+              </p>
+              <p class="font-semibold">Potential Risk</p>
+              <p class="text-sm">
+                {{ analysisData.prediction.analysis.potentialRisks }}
+              </p>
+            </div>
+          </UiCollapsible>
+        </div>
+      </template>
     </UiModal>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, nextTick, watch } from "vue";
 const { $api } = useNuxtApp();
 
 const newsList = ref([]);
 const analysisData = ref(null);
 const isLoading = ref(false);
 const isAnalysing = ref(false);
+const mountAnalysisContent = ref(false);
 const openAnalysisModal = ref(false);
 
 // Map backend impact level into readable values
@@ -196,6 +298,13 @@ const fetchNews = async () => {
 const catalystAnalysis = async (economicCalendarId) => {
   openAnalysisModal.value = true;
   isAnalysing.value = true;
+  mountAnalysisContent.value = false;
+  analysisData.value = null;
+
+  await nextTick();
+  await new Promise(requestAnimationFrame);
+
+  mountAnalysisContent.value = true;
 
   const minLoadingTime = 5000;
   const startTime = Date.now();
@@ -205,8 +314,7 @@ const catalystAnalysis = async (economicCalendarId) => {
       economicCalendarId,
     });
 
-    const raw = response.data.data || [];
-    analysisData.value = raw;
+    analysisData.value = response.data.data || null;
   } catch (error) {
     console.error("Failed to load news", error);
   } finally {
@@ -214,14 +322,22 @@ const catalystAnalysis = async (economicCalendarId) => {
     const remaining = minLoadingTime - elapsed;
 
     if (remaining > 0) {
-      await new Promise((resolve) => setTimeout(resolve, remaining));
+      await new Promise((r) => setTimeout(r, remaining));
     }
+
     if (openAnalysisModal.value) {
       isAnalysing.value = false;
     }
   }
 };
-
+watch(openAnalysisModal, async (val) => {
+  if (val) {
+    await nextTick();
+    mountAnalysisContent.value = true;
+  } else {
+    mountAnalysisContent.value = false;
+  }
+});
 // Auto run fetch on mount
 onMounted(() => {
   fetchNews();
