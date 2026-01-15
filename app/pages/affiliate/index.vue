@@ -26,7 +26,11 @@
             </p>
           </div>
           <div class="flex flex-col items-end">
-            <p class="text-sm text-[#838383]">Profits Today</p>
+            <div class="flex flex-row">
+              <p class="text-sm text-[#838383]">Profits Today</p>
+              <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
+            </div>
+
             <p class="text-2xl font-semibold text-white">
               ${{ profitStats.today ?? "0.00" }}
             </p>
@@ -45,7 +49,11 @@
             ></UiProgress>
           </div>
         </div>
-        <div class="flex flex-col gap-2 px-6 py-2">
+
+        <div class="flex flex-col gap-2 px-6 pb-2">
+          <div
+            class="h-[2px] w-[40%] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+          ></div>
           <div class="flex flex-row justify-between">
             <p class="text-[12px]">Profit last 7 days</p>
             <p class="text-[12px] text-[#00BDA7]">
@@ -88,7 +96,7 @@
                   clientSummary.total ?? 0,
                   clientSummary.newToday ?? 0,
                 ]"
-                title="Total Clients"
+                title="Total Client"
                 custom-class="max-w-[200px]"
                 title-class="!text-[#838383] !text-[15px]"
               />
@@ -102,13 +110,16 @@
                 </div>
 
                 <div>
-                  <p class="text-[12px] text-[#838383]">New Clients Today</p>
+                  <div class="flex flex-row gap-1">
+                    <p class="text-[12px] text-[#838383]">New Clients Today</p>
+                    <UiIcon icon="icon:ai-star" custom-class="w-5 h-5" />
+                  </div>
                   <p class="text-sm">
                     {{ clientSummary.newToday ?? "0" }}
                   </p>
                 </div>
                 <div
-                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
+                  class="h-[1px] w-[40%] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
                 ></div>
                 <div>
                   <p class="text-[12px] text-[#838383]">
@@ -133,17 +144,14 @@
             <div class="flex flex-row items-center gap-8">
               <UiProgress
                 type="circle"
-                :progress="planRingData"
-                title="Sub Analysis"
+                :progress="clientTypeChart"
+                title="Client Type"
                 custom-class="max-w-[200px]"
                 title-class="!text-[#838383] !text-[15px]"
               />
 
               <div class="flex flex-col gap-4 text-white">
-                <div
-                  v-for="plan in subAnalysis?.analytics?.planCounts || []"
-                  :key="plan.id"
-                >
+                <div v-for="plan in planCounts" :key="plan.id">
                   <div class="flex gap-1 text-[#838383] mb-1">
                     <UiIcon icon="mdi:package-variant" />
                     <p class="text-[12px] text-[#838383]">
@@ -376,7 +384,8 @@
       <template #body>
         <div
           v-if="!referralLink.referralLinks.length && !openReferralForm"
-          class="flex flex-col justify-center items-center text-center">
+          class="flex flex-col justify-center items-center text-center"
+        >
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
             <p class="capitalize text-sm fonts-semibold">
@@ -433,18 +442,21 @@
           <UiButton
             v-if="isEditMode"
             @click="deleteReferralLink(referralEditingId)"
-            class="!rounded-full bg-red-500 border border-red-500 hover:bg-red-600">
+            class="!rounded-full bg-red-500 border border-red-500 hover:bg-red-600"
+          >
             Delete Referral</UiButton
           >
         </div>
         <div
           v-if="referralLink.referralLinks.length > 0 && !openReferralForm"
-          class="flex flex-col text-center gap-4 w-full">
+          class="flex flex-col text-center gap-4 w-full"
+        >
           <img src="assets/bg/referralPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
             <div class="text-center">
               <p
-                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+              >
                 {{ affiliateInfo.name }}
               </p>
               <p class="text-sm font-semibold">
@@ -486,17 +498,20 @@
                         class="w-1.5 h-1.5 rounded-full"
                         :class="[
                           link.isActive ? 'bg-emerald-500' : 'bg-red-500',
-                        ]"></div>
+                        ]"
+                      ></div>
                     </div>
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div class="flex gap-2">
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
+                    >
                       <div class="relative">
                         <p
                           v-if="copiedIndex === idx"
-                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg">
+                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg"
+                        >
                           Copied
                         </p>
 
@@ -508,7 +523,8 @@
                               ? 'text-white/50'
                               : 'text-white hover:text-white/80'
                           "
-                          @click="copyLink(link.destinationUrl, idx)" />
+                          @click="copyLink(link.destinationUrl, idx)"
+                        />
                       </div>
                     </div>
                     <div
@@ -517,7 +533,8 @@
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
-                        @click="openEditReferralForm(link)" />
+                        @click="openEditReferralForm(link)"
+                      />
                     </div>
                   </div>
                 </div>
@@ -548,7 +565,8 @@
       <template #body>
         <div
           v-if="!externalLink.externalLinks.length && !openExternalForm"
-          class="flex flex-col justify-center items-center text-center">
+          class="flex flex-col justify-center items-center text-center"
+        >
           <UiIcon icon="icon:ai-confuse" custom-class="w-32 h-32" />
           <div>
             <p class="capitalize text-sm fonts-semibold">No Link Created</p>
@@ -597,25 +615,29 @@
           <UiInput
             v-model="externalForm.description"
             placeholder="Description"
-            type="textarea"></UiInput>
+            type="textarea"
+          ></UiInput>
           <UiButton class="!rounded-full" @click="submitExternal()">{{
             externalButtonLabel
           }}</UiButton>
           <UiButton
             v-if="isExternalEdit"
             class="!rounded-full bg-red-500 hover:bg-red-600 border border-red-500"
-            @click="deleteExternalLink(externalEditingId)">
+            @click="deleteExternalLink(externalEditingId)"
+          >
             Delete Link</UiButton
           >
         </div>
         <div
           v-if="externalLink.externalLinks.length > 0 && !openExternalForm"
-          class="flex flex-col text-center gap-4 w-full">
+          class="flex flex-col text-center gap-4 w-full"
+        >
           <img src="assets/bg/LinkPic.svg" class="w-full h-[15vh]" />
           <div class="grid grid-cols-1 gap-2">
             <div class="text-center">
               <p
-                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+                class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+              >
                 {{ affiliateInfo.name }}
               </p>
               <p class="text-sm font-semibold">
@@ -657,17 +679,20 @@
                         class="w-1.5 h-1.5 rounded-full"
                         :class="[
                           link.isActive ? 'bg-emerald-500' : 'bg-red-500',
-                        ]"></div>
+                        ]"
+                      ></div>
                     </div>
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div class="flex gap-2">
                     <div
-                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                      class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
+                    >
                       <div class="relative">
                         <p
                           v-if="copiedIndex === idx"
-                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg">
+                          class="absolute -left-16 -top-1 text-[10px] bg-black py-[2px] px-2 rounded-lg"
+                        >
                           Copied
                         </p>
 
@@ -679,7 +704,8 @@
                               ? 'text-white/50'
                               : 'text-white hover:text-white/80'
                           "
-                          @click="copyLink(link.url, idx)" />
+                          @click="copyLink(link.url, idx)"
+                        />
                       </div>
                     </div>
                     <div
@@ -688,7 +714,8 @@
                       <UiIcon
                         icon="cuida:edit-outline"
                         custom-class="h-3 w-3  cursor-pointer"
-                        @click="openEditExternal(link)" />
+                        @click="openEditExternal(link)"
+                      />
                     </div>
                   </div>
                 </div>
@@ -776,6 +803,30 @@ const clientStatus = ref({});
 const referralLink = ref({ referralLinks: [] });
 const externalLink = ref({ externalLinks: [] });
 
+const subAnalysis = ref(null);
+const subLoading = ref(false);
+
+const emptyPlans = [
+  {
+    name: "Subscription 1",
+    subscriptionCount: "No Data",
+  },
+  {
+    name: "Subscription 2",
+    subscriptionCount: "No Data",
+  },
+  {
+    name: "Subscription 3",
+    subscriptionCount: "No Data",
+  },
+];
+
+const planCounts = computed(() => {
+  const plans = subAnalysis.value?.analytics?.planCounts;
+
+  return plans && plans.length ? plans : emptyPlans;
+});
+
 /* ===================== TABLE COLUMNS ===================== */
 const userColumns = [
   { label: "Name", key: "name" },
@@ -842,15 +893,14 @@ const getSubStats = async () => {
   try {
     const res = await $api.get("/api/admin/subscription/analytics");
     subAnalysis.value = res.data.data ?? null;
-    console.log(subAnalysis.value);
   } catch (error) {
     console.error("Error in fetching sub analysis stats: ", error);
   }
 };
 
-const planRingData = computed(() => {
+const clientTypeChart = computed(() => {
   const plans = subAnalysis.value?.analytics?.planCounts ?? [];
-  if (!plans.length) return [];
+  if (!plans.length) return [0, 0];
 
   const max = Math.max(...plans.map((p) => p.subscriptionCount ?? 0), 1);
 

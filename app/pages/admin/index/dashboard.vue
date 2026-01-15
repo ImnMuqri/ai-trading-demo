@@ -5,19 +5,22 @@
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
             icon="solar:dollar-linear"
-            custom-class="w-4 h-4 mb-0.5"></UiIcon>
+            custom-class="w-4 h-4 mb-0.5"
+          ></UiIcon>
           <span class="text-sm font-semibold">Affiliator Summary</span>
         </div>
 
         <div
-          class="flex flex-col px-10 lg:flex-row h-full items-center justify-center py-10 xl:py-0">
+          class="flex flex-col px-10 lg:flex-row h-full items-center justify-center py-10 xl:py-0"
+        >
           <div class="flex flex-row items-center gap-8">
             <UiProgress
               type="circle"
               :progress="tradingRing"
               title="Total Agents"
               custom-class="max-w-[150px]"
-              title-class="!text-[#838383] !text-[15px]" />
+              title-class="!text-[#838383] !text-[15px]"
+            />
 
             <div class="flex flex-col text-white">
               <div class="flex flex-col gap-5">
@@ -45,7 +48,8 @@
                 </div>
 
                 <div
-                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] mb-6 w-1/3"></div>
+                  class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] mb-6 w-1/3"
+                ></div>
               </div>
 
               <div class="flex flex-col gap-5">
@@ -83,18 +87,21 @@
         <div class="flex gap-2 items-center">
           <UiIcon
             icon="solar:dollar-linear"
-            custom-class="w-4 h-4 mb-0.5"></UiIcon>
+            custom-class="w-4 h-4 mb-0.5"
+          ></UiIcon>
           <p class="text-sm font-semibold">Client Analytics</p>
         </div>
         <div class="p-10 flex flex-col lg:flex-row justify-around gap-8">
           <div
-            class="flex flex-row items-center lg:justify-none justify-center gap-8">
+            class="flex flex-row items-center lg:justify-none justify-center gap-8"
+          >
             <UiProgress
               type="circle"
               :progress="userRing"
               title="Total Client"
               custom-class="min-w-[150px] max-w-[160px]"
-              title-class="!text-[#838383] !text-[15px]" />
+              title-class="!text-[#838383] !text-[15px]"
+            />
 
             <div class="flex flex-col gap-1.5 text-white">
               <div>
@@ -122,7 +129,8 @@
               </div>
 
               <div
-                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-4 w-1/3"></div>
+                class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-4 w-1/3"
+              ></div>
 
               <div>
                 <p class="text-[12px] text-[#838383]">
@@ -150,42 +158,26 @@
             </div>
           </div>
 
-          <div
-            class="flex flex-row items-center lg:justify-none justify-center gap-8">
+          <div class="flex flex-row items-center gap-8">
             <UiProgress
               type="circle"
-              :progress="transactionRing"
+              :progress="clientTypeChart"
               title="Client Type"
-              custom-class="min-w-[150px] max-w-[160px]"
-              title-class="!text-[#838383] !text-[15px]" />
+              custom-class="max-w-[200px]"
+              title-class="!text-[#838383] !text-[15px]"
+            />
 
-            <div class="flex flex-col gap-8 text-white">
-              <div>
-                <div class="flex gap-2 text-[#838383] mb-1">
-                  <UiIcon icon="material-symbols:coffee-outline"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Basic Package</p>
+            <div class="flex flex-col gap-4 text-white">
+              <div v-for="plan in planCounts" :key="plan.id">
+                <div class="flex gap-1 text-[#838383] mb-1">
+                  <UiIcon icon="mdi:package-variant" />
+                  <p class="text-[12px] text-[#838383]">
+                    {{ plan.name }}
+                  </p>
                 </div>
+
                 <p class="text-sm font-semibold">
-                  {{
-                    $formatNumber(
-                      adminSummary?.clientSummary?.clientType?.Free
-                    ) ?? "No Data"
-                  }}
-                </p>
-              </div>
-
-              <div>
-                <div class="flex gap-2 text-[#838383] mb-1">
-                  <UiIcon
-                    icon="material-symbols:diamond-outline-rounded"></UiIcon>
-                  <p class="text-[12px] text-[#838383]">Pro Package</p>
-                </div>
-                <p class="text-sm font-semibold text-[#00BDA7]">
-                  {{
-                    $formatNumber(
-                      adminSummary?.clientSummary?.clientType?.["Primary Tier"]
-                    ) ?? "No Data"
-                  }}
+                  {{ plan.subscriptionCount }}
                 </p>
               </div>
             </div>
@@ -199,15 +191,18 @@
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
             icon="material-symbols:trophy-outline-rounded"
-            custom-class="w-4 h-4"></UiIcon>
+            custom-class="w-4 h-4"
+          ></UiIcon>
           <span class="text-sm font-semibold">Top 5 Affiliator by Profits</span>
         </div>
 
         <div
-          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"></div>
+          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+        ></div>
 
         <div
-          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0">
+          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
+        >
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
             <UiList
               :parameters="adminSummary?.topAffiliatesByProfits"
@@ -216,15 +211,18 @@
               ><template #parameters="{ parameters, getIndex }">
                 <div v-for="(p, idx) in parameters" class="flex gap-4">
                   <div
-                    class="flex items-center justify-center gap-5 w-full px-5">
+                    class="flex items-center justify-center gap-5 w-full px-5"
+                  >
                     <UiIcon
                       v-if="getIndex(idx) <= 2"
                       :icon="`icon:ai-medal-${getIndex(idx) + 1}`"
-                      custom-class="w-6 h-6 flex-shrink-0" />
+                      custom-class="w-6 h-6 flex-shrink-0"
+                    />
 
                     <div
                       v-else
-                      class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl">
+                      class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl"
+                    >
                       {{ globalIndex(idx) + 1 }}
                     </div>
 
@@ -242,7 +240,8 @@
 
                       <div class="flex-shrink-0 self-start">
                         <span
-                          class="font-semibold text-white whitespace-nowrap">
+                          class="font-semibold text-white whitespace-nowrap"
+                        >
                           {{ Number(p.totalProfits).toLocaleString() }}
                         </span>
                       </div>
@@ -258,15 +257,18 @@
         <div class="flex items-center gap-2 justify-start">
           <UiIcon
             icon="material-symbols:trophy-outline-rounded"
-            custom-class="w-4 h-4"></UiIcon>
+            custom-class="w-4 h-4"
+          ></UiIcon>
           <span class="text-sm font-semibold">Top 5 Affiliator by Clients</span>
         </div>
 
         <div
-          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"></div>
+          class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+        ></div>
 
         <div
-          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0">
+          class="flex flex-col lg:flex-row h-full items-center justify-center py-10 xl:py-0"
+        >
           <div class="w-full max-h-[300px] h-full overflow-hidden min-h-0">
             <UiList
               :parameters="adminSummary?.topAffiliatesByClients"
@@ -275,15 +277,18 @@
               ><template #parameters="{ parameters, getIndex }">
                 <div v-for="(p, idx) in parameters" class="flex gap-4">
                   <div
-                    class="flex items-center justify-center gap-5 w-full px-5">
+                    class="flex items-center justify-center gap-5 w-full px-5"
+                  >
                     <UiIcon
                       v-if="getIndex(idx) <= 2"
                       :icon="`icon:ai-medal-${getIndex(idx) + 1}`"
-                      custom-class="w-6 h-6 flex-shrink-0" />
+                      custom-class="w-6 h-6 flex-shrink-0"
+                    />
 
                     <div
                       v-else
-                      class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl">
+                      class="text-[13px] h-6 w-6 pt-[3px] bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text-[#1C1C1C] flex items-center justify-center !shadow-xl"
+                    >
                       {{ globalIndex(idx) + 1 }}
                     </div>
 
@@ -301,7 +306,8 @@
 
                       <div class="flex-shrink-0 self-start">
                         <span
-                          class="font-semibold text-white whitespace-nowrap">
+                          class="font-semibold text-white whitespace-nowrap"
+                        >
                           {{ Number(p.clientCount).toLocaleString() }}
                         </span>
                       </div>
@@ -318,39 +324,46 @@
           <div class="flex items-center gap-2 justify-start pb-4">
             <UiIcon
               icon="material-symbols:trophy-outline-rounded"
-              custom-class="w-4 h-4"></UiIcon>
+              custom-class="w-4 h-4"
+            ></UiIcon>
             <span class="text-sm font-semibold">Client Status </span>
           </div>
           <div
-            class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"></div>
+            class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] w-1/6"
+          ></div>
 
           <div
-            class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-5">
+            class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-5"
+          >
             <div
-              class="flex flex-col items-center px-3 max-w-[220px] border-b-[2px] border-[#D9D9D9]">
+              class="flex flex-col items-center px-3 max-w-[220px] border-b-[2px] border-[#D9D9D9]"
+            >
               <UiProgress
                 orientation="vertical"
                 :progress="clientStatusProgress"
                 :gradient-colors="clientStatusGradients"
                 bar-gap="gap-20"
-                custom-class="max-h-[140px] " />
+                custom-class="max-h-[140px] "
+              />
             </div>
 
             <div class="flex flex-col gap-2 w-full max-w-[280px]">
               <div
                 v-for="(value, key, index) in adminSummary?.clientsStatus"
                 :key="key"
-                class="flex justify-between text-[13px]">
+                class="flex justify-between text-[13px]"
+              >
                 <p class="capitalize">{{ key }}</p>
                 <p :style="{ color: clientStatusColors[index] }">
-                  {{ value }}
+                  {{ value ?? "No Data" }}
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div
-          class="flex flex-wrap items-center justify-center p-4 text-[#838383] hover:cursor-pointer">
+          class="flex flex-wrap items-center justify-center p-4 text-[#838383] hover:cursor-pointer"
+        >
           See full details <span class="pl-2 text-[#00BDA7]">></span>
         </div>
       </UiCard>
@@ -369,7 +382,8 @@
           <div class="text-center flex flex-col gap-2">
             <UiIcon
               icon="hugeicons:arrow-data-transfer-diagonal"
-              custom-class="w-5 h-5"></UiIcon>
+              custom-class="w-5 h-5"
+            ></UiIcon>
             <div>
               <span> Transaction Count </span>
               <p class="text-lg text-[#00BDA7]">
@@ -397,7 +411,8 @@
                 ? 'bg-[#00BDA7]/50 border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'users'">
+            @click="activeTab = 'users'"
+          >
             Users
           </div>
           <div
@@ -407,7 +422,8 @@
                 ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'affiliate'">
+            @click="activeTab = 'affiliate'"
+          >
             Affiliate
           </div>
           <div
@@ -417,7 +433,8 @@
                 ? 'bg-[#00BDA7]/50  border-[#00BDA7]'
                 : 'bg-[#0D0D0D] text-[#838383] border-[#1C1C1C] hover:text-white'
             "
-            @click="activeTab = 'transactions'">
+            @click="activeTab = 'transactions'"
+          >
             Transactions
           </div>
         </div>
@@ -427,41 +444,51 @@
             v-show="activeTab === 'users'"
             class="py-2 text-[12px] h-full flex-1"
             custom-class="!rounded-t-none !rounded-tr-lg"
-            :class="userLoading ? 'min-h-[350px]' : ''">
+            :class="userLoading ? 'min-h-[350px]' : ''"
+          >
             <div
-              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2">
+              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
+            >
               <div
-                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2">
+                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+              >
                 <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
                 <p class="text-sm font-semibold py-2">User List</p>
               </div>
               <div
-                class="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+                class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+              >
                 <span class="text-[#838383]">Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="userSearch" dark />
                   <UiFilter
                     v-model="selectedRole"
                     icon="fa6-regular:user"
-                    :options="roleOptions" />
+                    :options="roleOptions"
+                  />
                   <UiFilter
                     v-model="rowsPerPage"
                     icon="gg:list"
-                    :options="rowsPerPageOptions" />
+                    :options="rowsPerPageOptions"
+                  />
 
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="searchUsers()">
+                    @click="searchUsers()"
+                  >
                     <UiIcon
                       icon="formkit:submit"
-                      class="!text-[#00BDA7] hover:!text-white" />
+                      class="!text-[#00BDA7] hover:!text-white"
+                    />
                   </div>
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="clearData()">
+                    @click="clearData()"
+                  >
                     <UiIcon
                       icon="weui:refresh-filled"
-                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
+                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+                    />
                   </div>
                 </div>
               </div>
@@ -486,7 +513,8 @@
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
               :table-break-points="1000"
-              class="min-h-[265px]">
+              class="min-h-[265px]"
+            >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -499,7 +527,8 @@
                         ? 'capitalize'
                         : '',
                     ]"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
@@ -510,19 +539,22 @@
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex flex-wrap gap-[2px] justify-center">
+                      class="flex flex-wrap gap-[2px] justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <div v-else>
@@ -539,7 +571,8 @@
                     :items="card"
                     :index="(currentPage - 1) * rowsPerPage + idx"
                     :map="userColumns"
-                    class="my-2">
+                    class="my-2"
+                  >
                     <template #actions>
                       <div class="flex flex-wrap gap-[2px] justify-center">
                         <UiButton
@@ -547,13 +580,15 @@
                           icon="cuida:edit-outline"
                           size="sm"
                           custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                          @click="updateModal(card)" />
+                          @click="updateModal(card)"
+                        />
                         <UiButton
                           variant="icon"
                           icon="bxs:trash"
                           size="sm"
                           custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                          @click="confirmDelete(card)" /></div
+                          @click="confirmDelete(card)"
+                        /></div
                     ></template>
                     <template v-if="card.label"></template>
                     <template v-else>
@@ -570,41 +605,51 @@
             v-show="activeTab === 'affiliate'"
             class="py-2 text-[12px] h-full flex-1"
             custom-class="!rounded-t-none !rounded-tr-lg"
-            :class="userLoading ? 'min-h-[350px]' : ''">
+            :class="userLoading ? 'min-h-[350px]' : ''"
+          >
             <div
-              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2">
+              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
+            >
               <div
-                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2">
+                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+              >
                 <UiIcon icon="mdi:users" custom-class="w-4 h-4"></UiIcon>
                 <p class="text-sm font-semibold py-2">User List</p>
               </div>
               <div
-                class="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+                class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+              >
                 <span class="text-[#838383]">Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="userSearch" dark />
                   <UiFilter
                     v-model="selectedRole"
                     icon="fa6-regular:user"
-                    :options="roleOptions" />
+                    :options="roleOptions"
+                  />
                   <UiFilter
                     v-model="rowsPerPage"
                     icon="gg:list"
-                    :options="rowsPerPageOptions" />
+                    :options="rowsPerPageOptions"
+                  />
 
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="searchUsers()">
+                    @click="searchUsers()"
+                  >
                     <UiIcon
                       icon="formkit:submit"
-                      class="!text-[#00BDA7] hover:!text-white" />
+                      class="!text-[#00BDA7] hover:!text-white"
+                    />
                   </div>
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="clearData()">
+                    @click="clearData()"
+                  >
                     <UiIcon
                       icon="weui:refresh-filled"
-                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
+                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+                    />
                   </div>
                 </div>
               </div>
@@ -628,7 +673,8 @@
               "
               @page-changed="handlePageChange"
               @rows-per-page-changed="handleRowsPerPageChange"
-              :table-break-points="1000">
+              :table-break-points="1000"
+            >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -641,7 +687,8 @@
                         ? 'capitalize'
                         : '',
                     ]"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       {{
                         item[col.key]
@@ -652,19 +699,22 @@
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex flex-wrap gap-[2px] justify-center">
+                      class="flex flex-wrap gap-[2px] justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <div v-else>
@@ -681,7 +731,8 @@
                     :items="card"
                     :index="(currentPage - 1) * rowsPerPage + idx"
                     :map="userColumns"
-                    class="my-2">
+                    class="my-2"
+                  >
                     <template #actions>
                       <div class="flex flex-wrap gap-[2px] justify-center">
                         <UiButton
@@ -689,13 +740,15 @@
                           icon="cuida:edit-outline"
                           size="sm"
                           custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                          @click="updateModal(card)" />
+                          @click="updateModal(card)"
+                        />
                         <UiButton
                           variant="icon"
                           icon="bxs:trash"
                           size="sm"
                           custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                          @click="confirmDelete(card)" /></div
+                          @click="confirmDelete(card)"
+                        /></div
                     ></template>
                     <template v-if="card.label"></template>
                     <template v-else>
@@ -711,46 +764,57 @@
           <UiCard
             v-show="activeTab === 'transactions'"
             class="py-2 text-[12px] flex-1 w-full"
-            custom-class="!rounded-t-none !rounded-tr-lg">
+            custom-class="!rounded-t-none !rounded-tr-lg"
+          >
             <!-- Table Header -->
             <div
-              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2">
+              class="flex flex-col sm:flex-row justify-center sm:justify-between border-b border-[#1C1C1C] sm:pb-0 pb-2"
+            >
               <div
-                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2">
+                class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+              >
                 <UiIcon icon="mdi:currency-usd" custom-class="w-4 h-4"></UiIcon>
                 <p class="text-sm font-semibold py-2">Transactions List</p>
               </div>
               <div
-                class="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+                class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+              >
                 <span class="text-[#838383]">Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="transactionSearch" dark />
                   <UiFilter
                     v-model="selectedType"
                     icon="fa6-regular:user"
-                    :options="typeOptions" />
+                    :options="typeOptions"
+                  />
                   <UiFilter
                     v-model="selectedTransaction"
                     icon="mingcute:transfer-line"
-                    :options="transactionOptions" />
+                    :options="transactionOptions"
+                  />
                   <UiFilter
                     v-model="transactionRowsPerPage"
                     icon="gg:list"
-                    :options="rowsPerPageOptions" />
+                    :options="rowsPerPageOptions"
+                  />
 
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="searchTransactions()">
+                    @click="searchTransactions()"
+                  >
                     <UiIcon
                       icon="formkit:submit"
-                      class="!text-[#00BDA7] hover:!text-white" />
+                      class="!text-[#00BDA7] hover:!text-white"
+                    />
                   </div>
                   <div
                     class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-                    @click="clearTransactions()">
+                    @click="clearTransactions()"
+                  >
                     <UiIcon
                       icon="weui:refresh-filled"
-                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
+                      class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+                    />
                   </div>
                 </div>
               </div>
@@ -775,7 +839,8 @@
               @page-changed="transactionHandlePageChange"
               @rows-per-page-changed="transactionandleRowsPerPageChange"
               class="min-h-[265px]"
-              :table-break-points="1200">
+              :table-break-points="1200"
+            >
               <template #row="{ item, applyBorder }">
                 <div class="grid grid-cols-6 gap-2 items-center">
                   <div
@@ -783,7 +848,8 @@
                     :key="col.key"
                     class="truncate"
                     :class="applyBorder(idx, transactionsColumns.length)"
-                    :title="item[col.key]">
+                    :title="item[col.key]"
+                  >
                     <span v-if="col.key === 'createdAt'">
                       <span class="text-gray-400 font-semibold">
                         {{
@@ -803,25 +869,29 @@
                         'text-green-500': item[col.key] === 'completed',
                         'text-yellow-500': item[col.key] === 'pending',
                         'text-red-500': item[col.key] === 'failed',
-                      }">
+                      }"
+                    >
                       {{ item[col.key] }}
                     </span>
 
                     <div
                       v-else-if="col.key === 'actions'"
-                      class="flex gap-2 justify-center">
+                      class="flex gap-2 justify-center"
+                    >
                       <UiButton
                         variant="icon"
                         icon="cuida:edit-outline"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-[#00BDA7] !bg-transparent"
-                        @click="updateModal(item)" />
+                        @click="updateModal(item)"
+                      />
                       <UiButton
                         variant="icon"
                         icon="bxs:trash"
                         size="sm"
                         custom-class="!px-1 !w-fit !text-red-500 !bg-transparent"
-                        @click="confirmDelete(item)" />
+                        @click="confirmDelete(item)"
+                      />
                     </div>
 
                     <span v-else>
@@ -837,7 +907,8 @@
                     :items="card"
                     :index="(currentPage - 1) * rowsPerPage + idx"
                     :map="transactionsColumns"
-                    class="my-2">
+                    class="my-2"
+                  >
                     <template #format="{ field, value }">
                       <span v-if="field.key === 'type'" class="capitalize">
                         {{ value.replaceAll("_", " ") }}
@@ -850,7 +921,8 @@
                           'text-green-500': value === 'completed',
                           'text-yellow-500': value === 'pending',
                           'text-red-500': value === 'failed',
-                        }">
+                        }"
+                      >
                         {{ value ?? "No Data" }}
                       </span>
 
@@ -876,13 +948,15 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"></UiModal>
+      type="confirmAlert"
+    ></UiModal>
 
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update User Information"
-      :description="`Edit the user's details below. Make sure the information is accurate before saving.`">
+      :description="`Edit the user's details below. Make sure the information is accurate before saving.`"
+    >
       <template #body>
         <div class="flex flex-col gap-6 px-2 pt-4 pb-8">
           <UiInput dark label="Name" type="text" v-model="selectedUser.name" />
@@ -890,12 +964,14 @@
             dark
             label="Email"
             type="email"
-            v-model="selectedUser.email" />
+            v-model="selectedUser.email"
+          />
           <UiInput
             dark
             label="Phone"
             type="text"
-            v-model="selectedUser.phone" />
+            v-model="selectedUser.phone"
+          />
           <!-- <UiInput dark label="Role" type="text" v-model="selectedUser.role" /> -->
           <UiSelect
             v-model="selectedUser.role"
@@ -904,7 +980,8 @@
             label="Role"
             ref="roleSelect"
             class="roleSelect"
-            custom-class="!bg-[#1A1C20] !py-1.5 !text-[12px]" />
+            custom-class="!bg-[#1A1C20] !py-1.5 !text-[12px]"
+          />
         </div>
       </template>
       <template #footer>
@@ -912,11 +989,13 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="saveChanges">
+            @click="saveChanges"
+          >
             Save Changes </UiButton
           ><UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -1027,6 +1106,30 @@ const transactionsColumns = [
   { label: "Created At", key: "createdAt", sortable: true },
 ];
 
+const subAnalysis = ref(null);
+const subLoading = ref(false);
+
+const emptyPlans = [
+  {
+    name: "Subscription 1",
+    subscriptionCount: "No Data",
+  },
+  {
+    name: "Subscription 2",
+    subscriptionCount: "No Data",
+  },
+  {
+    name: "Subscription 3",
+    subscriptionCount: "No Data",
+  },
+];
+
+const planCounts = computed(() => {
+  const plans = subAnalysis.value?.analytics?.planCounts;
+
+  return plans && plans.length ? plans : emptyPlans;
+});
+
 const analytics = ref({
   userStats: {
     totalUsers: 0,
@@ -1111,6 +1214,27 @@ const userRing = computed(() => {
   const countedUsers = stats.userCount || 0;
 
   return [100, (countedUsers / total) * 100];
+});
+
+const getSubStats = async () => {
+  subLoading.value = true;
+  try {
+    const res = await $api.get("/api/admin/subscription/analytics");
+    subAnalysis.value = res.data.data ?? null;
+  } catch (error) {
+    console.error("Error in fetching sub analysis stats: ", error);
+  }
+};
+
+const clientTypeChart = computed(() => {
+  const plans = subAnalysis.value?.analytics?.planCounts ?? [];
+  if (!plans.length) return [0, 0];
+
+  const max = Math.max(...plans.map((p) => p.subscriptionCount ?? 0), 1);
+
+  return plans.map((p) =>
+    Math.min(Math.round(((p.subscriptionCount ?? 0) / max) * 100), 100)
+  );
 });
 
 const getAnalytics = async () => {
@@ -1418,6 +1542,7 @@ onMounted(() => {
   getUsers();
   getTransactions();
   getAnalytics();
+  getSubStats();
 });
 
 watch(selectedRole, (role) => {
