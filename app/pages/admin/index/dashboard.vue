@@ -1362,7 +1362,7 @@ const getTransactions = async () => {
       amount: tx.amount,
       currency: tx.currency,
       paymentMethod: tx.paymentMethod,
-      paymentStatus: tx.paymentStatus,
+      paymentStatus: tx.status,
       transactionId: tx.transactionId,
       startDate: tx.startDate,
       endDate: tx.endDate,

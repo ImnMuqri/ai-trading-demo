@@ -74,39 +74,10 @@
               type="circle"
               :progress="[meter.value]"
               :color="[meter.fillColor]"
-              custom-class="max-w-[100px]" />
-            <p class="text-sm text-gray-300 text-center">{{ meter.label }}</p>
-            <!-- <svg
-              width="100"
-              height="100"
-              viewBox="0 0 36 36"
-              class="!hidden mb-2">
-              <path
-                class="text-gray-700/20"
-                stroke="currentColor"
-                stroke-width="3"
-                fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-              <path
-                :stroke="meter.fillColor"
-                stroke-width="3"
-                :stroke-dasharray="`${meter.value}, 100`"
-                stroke-linecap="round"
-                fill="none"
-                d="M18 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831" />
-
-              <text
-                x="19"
-                y="21"
-                class="text-[8px] font-semibold"
-                :fill="meter.fillColor"
-                text-anchor="middle">
-                {{ meter.value }}%
-              </text>
-            </svg>
-            <p class="!hidden text-sm text-gray-300 text-center">
-              {{ meter.label }}
-            </p> -->
+              custom-class="max-w-[130px]"
+              title-class="!text-[10px]"
+              stroke="2.5"
+              :title="meter.label" />
           </div>
         </template>
       </div>

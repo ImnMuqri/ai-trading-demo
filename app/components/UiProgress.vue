@@ -3,8 +3,7 @@
   <div>
     <template v-if="props.type === 'circle'">
       <div
-        :class="['inline-flex justify-center items-center', props.customClass]"
-      >
+        :class="['inline-flex justify-center items-center', props.customClass]">
         <!-- SVG Circle -->
         <svg viewBox="0 0 36 36" class="w-full h-full">
           <template v-if="Array.isArray(progressArray)">
@@ -14,25 +13,23 @@
               cx="18"
               cy="18"
               :r="16 - i * 2.8"
-              stroke-width="1.8"
+              :stroke-width="props.stroke"
               fill="none"
-              stroke="#1A1A1AFF"
-            />
+              stroke="#1A1A1AFF" />
             <circle
               v-for="(p, i) in progressArray"
               :key="'fg-' + i"
               cx="18"
               cy="18"
               :r="radii[i]"
-              stroke-width="1.8"
+              :stroke-width="props.stroke"
               fill="none"
               :stroke="color[i % color.length]"
               :stroke-dasharray="circumferences[i]"
               :stroke-dashoffset="circumferences[i] * (1 - p / 100)"
               stroke-linecap="round"
               transform="rotate(-90 18 18)"
-              class="transition-all duration-800"
-            />
+              class="transition-all duration-800" />
           </template>
 
           <template v-else>
@@ -43,8 +40,7 @@
               stroke-width="3"
               fill="none"
               class="text-[#1C1C1C]"
-              stroke="currentColor"
-            />
+              stroke="currentColor" />
             <circle
               cx="18"
               cy="18"
@@ -63,8 +59,7 @@
               "
               stroke-linecap="round"
               transform="rotate(-90 18 18)"
-              class="transition-all duration-800"
-            />
+              class="transition-all duration-800" />
           </template>
         </svg>
 
@@ -74,9 +69,20 @@
           :class="[
             'absolute text-center text-[12px] font-medium text-white max-w-[80px]',
             props.titleClass,
-          ]"
-        >
-          {{ props.title }}
+          ]">
+          <p
+            :style="{
+              color: Array.isArray(progressArray) ? color[0] : resolvedColor,
+            }">
+            {{ props.title }}
+          </p>
+          <p
+            class="text-xl"
+            :style="{
+              color: Array.isArray(progressArray) ? color[0] : resolvedColor,
+            }">
+            {{ Number(props.progress) }}%
+          </p>
         </div>
 
         <div
@@ -87,19 +93,16 @@
           ]"
           :style="{
             color: Array.isArray(progressArray) ? color[0] : resolvedColor,
-          }"
-        >
+          }">
           {{ Number(props.progress) }}%
         </div>
       </div>
     </template>
-
     <template v-else>
       <div
         v-if="props.orientation === 'vertical'"
         :class="['flex items-end', props.barGap, props.customClass]"
-        :style="{ height: props.barHeight }"
-      >
+        :style="{ height: props.barHeight }">
         <template v-if="Array.isArray(progressArray)">
           <div
             v-for="(p, index) in progressArray"
@@ -109,8 +112,7 @@
               backgroundColor: props.bgColor,
               height: '100%',
               width: props.barWidth || '8px',
-            }"
-          >
+            }">
             <div
               class="w-full rounded-t transition-all duration-300"
               :style="{
@@ -120,8 +122,7 @@
                       ','
                     )})`
                   : color[index % color.length],
-              }"
-            ></div>
+              }"></div>
           </div>
         </template>
 
@@ -132,8 +133,7 @@
             backgroundColor: props.bgColor,
             height: props.barHeight || '200px',
             width: props.barWidth || '8px',
-          }"
-        >
+          }">
           <div
             class="w-full rounded-t transition-all duration-300"
             :style="{
@@ -143,8 +143,7 @@
                     ','
                   )})`
                 : resolvedColor,
-            }"
-          ></div>
+            }"></div>
         </div>
       </div>
 
@@ -154,8 +153,7 @@
             v-for="(p, index) in progressArray"
             :key="index"
             class="w-full h-2 rounded-r overflow-hidden"
-            :style="{ backgroundColor: props.bgColor }"
-          >
+            :style="{ backgroundColor: props.bgColor }">
             <div
               class="h-full rounded-r transition-all duration-300"
               :style="{
@@ -165,16 +163,14 @@
                       index
                     ].join(',')})`
                   : color[index % color.length],
-              }"
-            ></div>
+              }"></div>
           </div>
         </template>
 
         <div
           v-else
           class="w-full h-2 rounded-r overflow-hidden"
-          :style="{ backgroundColor: props.bgColor }"
-        >
+          :style="{ backgroundColor: props.bgColor }">
           <div
             class="h-full rounded-r transition-all duration-300"
             :style="{
@@ -184,8 +180,7 @@
                     ','
                   )})`
                 : resolvedColor,
-            }"
-          ></div>
+            }"></div>
         </div>
       </div>
     </template>
@@ -201,6 +196,7 @@ const props = defineProps({
   title: { type: String, default: "" },
   color: { type: Array, default: () => ["#00BDA7", "#FFFFFF"] },
   customClass: { type: String, default: "w-24 h-24" },
+  stroke: { type: String, default: "1.8" },
   titleClass: { type: String, default: "" },
   gradientColors: { type: Array, default: null }, //  [["#00AAFF","#00BDA7"], ["#FFAA00","#FF5500"]]
   bgColor: { type: String, default: "#1C1C1C" },
