@@ -396,7 +396,7 @@ const historyData = ref([]);
 
 const openDetailedAnalysis = ref(false);
 const selectedHistory = ref(null);
-const historyLoading = ref(false);
+const historyLoading = ref(true);
 const historyColumns = [
   { label: "Time", key: "createdAt", sortable: true },
   { label: "Symbol", key: "symbol", sortable: true },
