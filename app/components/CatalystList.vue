@@ -166,7 +166,8 @@
           style="will-change: transform">
           <div
             class="flex flex-col gap-2 px-4 py-4 mb-4 border border-[#00BDA7] bg-gradient-to-tl from-[#00BDA7] rounded-lg">
-            <div class="flex items-center justify-between gap-1 mb-2">
+            <div
+              class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-1 mb-2">
               <div class="flex items-center gap-2">
                 <UiIcon
                   icon="hugeicons:ai-idea"
@@ -174,7 +175,7 @@
                 <p class="text-xl font-semibold">Ai Analysis</p>
               </div>
               <div
-                class="flex gap-2 items-center justify-around py-2 px-6 border rounded-lg text-[12px]">
+                class="flex gap-2 w-full md:w-fit items-center justify-around py-2 px-6 border rounded-lg text-[12px]">
                 <div
                   class="flex flex-col gap-[1px] items-center justify-center">
                   <p>Actual</p>

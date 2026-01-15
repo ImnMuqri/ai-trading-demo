@@ -17,6 +17,10 @@ export default defineNuxtConfig({
         prefix: "icon",
         dir: "./app/assets/icons",
       },
+      {
+        prefix: "bg",
+        dir: "./app/assets/bg",
+      },
     ],
     serverBundle: {
       externalizeIconsJson: true,
@@ -28,7 +32,7 @@ export default defineNuxtConfig({
       // include all custom collections in the client bundle
       includeCustomCollections: true,
 
-      sizeLimitKb: 2000,
+      sizeLimitKb: 4000,
     },
   },
   runtimeConfig: {

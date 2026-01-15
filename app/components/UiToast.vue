@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center gap-3 h-18 mx-4 px-4 pr-4 rounded-xl border-[1px] cursor-pointer"
+    class="flex items-center gap-3 h-18 my-4 mx-4 md:my-0 px-4 pr-4 rounded-xl border-[1px] cursor-pointer"
     :class="[borderClass]">
     <div class="h-full py-[16px]">
       <UiIcon

@@ -5,14 +5,14 @@ export default defineNuxtPlugin(() => {
     const date = value instanceof Date ? value : new Date(value);
     if (isNaN(date.getTime())) return "N/A";
 
-    return new Intl.DateTimeFormat(opts.locale || "en-US", {
-      month: "numeric",
-      day: "numeric",
+    return new Intl.DateTimeFormat(opts.locale || "en-GB", {
+      day: "2-digit",
+      month: "short",
       year: "numeric",
       ...(opts.withTime && {
-        hour: "numeric",
-        minute: "numeric",
-        second: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
         hour12: true,
       }),
     }).format(date);

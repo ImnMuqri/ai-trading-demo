@@ -1,28 +1,24 @@
 <template>
   <div class="text-white">
     <div
-      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2"
-    >
+      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
           :options="symbols"
           placeholder="Select Instrument"
           ref="symbolSelect"
-          class="symbolSelect"
-        />
+          class="symbolSelect" />
         <UiSelect
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe"
           ref="intervalSelect"
-          class="intervalSelect"
-        />
+          class="intervalSelect" />
       </div>
       <div
         @click="openAffiliatorModal = true"
-        class="h-7 w-7 flex items-center justify-center bg-[#00BDA7]/50 border-[2px] border-[#00BDA7] rounded-full cursor-pointer"
-      >
+        class="h-7 w-7 flex items-center justify-center bg-[#00BDA7]/50 border-[2px] border-[#00BDA7] rounded-full cursor-pointer">
         <UiIcon icon="ic:baseline-link"></UiIcon>
       </div>
     </div>
@@ -32,8 +28,7 @@
         :symbol="selectedSymbol"
         :interval="selectedInterval"
         @open-analysis-modal="openDetailedAnalysis = true"
-        ref="requestSignalRef"
-      />
+        ref="requestSignalRef" />
       <client-only class="w-full lg:h-[630px]">
         <div class="grid grid-cols-1 gap-2">
           <UiCard class="px-2">
@@ -53,8 +48,7 @@
     <div class="flex flex-wrap w-full gap-4 mt-4">
       <ContextualFactors
         :selectedSymbol="selectedSymbol"
-        @sentimentIndex="SentimentIndex"
-      />
+        @sentimentIndex="SentimentIndex" />
     </div>
     <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <UiCard class="px-2 py-2 max-h-[600px] w-full overflow-hidden">
@@ -69,8 +63,7 @@
               activeTab === tab
                 ? 'border-b-2 border-emerald-500 text-emerald-600'
                 : 'text-gray-500 hover:text-gray-700',
-            ]"
-          >
+            ]">
             {{ tab }}
           </button>
         </div>
@@ -110,11 +103,9 @@
               <p>Live News</p>
               <span class="relative flex size-2">
                 <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"
-                ></span>
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
                 <span
-                  class="relative inline-flex size-2 rounded-full bg-red-500"
-                ></span>
+                  class="relative inline-flex size-2 rounded-full bg-red-500"></span>
               </span>
               <UiIcon icon="material-symbols:info-outline-rounded" />
             </div>
@@ -125,8 +116,7 @@
                   <template #icon-left>
                     <UiIcon
                       icon="ic:baseline-search"
-                      custom-class="text-gray-300"
-                    />
+                      custom-class="text-gray-300" />
                   </template>
                 </UiInput>
               </div>
@@ -158,16 +148,14 @@
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
-              class="mb-2 mx-auto"
-            >
+              class="mb-2 mx-auto">
               <!-- background ring -->
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#1C1C1C"
                 stroke-width="6.5"
-                stroke-linecap="round"
-              />
+                stroke-linecap="round" />
 
               <!-- progress ring -->
 
@@ -176,24 +164,21 @@
                 fill="none"
                 stroke="#8DADA2"
                 stroke-width="3"
-                stroke-linecap="round"
-              />
+                stroke-linecap="round" />
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                :stroke-dasharray="`${sentimentIndex.percentage} 100`"
-              />
+                :stroke-dasharray="`${sentimentIndex.percentage} 100`" />
 
               <!-- centered text -->
               <text
                 x="20"
                 y="11"
                 text-anchor="middle"
-                font-family="Inter, Arial, sans-serif"
-              >
+                font-family="Inter, Arial, sans-serif">
                 <tspan x="20.5" dy="1" font-size="2.8" fill="#10B981">
                   Index
                 </tspan>
@@ -202,8 +187,7 @@
                   dy="8"
                   font-size="7"
                   font-weight="700"
-                  fill="#10B981"
-                >
+                  fill="#10B981">
                   {{ sentimentIndex.percentage }}
                 </tspan>
                 <tspan x="20.4" dy="3.4" font-size="2.2" fill="#6B7280">
@@ -219,27 +203,23 @@
       :show="openAffiliatorModal"
       :isGradient="true"
       width="max-w-[500px]"
-      @close="openAffiliatorModal = false"
-    >
+      @close="openAffiliatorModal = false">
       <template #body>
         <div class="flex flex-col text-center gap-4 w-full">
           <img src="assets/bg/LinkPic.svg" class="w-full h-[20vh]" />
           <div class="grid grid-cols-1 gap-2">
             <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
-            >
-              Iman Muqri
+              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              {{ userProfile.affiliator.name }}
             </p>
-            <p>Id: 66666</p>
+            <p>{{ userProfile.affiliator.email }}</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
-              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"
-            ></div>
+              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"></div>
             <p class="text-[12px] whitespace-nowrap">Affiliator's Link</p>
             <div
-              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"
-            ></div>
+              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
           </div>
           <UiList
             :parameters="userProfile.affiliatorExternalLinks"
@@ -248,17 +228,14 @@
             :rowsPerPage="extRowsPerPage"
             @page-changed="extPageChange"
             @rows-per-page-changed="extRowsChange"
-            pagination
-          >
+            pagination>
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
                 :key="idx"
-                class="overflow-y-auto mb-4"
-              >
+                class="overflow-y-auto mb-4">
                 <div
-                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left"
-                >
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
                   <div>
                     <a :href="link.url" target="_blank" class="w-full text-sm"
                       >{{ link.name }}
@@ -266,8 +243,7 @@
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div
-                    class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
-                  >
+                    class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
                     <UiIcon
                       icon="solar:copy-bold"
                       custom-class="h-3 w-3  cursor-pointer"
@@ -276,8 +252,7 @@
                           ? 'text-[#00BDA7]'
                           : 'text-white hover:text-white/80'
                       "
-                      @click="copyLink(link.url, idx)"
-                    />
+                      @click="copyLink(link.url, idx)" />
                   </div>
                 </div>
               </div>
