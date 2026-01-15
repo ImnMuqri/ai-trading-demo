@@ -486,6 +486,7 @@
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
+                :key="idx"
                 class="overflow-y-auto mb-2"
               >
                 <div
@@ -667,6 +668,7 @@
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
+                :key="idx"
                 class="overflow-y-auto mb-2"
               >
                 <div
