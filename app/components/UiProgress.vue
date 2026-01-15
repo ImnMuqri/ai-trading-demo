@@ -77,6 +77,7 @@
             {{ props.title }}
           </p>
           <p
+            v-if="props.titleValue"
             class="text-xl"
             :style="{
               color: Array.isArray(progressArray) ? color[0] : resolvedColor,
@@ -198,6 +199,7 @@ const props = defineProps({
   customClass: { type: String, default: "w-24 h-24" },
   stroke: { type: String, default: "1.8" },
   titleClass: { type: String, default: "" },
+  titleValue: { type: Boolean, default: false },
   gradientColors: { type: Array, default: null }, //  [["#00AAFF","#00BDA7"], ["#FFAA00","#FF5500"]]
   bgColor: { type: String, default: "#1C1C1C" },
   orientation: { type: String, default: "horizontal" },

@@ -72,10 +72,11 @@
             class="flex flex-col items-center">
             <UiProgress
               type="circle"
+              titleValue
               :progress="[meter.value]"
               :color="[meter.fillColor]"
-              custom-class="max-w-[130px]"
-              title-class="!text-[10px]"
+              custom-class="max-w-[150px]"
+              title-class="!text-[11px]"
               stroke="2.5"
               :title="meter.label" />
           </div>
