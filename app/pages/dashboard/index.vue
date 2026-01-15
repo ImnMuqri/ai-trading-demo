@@ -221,7 +221,7 @@
             <div
               class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
           </div>
-          <div v-for="link in externalLinks.externalLinks">
+          <div v-for="link in userProfile.affiliatorExternalLinks">
             <div
               class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
               <div>
@@ -317,15 +317,15 @@ const fetchSymbols = async () => {
   }
 };
 
-const externalLinks = ref([]);
-const externalLinksLoading = ref(false);
+const userProfile = ref([]);
+const userProfileLoading = ref(false);
 
 const getExternalLinks = async () => {
-  externalLinksLoading.value = true;
+  userProfileLoading.value = true;
 
   try {
-    const res = await $api.get("/api/affiliate/external-links");
-    externalLinks.value = res.data?.data ?? [];
+    const res = await $api.get("/api/user/profile");
+    userProfile.value = res.data?.data ?? [];
   } catch (error) {
     console.error("Failed to fetch external links", error);
     showToast(
@@ -333,7 +333,7 @@ const getExternalLinks = async () => {
       "error"
     );
   } finally {
-    externalLinksLoading.value = false;
+    userProfileLoading.value = false;
   }
 };
 
