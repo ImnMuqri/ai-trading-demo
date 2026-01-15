@@ -2,7 +2,7 @@
   <button
     type="button"
     role="switch"
-    :aria-checked="modelValue"
+    :aria-checked="isOn"
     :disabled="disabled"
     @click="toggle"
     @keydown.space.prevent="toggle"
@@ -10,22 +10,24 @@
     class="relative inline-flex items-center transition-colors duration-300 focus:outline-none"
     :class="[
       sizeClasses.track,
-      modelValue ? activeColor : inactiveColor,
+      isOn ? activeColor : inactiveColor,
       disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer',
     ]">
     <span
       class="absolute transition-transform duration-300 bg-white rounded-full shadow"
       :class="[
         sizeClasses.thumb,
-        modelValue ? sizeClasses.translateOn : sizeClasses.translateOff,
+        isOn ? sizeClasses.translateOn : sizeClasses.translateOff,
       ]" />
   </button>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const props = defineProps({
   modelValue: {
-    type: Boolean,
+    type: [Boolean, String, Number],
     required: true,
   },
   disabled: {
@@ -45,13 +47,22 @@ const props = defineProps({
     type: String,
     default: "bg-neutral-400",
   },
+  trueValue: {
+    default: true,
+  },
+  falseValue: {
+    default: false,
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
 
+const isOn = computed(() => props.modelValue === props.trueValue);
+
 const toggle = () => {
   if (props.disabled) return;
-  emit("update:modelValue", !props.modelValue);
+
+  emit("update:modelValue", isOn.value ? props.falseValue : props.trueValue);
 };
 
 const sizeClasses = computed(() => {

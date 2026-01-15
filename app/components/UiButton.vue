@@ -22,6 +22,9 @@
       class="flex items-center gap-2 transition-opacity duration-200">
       <template v-if="variant === 'icon' && icon">
         <UiIcon :icon="icon" :class="iconSizeClasses" />
+        <div class="text-[12px]">
+          <slot></slot>
+        </div>
       </template>
       <template v-else>
         <slot name="icon-left"></slot>

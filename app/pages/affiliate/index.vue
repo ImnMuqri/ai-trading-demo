@@ -1,11 +1,33 @@
 <template>
   <div class="flex flex-col gap-4 text-white">
-    <div class="flex gap-2 justify-end">
-      <UiButton variant="outline" @click="openReferral = true"
-        >Referral Link</UiButton
-      ><UiButton variant="outline" @click="openExternal = true"
-        >External Link</UiButton
-      >
+    <div class="flex items-center gap-2 justify-end">
+      <p class="text-[12px] text-[#838383]">Actions:</p>
+      <div
+        @click="openReferral = true"
+        class="group cursor-pointer flex items-center h-7 w-7 rounded-full border-[2px] border-[#00BDA7] bg-[#00BDA7]/50 overflow-hidden transition-all duration-300 ease-out hover:w-[160px]">
+        <div
+          class="flex items-center justify-center w-6 h-6 group-hover:ml-2 flex-shrink-0">
+          <UiIcon icon="fa:handshake-o" class="w-4 h-4" />
+        </div>
+        <p
+          class="whitespace-nowrap text-[12px] opacity-0 translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
+          Generate Referral
+        </p>
+      </div>
+
+      <div
+        @click="openExternal = true"
+        class="group cursor-pointer flex items-center h-7 w-7 rounded-full border-[2px] border-[#00BDA7] bg-[#00BDA7]/50 overflow-hidden transition-all duration-300 ease-out hover:w-[180px]">
+        <div
+          class="flex items-center justify-center w-6 h-6 group-hover:ml-2 flex-shrink-0">
+          <UiIcon icon="ic:baseline-link" class="w-4 h-4" />
+        </div>
+
+        <p
+          class="whitespace-nowrap text-[12px] opacity-0 translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0">
+          Generate External Link
+        </p>
+      </div>
     </div>
     <div class="flex flex-col xl:flex-row gap-4">
       <UiCard isGradient class="p-4 flex flex-col gap-4">

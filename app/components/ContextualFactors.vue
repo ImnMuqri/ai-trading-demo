@@ -31,8 +31,7 @@
             :key="i"
             class="flex flex-col items-center animate-pulse">
             <div
-              class="w-[100px] h-[100px] rounded-full bg-gray-700/30 mb-2"></div>
-            <div class="h-3 w-20 bg-gray-700/30 rounded"></div>
+              class="w-[150px] h-[150px] rounded-full bg-gray-700/30 mb-2"></div>
           </div>
         </template>
         <template v-else>

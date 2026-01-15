@@ -332,10 +332,10 @@
             </div>
           </div>
         </div>
-        <div
+        <!-- <div
           class="flex flex-wrap items-center justify-center p-4 text-[#838383] hover:cursor-pointer">
           See full details <span class="pl-2 text-[#00BDA7]">></span>
-        </div>
+        </div> -->
       </UiCard>
     </div>
 

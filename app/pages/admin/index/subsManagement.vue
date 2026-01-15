@@ -5,29 +5,24 @@
         <div class="flex items-center gap-2">
           <UiIcon
             icon="qlementine-icons:money-16"
-            custom-class="w-3 h-3"
-          ></UiIcon>
+            custom-class="w-3 h-3"></UiIcon>
           <span class="text-sm">Subscription Breakdown</span>
         </div>
 
         <div
-          class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-10"
-        >
+          class="flex flex-col justify-center items-center w-full xl:w-[350px] h-full gap-6 py-10">
           <div
-            class="flex flex-col gap-3 w-full max-w-[220px] border-l-[2px] border-[#D9D9D9] py-3"
-          >
+            class="flex flex-col gap-3 w-full max-w-[220px] border-l-[2px] border-[#D9D9D9] py-3">
             <UiProgress
               :progress="planProgress"
-              :gradientColors="[['#00AAFF', '#00BDA7']]"
-            />
+              :gradientColors="[['#00AAFF', '#00BDA7']]" />
           </div>
 
           <div class="flex flex-col gap-2 py-4 w-full max-w-[220px]">
             <div
               v-for="(name, idx) in planNames"
               :key="idx"
-              class="flex justify-between text-[12px]"
-            >
+              class="flex justify-between text-[12px]">
               <p>{{ name }}</p>
               <p class="text-[#00BDA7]">{{ planProgress[idx] }}</p>
             </div>
@@ -42,15 +37,13 @@
         </div>
 
         <div
-          class="flex flex-col lg:flex-row items-center justify-center w-full h-full pb-6 gap-8"
-        >
+          class="flex flex-col lg:flex-row items-center justify-center w-full h-full pb-6 gap-8">
           <UiProgress
             type="circle"
             :progress="progressData"
             title="Subs Revenue"
             custom-class="min-w-[150px] max-w-[200px]"
-            title-class="!text-[#838383] text-[16px] "
-          />
+            title-class="!text-[#838383] text-[16px] " />
 
           <div class="flex flex-col gap-2 text-white">
             <div>
@@ -66,8 +59,7 @@
             </div>
 
             <div
-              class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"
-            ></div>
+              class="h-[2px] bg-gradient-to-r from-[#626262] to-[#1D1D1D00] my-2"></div>
 
             <div>
               <p class="text-[12px] text-[#838383]">Subscription Growth</p>
@@ -81,44 +73,36 @@
     </div>
     <UiCard class="py-2 text-[12px] h-full flex-1">
       <div
-        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2"
-      >
+        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2">
         <div class="flex items-center gap-2 px-4">
           <UiIcon
             icon="mdi:credit-card-outline"
-            custom-class="w-4 h-4"
-          ></UiIcon>
+            custom-class="w-4 h-4"></UiIcon>
           <p class="text-sm font-semibold py-2">Package List</p>
         </div>
 
         <div
-          class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
-        >
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3">
           <span class="text-[#838383]">Filters : </span>
           <div class="flex flex-wrap">
             <UiSearch v-model="search" dark />
             <UiFilter
               v-model="rowsPerPage"
               icon="gg:list"
-              :options="rowsPerPageOptions"
-            />
+              :options="rowsPerPageOptions" />
             <div
               class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="handleSearchSubmit"
-            >
+              @click="handleSearchSubmit">
               <UiIcon
                 icon="formkit:submit"
-                class="!text-[#00BDA7] hover:!text-white"
-              />
+                class="!text-[#00BDA7] hover:!text-white" />
             </div>
             <div
               class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="clearData()"
-            >
+              @click="clearData()">
               <UiIcon
                 icon="weui:refresh-filled"
-                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
-              />
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
             </div>
           </div>
         </div>
@@ -134,8 +118,7 @@
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
-        :table-break-points="600"
-      >
+        :table-break-points="600">
         <template #row="{ item, applyBorder }">
           <div class="grid grid-cols-6 gap-2 items-center">
             <div
@@ -143,16 +126,14 @@
               :key="col.key"
               class="!truncate"
               :class="applyBorder(idx, subscriptionColumns.length)"
-              :title="item[col.key]"
-            >
+              :title="item[col.key]">
               <span v-if="col.key === 'isActive'">
                 <span
                   :class="
                     item[col.key]
                       ? 'text-emerald-500 font-semibold'
                       : 'text-red-500 font-semibold'
-                  "
-                >
+                  ">
                   {{ item[col.key] ? "Active" : "Inactive" }}</span
                 >
               </span>
@@ -161,22 +142,19 @@
               </span>
               <div
                 v-else-if="col.key === 'actions'"
-                class="flex flex-wrap gap-[2px] justify-center"
-              >
+                class="flex flex-wrap gap-[2px] justify-center">
                 <UiButton
                   variant="icon"
                   icon="cuida:edit-outline"
                   size="sm"
                   custom-class="!px-1 !w-fit !text-[#00BDA7] hover:!text-[#00BDA7]/80 !bg-transparent"
-                  @click="openUpdateModal(item)"
-                />
+                  @click="openUpdateModal(item)" />
                 <UiButton
                   variant="icon"
                   icon="bxs:trash"
                   size="sm"
                   custom-class="!px-1 !w-fit !text-red-500 hover:!text-red-600 !bg-transparent"
-                  @click="openDeleteConfirm(item)"
-                />
+                  @click="openDeleteConfirm(item)" />
               </div>
 
               <span v-else>
@@ -192,8 +170,7 @@
               :items="card"
               :index="(currentPage - 1) * rowsPerPage + idx"
               :map="subscriptionColumns"
-              class="my-2"
-            >
+              class="my-2">
               <template #format="{ field, value }">
                 <span v-if="field.key === 'price'">
                   {{ card.currency ?? "" }} {{ value ?? "0" }}
@@ -204,8 +181,7 @@
                     value
                       ? 'text-emerald-500 font-semibold'
                       : 'text-red-500 font-semibold'
-                  "
-                >
+                  ">
                   {{ value ? "Active" : "Inactive" }}
                 </span>
               </template>
@@ -216,15 +192,13 @@
                     icon="cuida:edit-outline"
                     size="sm"
                     custom-class="!px-1 !w-fit !text-[#00BDA7] hover:!text-[#00BDA7]/80 !bg-transparent"
-                    @click="openUpdateModal(card)"
-                  />
+                    @click="openUpdateModal(card)" />
                   <UiButton
                     variant="icon"
                     icon="bxs:trash"
                     size="sm"
                     custom-class="!px-1 !w-fit !text-red-500 hover:!text-red-600 !bg-transparent"
-                    @click="openDeleteConfirm(card)"
-                  /></div
+                    @click="openDeleteConfirm(card)" /></div
               ></template>
               <template v-if="card.label"></template>
               <template v-else>
@@ -237,14 +211,12 @@
           <UiButton
             variant="text"
             class="!text-[11px] !px-2 !mx-2"
-            @click="openCreate = true"
-          >
+            @click="openCreate = true">
             Create Package
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-[#00BDA7]"
-              />
+                custom-class="w-4 h-4 !text-[#00BDA7]" />
             </template>
           </UiButton>
         </template>
@@ -252,12 +224,10 @@
       </UiTable>
       <div
         v-if="subscriptionPlans.length < 5 && !plansLoading"
-        class="flex flex-col gap-[2px] items-center justify-center py-20"
-      >
+        class="flex flex-col gap-[2px] items-center justify-center py-20">
         <UiIcon
           icon="hugeicons:package-open"
-          custom-class="w-[70px] h-[70px]  bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
-        />
+          custom-class="w-[70px] h-[70px]  bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
         <p>CREATE MORE PACKAGE</p>
         <p class="italic text-[10px] text-[#626262]">
           Click on the button below to create more package
@@ -267,14 +237,12 @@
             label="Create Package"
             variant="primary"
             class="!rounded-full !text-[11px] capitalize"
-            @click="clearErrors(), (openCreate = true), resetNewSubs()"
-          >
+            @click="clearErrors(), (openCreate = true), resetNewSubs()">
             Create new package
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-white"
-              />
+                custom-class="w-4 h-4 !text-white" />
             </template>
           </UiButton>
         </div>
@@ -289,16 +257,14 @@
       :isLoading="isDeleteLoading"
       @confirm="handleDeleteConfirmed"
       @close="openConfirm = false"
-      type="confirmAlert"
-    />
+      type="confirmAlert" />
 
     <!-- Update Plan Modal -->
     <UiModal
       :show="openUpdate"
       @close="openUpdate = false"
       title="Update Plan"
-      description="Edit the plan details below. Ensure the information is correct."
-    >
+      description="Edit the plan details below. Ensure the information is correct.">
       <template #body>
         <div class="flex flex-col gap-4 px-2">
           <div class="">
@@ -306,12 +272,10 @@
               dark
               label="Package Name"
               type="text"
-              v-model="selectedPlan.name"
-            />
+              v-model="selectedPlan.name" />
             <p
               v-if="errors.name"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
-            >
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
               {{ errors.name }}
             </p>
           </div>
@@ -320,39 +284,30 @@
             dark
             label="Description"
             type="text"
-            v-model="selectedPlan.description"
-          />
+            v-model="selectedPlan.description" />
           <UiInput
             dark
             label="Request Limit"
             type="number"
-            v-model="selectedPlan.requestLimit"
-          />
+            v-model="selectedPlan.requestLimit" />
           <UiInput
             dark
             label="Price"
             type="number"
-            v-model="selectedPlan.price"
-          />
+            v-model="selectedPlan.price" />
           <UiInput
             dark
             label="Currency"
             type="text"
-            v-model="selectedPlan.currency"
-          />
+            v-model="selectedPlan.currency" />
           <UiInput
             dark
             label="Duration (days)"
             type="number"
-            v-model="selectedPlan.duration"
-          />
+            v-model="selectedPlan.duration" />
           <div class="flex items-center gap-2">
-            <UiRadio
-              v-model="selectedPlan.isActive"
-              as-boolean
-              :items="['Active', 'Inactive']"
-              custom-class="!text-[12px]"
-            />
+            <p class="text-[12px]">Active</p>
+            <UiSwitch v-model="selectedPlan.isActive" size="sm" />
           </div>
         </div>
       </template>
@@ -362,14 +317,12 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="handleUpdatePlan"
-          >
+            @click="handleUpdatePlan">
             Save Changes
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false"
-          >
+            @click="openUpdate = false">
             Cancel
           </UiButton>
         </div>
@@ -381,16 +334,14 @@
       :show="openCreate"
       title="Create New Package"
       :description="'Fill in the details below to create a new subscription plan.'"
-      @close="openCreate = false"
-    >
+      @close="openCreate = false">
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <div class="">
             <UiInput dark label="Name" v-model="newPlan.name" />
             <p
               v-if="errors.name"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
-            >
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
               {{ errors.name }}
             </p>
           </div>
@@ -400,16 +351,14 @@
             dark
             label="Request Limit"
             type="number"
-            v-model.number="newPlan.requestLimit"
-          />
+            v-model.number="newPlan.requestLimit" />
           <div class="">
             <UiInput
               dark
               label="Price"
               type="number"
               step="0.01"
-              v-model.number="newPlan.price"
-            />
+              v-model.number="newPlan.price" />
             <p class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
               {{ errors.price }}
             </p>
@@ -425,8 +374,7 @@
               dark
               label="Duration (days)"
               type="number"
-              v-model.number="newPlan.duration"
-            />
+              v-model.number="newPlan.duration" />
             <p class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
               {{ errors.duration }}
             </p>
@@ -438,20 +386,17 @@
               <UiRadio
                 v-model="newPlan.features.ai_analyses"
                 :items="['AI Analysis', 'No AI Analysis']"
-                custom-class="!text-[12px]"
-              />
+                custom-class="!text-[12px]" />
               <UiRadio
                 v-model="newPlan.features.priority_support"
                 :items="['Priority Support', 'No Priority Support']"
-                custom-class="!text-[12px]"
-              />
+                custom-class="!text-[12px]" />
             </div>
             <UiRadio
               v-model="newPlan.isActive"
               as-boolean
               :items="['Active', 'Inactive']"
-              custom-class="!text-[12px]"
-            />
+              custom-class="!text-[12px]" />
           </div>
         </div>
       </template>
@@ -461,14 +406,12 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isCreating"
-            @click="createPlan"
-          >
+            @click="createPlan">
             Create Plan
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openCreate = false"
-          >
+            @click="openCreate = false">
             Cancel
           </UiButton>
         </div>
@@ -479,8 +422,7 @@
       title="Success"
       :description="successMsg"
       type="successAlert"
-      @close="successModal = false"
-    ></UiModal>
+      @close="successModal = false"></UiModal>
   </div>
 </template>
 
