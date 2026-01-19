@@ -68,8 +68,8 @@
                           ? sortDir === 'asc'
                             ? 'mdi:chevron-up'
                             : sortDir === 'desc'
-                            ? 'mdi:chevron-down'
-                            : ''
+                              ? 'mdi:chevron-down'
+                              : ''
                           : 'mdi:unfold-more-horizontal'
                       "
                       class="w-4 h-4 opacity-60"
@@ -146,7 +146,7 @@
         <div v-if="$slots.pagination" class="h-full">
           <slot name="pagination">
             <UiPagination
-              :totalItems="filteredItems.length"
+              :totalItems="totalItems"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
               @page-changed="(page) => emit('page-changed', page)"
@@ -244,6 +244,7 @@ const props = defineProps({
   allItems: { type: Array, default: () => [] },
   searchKey: { type: String, default: "" },
   searchableKeys: { type: Array, default: null },
+  server: { type: Boolean, default: false },
 });
 
 const emit = defineEmits([
@@ -317,11 +318,17 @@ const filteredItems = computed(() => {
     keys.some((key) => {
       const value = item[key];
       return value != null && String(value).toLowerCase().includes(query);
-    })
+    }),
   );
 });
 
 const pagedItems = computed(() => {
+  // Server-side pagination
+  if (props.server) {
+    return sortedItems.value;
+  }
+
+  // Client-side pagination
   const start = (props.currentPage - 1) * props.rowsPerPage;
   return sortedItems.value.slice(start, start + props.rowsPerPage);
 });
@@ -365,6 +372,6 @@ watch(
       hasLoaded.value = true;
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 </script>

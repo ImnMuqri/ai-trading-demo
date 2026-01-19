@@ -4,37 +4,46 @@
       :class="[
         'mt-4 py-2 text-sm w-full transition-all',
         historyLoading ? 'min-h-[80vh]' : 'min-h-[80vh]',
-      ]">
+      ]"
+    >
       <!-- Header -->
       <div
-        class="flex flex-col sm:flex-row justify-center sm:justify-between sm:border-none border-b border-[#1C1C1C] sm:pb-0 pb-2">
+        class="flex flex-col sm:flex-row justify-center sm:justify-between sm:border-none border-b border-[#1C1C1C] sm:pb-0 pb-2"
+      >
         <div
-          class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2">
+          class="flex items-center gap-2 px-4 sm:border-b border-[#1C1C1C] sm:pb-2"
+        >
           <UiIcon icon="mdi:chart-line" custom-class="w-5 h-5" />
           <p class="text-lg font-semibold py-2">Signal History</p>
         </div>
         <div
-          class="flex flex-wrap justify-center sm:justify-end items-center gap-3">
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
+        >
           <span class="text-[#838383]">Filters : </span>
           <div class="flex flex-wrap">
             <UiSearch v-model="search" dark />
             <UiFilter
               v-model="rowsPerPage"
               icon="gg:list"
-              :options="rowsPerPageOptions" />
+              :options="rowsPerPageOptions"
+            />
             <div
               class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="handleSearchSubmit">
+              @click="handleSearchSubmit"
+            >
               <UiIcon
                 icon="formkit:submit"
-                class="!text-[#00BDA7] hover:!text-white" />
+                class="!text-[#00BDA7] hover:!text-white"
+              />
             </div>
             <div
               class="flex flex-col w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="clearData()">
+              @click="clearData()"
+            >
               <UiIcon
                 icon="weui:refresh-filled"
-                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+              />
             </div>
           </div>
         </div>
@@ -46,21 +55,25 @@
         :isLoading="historyLoading"
         :currentPage="currentPage"
         :rowsPerPage="rowsPerPage"
-        :totalItems="historyData.length"
+        :totalItems="pagination.total"
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         :table-break-points="1000"
-        :search-key="search">
+        :search-key="search"
+        server
+      >
         <template #row="{ item, applyBorder }">
           <div
-            class="grid grid-cols-5 gap-2 items-center text-[#838383] text-center">
+            class="grid grid-cols-5 gap-2 items-center text-[#838383] text-center"
+          >
             <div
               v-for="(col, idx) in historyColumns"
               :key="col.key"
               class="text-gray-300 font-bold"
               :class="applyBorder(idx, historyColumns.length)"
-              :title="item[col.key]">
+              :title="item[col.key]"
+            >
               <span v-if="col.key === 'createdAt'" class="text-gray-400">
                 {{ $formatDate(item[col.key] ?? "N/A", { withTime: true }) }}
               </span>
@@ -72,18 +85,21 @@
                 class="font-semibold"
                 :class="
                   item[col.key] === 'BUY' ? 'text-green-500' : 'text-red-500'
-                ">
+                "
+              >
                 {{ item[col.key] }}
               </span>
 
               <div v-else-if="col.key === 'actions'" class="flex">
                 <div
                   @click="viewSignal(item)"
-                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition">
+                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition"
+                >
                   <p>View Signal</p>
                   <UiIcon
                     icon="ic:round-chevron-right"
-                    custom-class="w-4 h-4" />
+                    custom-class="w-4 h-4"
+                  />
                 </div>
               </div>
 
@@ -100,15 +116,18 @@
               :items="card"
               :index="(currentPage - 1) * rowsPerPage + idx"
               :map="historyColumns"
-              class="my-2">
+              class="my-2"
+            >
               <template #actions>
                 <div
                   @click="viewSignal(card)"
-                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition">
+                  class="flex gap-1 items-center cursor-pointer underline text-[#838383] hover:text-[#00BDA7] transition"
+                >
                   <p>View Signal</p>
                   <UiIcon
                     icon="ic:round-chevron-right"
-                    custom-class="w-4 h-4" /></div
+                    custom-class="w-4 h-4"
+                  /></div
               ></template>
               <template v-if="card.label"></template>
               <template v-else> {{ value ?? "No Data" }} </template></UiListCard
@@ -124,13 +143,16 @@
       description="Here's a detailed analysis of the trading signal."
       :isGradient="false"
       width="max-w-[800px]"
-      @close="openDetailedAnalysis = false">
+      @close="openDetailedAnalysis = false"
+    >
       <template #body>
         <div class="text-gray-300">
           <div
-            class="flex gap-2 items-center justify-around py-3 border rounded-xl">
+            class="flex gap-2 items-center justify-around py-3 border rounded-xl"
+          >
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Risk Level</p>
               <p
                 class="font-semibold"
@@ -138,19 +160,22 @@
                   'text-yellow-500': selectedHistory.riskLevel === 'Medium',
                   'text-[#00BDA7]': selectedHistory.riskLevel === 'Low',
                   'text-red-500': selectedHistory.riskLevel === 'High',
-                }">
+                }"
+              >
                 {{ selectedHistory.riskLevel }}
               </p>
             </div>
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Risk Reward</p>
               <p class="font-semibold">
                 {{ selectedHistory.riskRewardRatio }}
               </p>
             </div>
             <div
-              class="flex flex-col gap-1 items-center justify-center text-sm">
+              class="flex flex-col gap-1 items-center justify-center text-sm"
+            >
               <p>Confidence Level</p>
               <p
                 class="font-semibold"
@@ -160,7 +185,8 @@
                     selectedHistory.confidenceLevel >= 0.5 &&
                     selectedHistory.confidenceLevel <= 0.79,
                   'text-emerald-500': selectedHistory.confidenceLevel > 0.79,
-                }">
+                }"
+              >
                 {{ formatScore(selectedHistory.confidenceLevel) }}
               </p>
             </div>
@@ -168,11 +194,13 @@
 
           <div class="flex flex-col gap-2 text-sm">
             <div
-              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2">
+              class="flex flex-col gap-2 p-3 border border-[#00BDA7] rounded-lg mt-4 mb-2"
+            >
               <div class="flex items-center gap-1">
                 <UiIcon
                   icon="hugeicons:ai-idea"
-                  custom-class="h-4 w-4"></UiIcon>
+                  custom-class="h-4 w-4"
+                ></UiIcon>
                 <h3 class="text-lg font-semibold">AI Analysis</h3>
               </div>
               <div class="flex flex-col gap-4">
@@ -232,38 +260,44 @@
                 <div class="flex items-center gap-2">
                   <UiIcon
                     icon="hugeicons:book-open-01"
-                    custom-class="h-3.5 w-3.5"></UiIcon>
+                    custom-class="h-3.5 w-3.5"
+                  ></UiIcon>
                   <p>Key Insight</p>
                 </div>
                 <div class="flex flex-col gap-2 mt-2">
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Trend</p>
                     <p
                       :class="
                         selectedHistory?.trend == 'Bullish'
                           ? 'text-emerald-500'
                           : 'text-red-500'
-                      ">
+                      "
+                    >
                       {{ selectedHistory?.trend ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Volatility</p>
                     <p class="text-emerald-500">
                       {{ selectedHistory?.volatility ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB] uppercase">Volume Analysis</p>
                     <p>
                       {{ selectedHistory.volumeAnalysis }}
                     </p>
                   </div>
                   <div
-                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex flex-col justify-between gap-1 text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB] uppercase">Market Sentiment</p>
                     <p>
                       {{ selectedHistory.marketSentiment }}
@@ -275,24 +309,28 @@
                 <div class="flex items-center gap-1">
                   <UiIcon
                     icon="hugeicons:ai-idea"
-                    custom-class="h-3.5 w-3.5"></UiIcon>
+                    custom-class="h-3.5 w-3.5"
+                  ></UiIcon>
                   <p>Trade Idea</p>
                 </div>
                 <div class="flex flex-col gap-2 mt-2">
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Signal</p>
                     <p
                       :class="
                         selectedHistory?.signal === 'BUY'
                           ? 'text-emerald-500'
                           : 'text-red-500'
-                      ">
+                      "
+                    >
                       {{ selectedHistory?.signal ?? "No Info" }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Entry Zone</p>
                     <p class="text-yellow-500">
                       {{ selectedHistory?.entryZone.upper ?? "No Info" }}-
@@ -300,7 +338,8 @@
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Stop Loss</p>
                     <p class="text-red-500">
                       {{ formatPrice(selectedHistory?.stopLoss ?? "No Info") }}
@@ -308,21 +347,24 @@
                   </div>
 
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 1</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit1) }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 2</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit2) }}
                     </p>
                   </div>
                   <div
-                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2">
+                    class="flex justify-between gap-2 uppercase text-[12px] border border-[#6262624D] rounded-md w-full p-2"
+                  >
                     <p class="text-[#BCBBBB]">Take Profit 3</p>
                     <p class="text-emerald-500">
                       {{ formatPrice(selectedHistory.takeProfit3) }}
@@ -361,7 +403,20 @@ const historyColumns = [
 ];
 
 const currentPage = ref(1);
-const rowsPerPage = ref(15);
+
+const rowsPerPage = computed({
+  get: () => pagination.value.limit,
+  set: (val) => {
+    pagination.value.limit = val;
+    pagination.value.offset = 0;
+  },
+});
+
+const pagination = ref({
+  limit: 15,
+  offset: 0,
+  total: 0,
+});
 
 const search = ref(null);
 const rowsPerPageOptions = [
@@ -380,7 +435,15 @@ const formatPrice = (value) => {
 const getSignalHistory = async () => {
   historyLoading.value = true;
   try {
-    const res = await $api.get("/api/ai/trading-history");
+    const res = await $api.get("/api/ai/trading-history", {
+      params: {
+        limit: pagination.value.limit,
+        offset: pagination.value.offset,
+      },
+    });
+
+    pagination.value.total = res.data.data.pagination.total;
+
     historyData.value = res.data.data.history || [];
     historyLoading.value = false;
   } catch (error) {
@@ -396,12 +459,16 @@ const viewSignal = (signal) => {
 };
 
 const handlePageChange = (page) => {
-  currentPage.value = page;
+  currentPage.value = page; // reactive
+  pagination.value.offset = (page - 1) * pagination.value.limit;
+  getSignalHistory();
 };
 
 const handleRowsPerPageChange = (rpp) => {
   rowsPerPage.value = rpp;
   currentPage.value = 1;
+  pagination.value.offset = 0;
+  getSignalHistory();
 };
 
 onMounted(() => {
