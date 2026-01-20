@@ -162,29 +162,6 @@
             </div>
             <ClientOnly>
               <div class="flex gap-2 mb-4 justify-between items-center">
-                <div class="flex flex-row gap-2">
-                  <!-- <div class="w-fit max-w-28 mt-0.5">
-                    <UiInput dark custom-class="h-7" placeholder="Search">
-                      <template #icon-left>
-                        <UiIcon
-                          icon="ic:baseline-search"
-                          custom-class="text-gray-300"
-                        />
-                      </template>
-                    </UiInput>
-                  </div> -->
-
-                  <UiFilter
-                    v-model="selectedNews"
-                    icon="carbon:funnel-sort"
-                    :options="newsSymbols"
-                    position="bottom-right"
-                    searchable
-                  />
-
-                  <UiDate v-model="newsDate" icon="uiw:date" />
-                </div>
-
                 <div class="flex flex-row items-center gap-2">
                   <div
                     class="cursor-pointer px-2 py-1"
@@ -202,6 +179,28 @@
                   >
                     {{ selectedNews }}
                   </div>
+                </div>
+                <div class="flex flex-row gap-2">
+                  <!-- <div class="w-fit max-w-28 mt-0.5">
+                    <UiInput dark custom-class="h-7" placeholder="Search">
+                      <template #icon-left>
+                        <UiIcon
+                          icon="ic:baseline-search"
+                          custom-class="text-gray-300"
+                        />
+                      </template>
+                    </UiInput>
+                  </div> -->
+
+                  <UiFilter
+                    v-model="selectedNews"
+                    icon="carbon:funnel-sort"
+                    :options="newsSymbols"
+                    position="bottom-left"
+                    searchable
+                  />
+
+                  <UiDate v-model="newsDate" icon="uiw:date" />
                 </div>
               </div>
             </ClientOnly>
