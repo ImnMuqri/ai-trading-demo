@@ -8,21 +8,24 @@
       variantClasses,
       customClass,
       { 'opacity-60 cursor-not-allowed': isDisabled || isLoading },
-    ]">
+    ]"
+  >
     <!-- Absolute Loading Spinner -->
     <div
       v-if="isLoading"
-      class="absolute inset-0 flex items-center justify-center">
+      class="absolute inset-0 flex items-center justify-center"
+    >
       <UiIcon icon="svg-spinners:blocks-shuffle-3" class="text-lg" />
     </div>
 
     <!-- Content with reduced opacity when loading -->
     <div
       :class="{ 'opacity-0': isLoading, 'opacity-100': !isLoading }"
-      class="flex items-center gap-2 transition-opacity duration-200">
+      class="flex items-center gap-2 transition-opacity duration-200"
+    >
       <template v-if="variant === 'icon' && icon">
         <UiIcon :icon="icon" :class="iconSizeClasses" />
-        <div class="text-[12px]">
+        <div v-if="hasSlotContent" class="text-[12px]">
           <slot></slot>
         </div>
       </template>
@@ -36,6 +39,10 @@
 </template>
 
 <script setup>
+import { useSlots } from "vue";
+
+const slots = useSlots();
+
 const props = defineProps({
   variant: {
     type: String,
@@ -53,6 +60,8 @@ const props = defineProps({
     default: "",
   },
 });
+
+const hasSlotContent = !!slots.default;
 
 const variantClasses = computed(() => {
   switch (props.variant) {

@@ -5,20 +5,23 @@
         <div class="flex items-center justify-between gap-2 pb-2">
           <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
           <span
-            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+            class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
+          ></span>
         </div>
         <!-- News items for this date -->
         <div
           v-for="(news, index) in group"
           :key="index"
           :class="impactBorder(news.tag)"
-          class="p-[2px] rounded-lg mb-3">
+          class="p-[2px] rounded-lg mb-3"
+        >
           <div class="relative px-6 py-3 rounded-lg bg-[#0D0D0D] h-full">
             <a
               :href="news.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex flex-col md:flex-row gap-6 items-center mb-2">
+              class="flex flex-col md:flex-row gap-6 items-center mb-2"
+            >
               <!-- Show image if available -->
               <img
                 v-if="news.image"
@@ -27,7 +30,8 @@
                 :class="[
                   'h-auto rounded-md mb-2 col-span-1',
                   index === 0 ? 'w-full md:w-[20vw]' : 'w-full md:w-[10vw]',
-                ]" />
+                ]"
+              />
               <div class="grid grid-cols-1 gap-2">
                 <p class="text-[12px] text-gray-500 capitalize">
                   {{ formatTime(news.publishedAt) }}
@@ -47,35 +51,42 @@
                 news.tag == 'Positive'
                   ? 'bg-[#00BDA7]'
                   : news.tag == 'Negative'
-                  ? 'bg-red-500'
-                  : 'bg-gray-500',
-              ]">
+                    ? 'bg-red-500'
+                    : 'bg-gray-500',
+              ]"
+            >
               {{ news.tag }}
             </p>
             <div
               @click="newAnalysis(news.id)"
               :ref="(el) => setAnalysisButton(el, news.id)"
               class="absolute top-2 right-2 flex gap-1 items-center cursor-pointer rounded-full"
-              :class="isAnalysing ? 'animate-pulse pointer-events-none' : ''">
+              :class="isAnalysing ? 'animate-pulse pointer-events-none' : ''"
+            >
               <UiIcon
                 icon="icon:ai-icon"
-                custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+                custom-class="h-10 w-10 text-[#00BDA7]"
+              ></UiIcon>
             </div>
             <div
               class="overflow-hidden transition-[max-height] duration-300 ease-in"
               :style="{
                 maxHeight: openAnalysis === news.id ? '1000px' : '0px',
-              }">
+              }"
+            >
               <!-- Loading state -->
               <div
                 class="flex items-center justify-center bg-[#1C1C1C] text-sm rounded-md py-2"
-                v-show="isAnalysing">
+                v-show="isAnalysing"
+              >
                 <iframe
                   src="https://lottie.host/embed/421ff970-c655-4968-8fe0-06c734cea089/6aVQU0cIOG.lottie"
-                  class="border-0 !w-16 !h-14">
+                  class="border-0 !w-16 !h-14"
+                >
                 </iframe>
                 <p
-                  class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text">
+                  class="text-[11px] font-semibold inline-block text-gray-400 shimmer-text"
+                >
                   Generating Ai Analysis
                 </p>
               </div>
@@ -83,12 +94,15 @@
               <div
                 v-if="analysisData"
                 v-show="!isAnalysing"
-                class="bg-[#1C1C1C] text-sm rounded-md">
+                class="bg-[#1C1C1C] text-sm rounded-md"
+              >
                 <div
-                  class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2">
+                  class="flex items-center px-2 py-2 border-b border-[#2A2A2A] gap-2"
+                >
                   <UiIcon
                     icon="icon:ai-icon"
-                    custom-class="h-9 w-8 text-[#00BDA7]"></UiIcon>
+                    custom-class="h-9 w-8 text-[#00BDA7]"
+                  ></UiIcon>
                   AI Analysis
                 </div>
                 <div class="flex flex-col gap-2 p-4 text-[12px] text-gray-300">
@@ -111,9 +125,10 @@
                         analysisData.analysis.sentiment === 'Positive'
                           ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
                           : analysisData.analysis.sentiment === 'Negative'
-                          ? 'bg-red-500/15 text-red-500 border-red-500'
-                          : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                      ]">
+                            ? 'bg-red-500/15 text-red-500 border-red-500'
+                            : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                      ]"
+                    >
                       {{ analysisData.analysis?.sentiment }}
                     </UiChip>
 
@@ -123,9 +138,10 @@
                         analysisData.analysis.impact === 'Low'
                           ? 'bg-[#00BDA7]/15 text-[#00BDA7] border-[#00BDA7]'
                           : analysisData.analysis.impact === 'High'
-                          ? 'bg-red-500/15 text-red-500 border-red-500'
-                          : 'bg-gray-500/15 text-gray-400 border-gray-600',
-                      ]">
+                            ? 'bg-red-500/15 text-red-500 border-red-500'
+                            : 'bg-gray-500/15 text-gray-400 border-gray-600',
+                      ]"
+                    >
                       {{ analysisData.analysis.impact }}
                     </UiChip>
                   </div>
@@ -147,11 +163,13 @@
           <!-- Shimmer news card -->
           <div class="px-4 pt-4 pb-3 mb-3 rounded-lg bg-gray-800 animate-pulse">
             <div
-              class="flex flex-col md:flex-row gap-6 items-start md:items-center mb-3">
+              class="flex flex-col md:flex-row gap-6 items-start md:items-center mb-3"
+            >
               <!-- Image shimmer -->
               <div
                 class="rounded-md bg-gray-700"
-                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"></div>
+                :class="n === 1 ? 'w-[350px] h-24' : 'w-[200px] h-20'"
+              ></div>
 
               <!-- Text shimmer -->
               <div class="grid grid-cols-1 gap-2 flex-1">
@@ -167,7 +185,10 @@
         </div>
       </div>
 
-      <div v-if="newsList.length === 0" class="p-4 text-gray-500">
+      <div
+        v-if="newsList.length === 0"
+        class="flex flex-col h-full justify-center items-center p-4 text-gray-500"
+      >
         No news available.
       </div>
     </div>
@@ -190,8 +211,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 const { $api } = useNuxtApp();
+
+const props = defineProps({
+  selectedNews: {
+    type: String,
+    default: "All",
+  },
+  selectedDate: {
+    type: String,
+    default: "",
+  },
+});
 
 const isLoading = ref(false);
 const isAnalysing = ref(false);
@@ -240,7 +272,16 @@ const fetchNews = async () => {
   isLoading.value = true;
 
   try {
-    const response = await $api.get("api/forex-news");
+    const params = {};
+    if (props.selectedNews && props.selectedNews !== "All") {
+      params.currency = props.selectedNews;
+    }
+
+    if (props.selectedDate && props.selectedDate !== "") {
+      params.date = props.selectedDate;
+    }
+
+    const response = await $api.get("api/forex-news", { params });
     const raw = response.data.data || [];
 
     newsList.value = raw.map((item) => ({
@@ -311,14 +352,14 @@ const groupedNews = computed(() => {
 
   Object.keys(groups).forEach((key) => {
     groups[key].sort(
-      (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt)
+      (a, b) => new Date(b.publishedAt) - new Date(a.publishedAt),
     );
   });
 
   return Object.fromEntries(
     Object.entries(groups).sort(
-      ([dateA], [dateB]) => new Date(dateB) - new Date(dateA)
-    )
+      ([dateA], [dateB]) => new Date(dateB) - new Date(dateA),
+    ),
   );
 });
 // Border colors based on severity
@@ -339,6 +380,23 @@ const impactBorder = (severity) => {
 onMounted(() => {
   fetchNews();
 });
+
+watch(
+  () => props.selectedNews,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchNews();
+    }
+  },
+);
+watch(
+  () => props.selectedDate,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchNews();
+    }
+  },
+);
 </script>
 
 <style scoped>

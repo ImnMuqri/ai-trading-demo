@@ -20,15 +20,24 @@
         class="absolute z-50 max-h-60 w-44 overflow-auto bg-[#2A2A2A] border border-[#1C1C1C] rounded-lg shadow-lg text-white text-sm"
         :class="positionClass"
       >
+        <li v-if="searchable" class="p-2 border-b border-[#1C1C1C]">
+          <UiInput
+            v-model="search"
+            dark
+            :placeholder="props.placeholder"
+            custom-class=""
+          />
+        </li>
+
         <li
-          v-for="option in options"
+          v-for="option in filteredOptions"
           :key="option.value"
           @click="selectOption(option)"
           class="px-4 py-2 hover:bg-white hover:text-black cursor-pointer transition"
         >
           {{ option.label }}
         </li>
-        <li v-if="options.length === 0" class="px-4 py-2 text-gray-500">
+        <li v-if="filteredOptions.length === 0" class="px-4 py-2 text-gray-500">
           No options
         </li>
       </ul>
@@ -44,12 +53,15 @@ const props = defineProps({
   icon: { type: String, default: "heroicons:magnifying-glass-plus-20-solid" },
   options: { type: Array, required: true },
   position: { type: String, default: "bottom-left" },
+  searchable: { type: Boolean, default: false },
+  placeholder: { type: String, default: "Select an item" },
 });
 
 const emit = defineEmits(["update:modelValue"]);
 
 const open = ref(false);
 const wrapper = ref(null);
+const search = ref("");
 
 const toggleDropdown = () => (open.value = !open.value);
 
@@ -71,6 +83,13 @@ const positionClass = computed(() => {
     default:
       return "mt-2 left-0";
   }
+});
+
+const filteredOptions = computed(() => {
+  if (!props.searchable || !search.value) return props.options;
+
+  const q = search.value.toLowerCase();
+  return props.options.filter((o) => o.label.toLowerCase().includes(q));
 });
 
 const handleClickOutside = (event) => {
@@ -96,5 +115,21 @@ onBeforeUnmount(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+ul::-webkit-scrollbar {
+  width: 8px;
+}
+ul::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+ul::-webkit-scrollbar-thumb {
+  background-color: #00bda7;
+  border-radius: 4px;
+  border: 2px solid #2a2a2a;
+}
+ul::-webkit-scrollbar-thumb:hover {
+  background-color: #00e0c0;
 }
 </style>

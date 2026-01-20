@@ -16,6 +16,7 @@ body {
 .Vue-Toastification__toast-body,
 .Vue-Toastification__toast-component-body,
 .my-toast-wrapper,
+.my-toast-wrapper,
 .my-toast-body {
   font-family: "Poppins", sans-serif !important;
 }
@@ -90,9 +91,18 @@ body {
   color: #ff3300 !important;
 }
 
+.dp__cell_offset {
+  color: #797979 !important;
+}
+
+.dp__inner_nav:hover{
+  color: #fff !important
+}
+
+
 .dp__theme_light {
   --dp-background-color: #1c1c1c !important;
-  --dp-text-color: #797979 !important;
+  --dp-text-color: #c0c4cc !important;
   --dp-hover-color: #00bda7 !important;
   --dp-hover-text-color: #fff;
   --dp-hover-icon-color: #959595;

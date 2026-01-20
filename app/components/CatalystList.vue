@@ -5,9 +5,9 @@
       <div class="flex items-center justify-between gap-2 pb-2">
         <p class="text-sm text-[#00BDA7] whitespace-nowrap">{{ date }}</p>
         <span
-          class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"></span>
+          class="block h-[1px] w-full bg-gradient-to-r from-[#737373] to-[#D9D9D900]"
+        ></span>
       </div>
-
       <!-- News items for this date -->
       <div
         v-for="(news, index) in group"
@@ -15,7 +15,8 @@
         :class="[
           'pl-4 pb-3  rounded-lg transition mb-3',
           impactBorder(news.severity),
-        ]">
+        ]"
+      >
         <div class="flex items-center justify-between">
           <span class="flex gap-2">
             <p class="text-[12px] text-gray-400">{{ news.country }}</p>
@@ -26,7 +27,8 @@
           <div @click="catalystAnalysis(news.id)" class="cursor-pointer">
             <UiIcon
               icon="icon:ai-icon"
-              custom-class="h-10 w-10 text-[#00BDA7]"></UiIcon>
+              custom-class="h-10 w-10 text-[#00BDA7]"
+            ></UiIcon>
           </div>
         </div>
         <h3 class="text-md font-medium text-white mb-1">{{ news.title }}</h3>
@@ -36,9 +38,10 @@
             news.severity === 'high'
               ? 'text-red-500'
               : news.severity === 'medium'
-              ? 'text-yellow-500'
-              : 'text-[#00BDA7]',
-          ]">
+                ? 'text-yellow-500'
+                : 'text-[#00BDA7]',
+          ]"
+        >
           Possible Impact:
         </p>
 
@@ -71,7 +74,10 @@
       </div>
     </div>
 
-    <div v-if="newsList.length === 0" class="p-4 text-gray-500">
+    <div
+      v-if="newsList.length === 0"
+      class="flex flex-col h-full justify-center items-center p-4 text-gray-500"
+    >
       No news available.
     </div>
     <!-- <UiModal
@@ -158,38 +164,47 @@
       :isGradient="false"
       :isLoading="isAnalysing"
       width="max-w-[800px]"
-      @close="openAnalysisModal = false">
+      @close="openAnalysisModal = false"
+    >
       <template #body>
         <div
           v-if="!isAnalysing"
           class="modal-body text-gray-300 overflow-y-auto max-h-[70vh] pr-2"
-          style="will-change: transform">
+          style="will-change: transform"
+        >
           <div
-            class="flex flex-col gap-2 px-4 py-4 mb-4 border border-[#00BDA7] bg-gradient-to-tl from-[#00BDA7] rounded-lg">
+            class="flex flex-col gap-2 px-4 py-4 mb-4 border border-[#00BDA7] bg-gradient-to-tl from-[#00BDA7] rounded-lg"
+          >
             <div
-              class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-1 mb-2">
+              class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-1 mb-2"
+            >
               <div class="flex items-center gap-2">
                 <UiIcon
                   icon="hugeicons:ai-idea"
-                  custom-class="h-5 w-5 text-yellow-500"></UiIcon>
+                  custom-class="h-5 w-5 text-yellow-500"
+                ></UiIcon>
                 <p class="text-xl font-semibold">Ai Analysis</p>
               </div>
               <div
-                class="flex gap-2 w-full md:w-fit items-center justify-around py-2 px-6 border rounded-lg text-[12px]">
+                class="flex gap-2 w-full md:w-fit items-center justify-around py-2 px-6 border rounded-lg text-[12px]"
+              >
                 <div
-                  class="flex flex-col gap-[1px] items-center justify-center">
+                  class="flex flex-col gap-[1px] items-center justify-center"
+                >
                   <p>Actual</p>
                   <p class="font-semibold">Pending</p>
                 </div>
                 <div
-                  class="flex flex-col gap-[1px] items-center justify-center">
+                  class="flex flex-col gap-[1px] items-center justify-center"
+                >
                   <p>Forecast</p>
                   <p class="font-semibold">
                     {{ analysisData.prediction.predictedActual }}
                   </p>
                 </div>
                 <div
-                  class="flex flex-col gap-[1px] items-center justify-center">
+                  class="flex flex-col gap-[1px] items-center justify-center"
+                >
                   <p>Predicted</p>
                   <p class="font-semibold">
                     {{ analysisData.prediction.predictedActual }}
@@ -264,6 +279,21 @@ const isAnalysing = ref(false);
 const mountAnalysisContent = ref(false);
 const openAnalysisModal = ref(false);
 
+const props = defineProps({
+  selectedImpact: {
+    type: String,
+    default: null,
+  },
+  selectedCountry: {
+    type: String,
+    default: "All",
+  },
+  selectedDate: {
+    type: String,
+    default: "",
+  },
+});
+
 // Map backend impact level into readable values
 const mapSeverity = (level) => {
   if (level === "1") return "high";
@@ -277,7 +307,19 @@ const fetchNews = async () => {
   isLoading.value = true;
 
   try {
-    const res = await $api.get("api/economic-calendar");
+    const params = {};
+    if (props.selectedImpact && props.selectedImpact !== null) {
+      params.impact = props.selectedImpact;
+    }
+    if (props.selectedCountry && props.selectedCountry !== "All") {
+      params.country = props.selectedCountry;
+    }
+
+    if (props.selectedDate && props.selectedDate !== "") {
+      params.date = props.selectedDate;
+    }
+
+    const res = await $api.get("api/economic-calendar", { params });
     const raw = res.data.data || [];
 
     newsList.value = raw.map((item) => ({
@@ -339,6 +381,31 @@ watch(openAnalysisModal, async (val) => {
     mountAnalysisContent.value = false;
   }
 });
+
+watch(
+  () => props.selectedImpact,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchNews();
+    }
+  },
+);
+watch(
+  () => props.selectedCountry,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchNews();
+    }
+  },
+);
+watch(
+  () => props.selectedDate,
+  (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchNews();
+    }
+  },
+);
 // Auto run fetch on mount
 onMounted(() => {
   fetchNews();
@@ -371,7 +438,7 @@ const groupedNews = computed(() => {
 
   // Sort date groups from latest to oldest
   return Object.fromEntries(
-    Object.entries(groups).sort(([a], [b]) => new Date(b) - new Date(a))
+    Object.entries(groups).sort(([a], [b]) => new Date(b) - new Date(a)),
   );
 });
 

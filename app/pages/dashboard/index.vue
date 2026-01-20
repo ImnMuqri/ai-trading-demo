@@ -1,24 +1,28 @@
 <template>
   <div class="text-white">
     <div
-      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2">
+      class="flex flex-wrap items-center justify-between gap-2 py-2 px-1 w-full mb-2"
+    >
       <div class="flex items-center gap-2">
         <UiSelect
           v-model="selectedSymbol"
           :options="symbols"
           placeholder="Select Instrument"
           ref="symbolSelect"
-          class="symbolSelect" />
+          class="symbolSelect"
+        />
         <UiSelect
           v-model="selectedInterval"
           :options="intervalOptions"
           placeholder="Select Timeframe"
           ref="intervalSelect"
-          class="intervalSelect" />
+          class="intervalSelect"
+        />
       </div>
       <div
         @click="openAffiliatorModal = true"
-        class="h-7 w-7 flex items-center justify-center bg-[#00BDA7]/50 border-[2px] border-[#00BDA7] rounded-full cursor-pointer">
+        class="h-7 w-7 flex items-center justify-center bg-[#00BDA7]/50 border-[2px] border-[#00BDA7] rounded-full cursor-pointer"
+      >
         <UiIcon icon="ic:baseline-link"></UiIcon>
       </div>
     </div>
@@ -28,7 +32,8 @@
         :symbol="selectedSymbol"
         :interval="selectedInterval"
         @open-analysis-modal="openDetailedAnalysis = true"
-        ref="requestSignalRef" />
+        ref="requestSignalRef"
+      />
       <client-only class="w-full lg:h-[630px]">
         <div class="grid grid-cols-1 gap-2">
           <UiCard class="px-2">
@@ -48,7 +53,8 @@
     <div class="flex flex-wrap w-full gap-4 mt-4">
       <ContextualFactors
         :selectedSymbol="selectedSymbol"
-        @sentimentIndex="SentimentIndex" />
+        @sentimentIndex="SentimentIndex"
+      />
     </div>
     <div class="flex flex-col lg:flex-row gap-4 mt-4">
       <UiCard class="px-2 py-2 max-h-[600px] w-full overflow-hidden">
@@ -63,68 +69,149 @@
               activeTab === tab
                 ? 'border-b-2 border-emerald-500 text-emerald-600'
                 : 'text-gray-500 hover:text-gray-700',
-            ]">
+            ]"
+          >
             {{ tab }}
           </button>
         </div>
 
         <!-- Tab Content -->
         <div v-if="activeTab === 'Upcoming Catalysts'">
-          <div class="px-4 w-full max-h-[600px]">
+          <div class="px-4 w-full min-h-[500px] max-h-[600px]">
             <div class="flex items-center gap-1 mb-2">
               <p>Upcoming Catalysts</p>
               <UiIcon icon="material-symbols:info-outline-rounded" />
             </div>
 
-            <div class="flex gap-2 mb-2">
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                <span class="text-[12px]">Low Impact</span>
+            <ClientOnly>
+              <div
+                class="flex flex-col md:flex-row gap-2 mb-2 justify-between items-start md:items-center"
+              >
+                <div
+                  class="flex flex-wrap gap-2 mt-2 md:mt-0 justify-center items-center md:justify-start"
+                >
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span class="text-[12px]">Low Impact</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <span class="text-[12px]">Medium Impact</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                    <span class="text-[12px]">High Impact</span>
+                  </div>
+                </div>
+                <div
+                  class="flex flex-wrap justify-center items-center md:justify-end md:items-end w-full sm:w-fit gap-2"
+                >
+                  <!-- <div class="w-fit max-w-28 mt-0.5">
+                    <UiInput dark custom-class="h-7" placeholder="Search">
+                      <template #icon-left>
+                        <UiIcon
+                          icon="ic:baseline-search"
+                          custom-class="text-gray-300"
+                        />
+                      </template>
+                    </UiInput>
+                  </div> -->
+
+                  <UiFilter
+                    v-model="selectedCountry"
+                    icon="proicons:globe"
+                    :options="countries"
+                    custom-class="!text-[#626262]"
+                    :position="filterPosition"
+                    searchable
+                  />
+                  <UiFilter
+                    v-model="selectedImpact"
+                    icon="carbon:funnel-sort"
+                    :options="impacts"
+                  />
+
+                  <UiDate v-model="impactDate" icon="uiw:date" />
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
-                <span class="text-[12px]">Medium Impact</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-red-500"></div>
-                <span class="text-[12px]">High Impact</span>
-              </div>
-            </div>
+            </ClientOnly>
 
             <client-only>
-              <CatalystList />
+              <CatalystList
+                :selected-impact="selectedImpact"
+                :selected-date="impactDate"
+                :selected-country="selectedCountry"
+              />
             </client-only>
           </div>
         </div>
 
         <div v-else-if="activeTab === 'Live News'">
-          <div class="px-4 w-full max-h-[600px]">
+          <div class="px-4 w-full min-h-[500px] max-h-[600px]">
             <div class="flex gap-2 items-center pb-2">
               <p>Live News</p>
               <span class="relative flex size-2">
                 <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"></span>
+                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-300 opacity-75"
+                ></span>
                 <span
-                  class="relative inline-flex size-2 rounded-full bg-red-500"></span>
+                  class="relative inline-flex size-2 rounded-full bg-red-500"
+                ></span>
               </span>
               <UiIcon icon="material-symbols:info-outline-rounded" />
             </div>
+            <ClientOnly>
+              <div class="flex gap-2 mb-4 justify-between items-center">
+                <div class="flex flex-row gap-2">
+                  <!-- <div class="w-fit max-w-28 mt-0.5">
+                    <UiInput dark custom-class="h-7" placeholder="Search">
+                      <template #icon-left>
+                        <UiIcon
+                          icon="ic:baseline-search"
+                          custom-class="text-gray-300"
+                        />
+                      </template>
+                    </UiInput>
+                  </div> -->
 
-            <div class="flex gap-2 mb-4">
-              <div class="w-fit max-w-28">
-                <UiInput dark custom-class="h-7" placeholder="Search">
-                  <template #icon-left>
-                    <UiIcon
-                      icon="ic:baseline-search"
-                      custom-class="text-gray-300" />
-                  </template>
-                </UiInput>
+                  <UiFilter
+                    v-model="selectedNews"
+                    icon="carbon:funnel-sort"
+                    :options="newsSymbols"
+                    position="bottom-right"
+                    searchable
+                  />
+
+                  <UiDate v-model="newsDate" icon="uiw:date" />
+                </div>
+
+                <div class="flex flex-row items-center gap-2">
+                  <div
+                    class="cursor-pointer px-2 py-1"
+                    :class="{
+                      'border-b-2 border-[#00BDA7]': selectedNews === 'All',
+                    }"
+                    @click="selectAll"
+                  >
+                    All
+                  </div>
+
+                  <div
+                    v-if="selectedNews !== 'All'"
+                    class="cursor-pointer px-2 py-1 border-b-2 border-[#00BDA7]"
+                  >
+                    {{ selectedNews }}
+                  </div>
+                </div>
               </div>
-              <UiIcon icon="carbon:funnel-sort" />
-            </div>
+            </ClientOnly>
 
             <client-only>
-              <NewsList ref="analysisRef" />
+              <NewsList
+                ref="analysisRef"
+                :selected-news="selectedNews"
+                :selected-date="newsDate"
+              />
             </client-only>
           </div>
         </div>
@@ -148,14 +235,16 @@
               viewBox="0 0 40 40"
               xmlns="http://www.w3.org/2000/svg"
               preserveAspectRatio="xMidYMid meet"
-              class="mb-2 mx-auto">
+              class="mb-2 mx-auto"
+            >
               <!-- background ring -->
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#1C1C1C"
                 stroke-width="6.5"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
 
               <!-- progress ring -->
 
@@ -164,21 +253,24 @@
                 fill="none"
                 stroke="#8DADA2"
                 stroke-width="3"
-                stroke-linecap="round" />
+                stroke-linecap="round"
+              />
               <path
                 d="M20 2.0845 a15.9155 15.9155 0 0 1 0 31.831 a15.9155 15.9155 0 0 1 0 -31.831"
                 fill="none"
                 stroke="#10B981"
                 stroke-width="3"
                 stroke-linecap="round"
-                :stroke-dasharray="`${sentimentIndex.percentage} 100`" />
+                :stroke-dasharray="`${sentimentIndex.percentage} 100`"
+              />
 
               <!-- centered text -->
               <text
                 x="20"
                 y="11"
                 text-anchor="middle"
-                font-family="Inter, Arial, sans-serif">
+                font-family="Inter, Arial, sans-serif"
+              >
                 <tspan x="20.5" dy="1" font-size="2.8" fill="#10B981">
                   Index
                 </tspan>
@@ -187,7 +279,8 @@
                   dy="8"
                   font-size="7"
                   font-weight="700"
-                  fill="#10B981">
+                  fill="#10B981"
+                >
                   {{ sentimentIndex.percentage }}
                 </tspan>
                 <tspan x="20.4" dy="3.4" font-size="2.2" fill="#6B7280">
@@ -203,23 +296,27 @@
       :show="openAffiliatorModal"
       :isGradient="true"
       width="max-w-[500px]"
-      @close="openAffiliatorModal = false">
+      @close="openAffiliatorModal = false"
+    >
       <template #body>
         <div class="flex flex-col text-center gap-4 w-full">
           <img src="assets/bg/LinkPic.svg" class="w-full h-[20vh]" />
           <div class="grid grid-cols-1 gap-2">
             <p
-              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent">
+              class="text-2xl font-semibold bg-gradient-to-r from-[#00AAFF] to-[#00BDA7] bg-clip-text text-transparent"
+            >
               {{ userProfile.affiliator.name }}
             </p>
             <p>{{ userProfile.affiliator.email }}</p>
           </div>
           <div class="flex flex-row gap-4 justify-evenly items-center">
             <div
-              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-l from-[#838383] to-[#1D1D1D00]"
+            ></div>
             <p class="text-[12px] whitespace-nowrap">Affiliator's Link</p>
             <div
-              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"></div>
+              class="h-[2px] w-full bg-gradient-to-r from-[#838383] to-[#1D1D1D00]"
+            ></div>
           </div>
           <UiList
             :parameters="userProfile.affiliatorExternalLinks"
@@ -228,14 +325,17 @@
             :rowsPerPage="extRowsPerPage"
             @page-changed="extPageChange"
             @rows-per-page-changed="extRowsChange"
-            pagination>
+            pagination
+          >
             <template #parameters="{ parameters }">
               <div
                 v-for="(link, idx) in parameters"
                 :key="idx"
-                class="overflow-y-auto mb-4">
+                class="overflow-y-auto mb-4"
+              >
                 <div
-                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left">
+                  class="flex justify-between items-center py-2 px-4 bg-[#323232] rounded-lg text-left"
+                >
                   <div>
                     <a :href="link.url" target="_blank" class="w-full text-sm"
                       >{{ link.name }}
@@ -243,7 +343,8 @@
                     <p class="text-[11px]">{{ link.description }}</p>
                   </div>
                   <div
-                    class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]">
+                    class="flex items-center justify-center h-6 w-6 rounded-full bg-[#00AAFF]"
+                  >
                     <UiIcon
                       icon="solar:copy-bold"
                       custom-class="h-3 w-3  cursor-pointer"
@@ -252,7 +353,8 @@
                           ? 'text-[#00BDA7]'
                           : 'text-white hover:text-white/80'
                       "
-                      @click="copyLink(link.url, idx)" />
+                      @click="copyLink(link.url, idx)"
+                    />
                   </div>
                 </div>
               </div>
@@ -284,6 +386,29 @@ const tabs = ["Live News", "Upcoming Catalysts"];
 const activeTab = ref(tabs[0]);
 
 const selectedInterval = ref("15"); // minutes, e.g., "1", "5", "15", "60", "D"
+
+const selectedNews = ref("All");
+const newsSymbols = ref([]);
+
+const newsDate = ref("");
+
+const selectedImpact = ref(null);
+const impacts = [
+  { label: "Show All", value: null },
+  { label: "Low Impact", value: 3 },
+  { label: "Medium Impact", value: 2 },
+  { label: "High Impact", value: 1 },
+];
+const impactDate = ref("");
+
+const selectedCountry = ref(null);
+const countries = ref([]);
+
+const filterPosition = computed(() =>
+  typeof window !== "undefined" && window.innerWidth < 768
+    ? "bottom-right"
+    : "bottom-left",
+);
 
 const symbols = ref([]);
 const selectedSymbol = ref(""); // initially empty
@@ -320,7 +445,7 @@ const SentimentIndex = (value) => {
 const fetchSymbols = async () => {
   try {
     const resCurrency = await $api.get(
-      `api/contextual-factors/available-pairs`
+      `api/contextual-factors/available-pairs`,
     );
     const pairs = resCurrency.data.data.currencyPairs || [];
 
@@ -338,6 +463,41 @@ const fetchSymbols = async () => {
   }
 };
 
+const fetchCountries = async () => {
+  try {
+    countries.value = await $fetch("/api/country/country");
+    console.log(countries);
+  } catch (error) {
+    console.error("Error in fetching countries :", error);
+  }
+};
+
+const mapToNewsSymbols = async () => {
+  newsSymbols.value = [
+    { label: "Show All", value: "All" },
+    ...symbols.value.map((s) => {
+      let formattedValue = s.value;
+
+      if (!formattedValue.includes("/") && formattedValue.length === 6) {
+        formattedValue =
+          formattedValue.slice(0, 3) + "-" + formattedValue.slice(3);
+      } else if (formattedValue.includes("/")) {
+        formattedValue = formattedValue.replace("/", "-");
+      }
+
+      return {
+        label: s.label,
+        value: formattedValue,
+      };
+    }),
+  ];
+};
+
+const selectAll = () => {
+  selectedNews.value = "All";
+  newsDate.value = "";
+};
+
 const userProfile = ref([]);
 const userProfileLoading = ref(false);
 
@@ -351,7 +511,7 @@ const getExternalLinks = async () => {
     console.error("Failed to fetch external links", error);
     showToast(
       error.response?.data?.message || "Unable to fetch external links",
-      "error"
+      "error",
     );
   } finally {
     userProfileLoading.value = false;
@@ -465,7 +625,9 @@ onMounted(async () => {
   await nextTick();
 
   if (process.client) {
+    await fetchCountries();
     await fetchSymbols();
+    await mapToNewsSymbols();
     await getExternalLinks();
     await nextTick();
     loadTickerTape();
@@ -504,7 +666,7 @@ onMounted(async () => {
     {
       element: await waitForElement(
         () => analysisRef.value?.getFirstAnalysisButton(),
-        5000
+        5000,
       ),
       popover: {
         description:
