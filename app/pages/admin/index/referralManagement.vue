@@ -2,34 +2,41 @@
   <div class="text-white">
     <UiCard class="py-2 text-[12px] h-full flex-1">
       <div
-        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2">
+        class="flex flex-col sm:flex-row justify-between border-b border-[#1C1C1C] pb-2"
+      >
         <div class="flex items-center gap-2 px-4">
           <UiIcon icon="mdi:account-multiple-outline" custom-class="w-4 h-4" />
           <p class="text-sm font-semibold py-2">Referral Campaigns</p>
         </div>
 
         <div
-          class="flex flex-wrap justify-center sm:justify-end items-center gap-3 px-3">
-          <span class="text-[#838383]">Filters : </span>
+          class="flex flex-wrap justify-center sm:justify-end items-center gap-3 px-3"
+        >
+          <span class="text-[#838383] hidden sm:inline"> Filters : </span>
+
           <div class="flex flex-wrap">
             <UiSearch v-model="search" dark />
             <UiFilter
               v-model="rowsPerPage"
               icon="gg:list"
-              :options="rowsPerPageOptions" />
+              :options="rowsPerPageOptions"
+            />
             <div
               class="flex w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="handleSearchSubmit">
+            >
               <UiIcon
                 icon="formkit:submit"
-                class="!text-[#00BDA7] hover:!text-white" />
+                class="!text-[#00BDA7] hover:!text-white"
+              />
             </div>
             <div
               class="flex w-8 h-8 items-center justify-center rounded-lg cursor-pointer"
-              @click="clearData()">
+              @click="clearData()"
+            >
               <UiIcon
                 icon="weui:refresh-filled"
-                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]" />
+                class="!text-[#FF9D00] hover:!text-white transform scale-x-[-1]"
+              />
             </div>
           </div>
         </div>
@@ -47,10 +54,13 @@
         @page-changed="handlePageChange"
         @rows-per-page-changed="handleRowsPerPageChange"
         empty-class="min-h-[400px]"
-        :table-break-points="1000">
+        :search-key="search"
+        :table-break-points="1000"
+      >
         <template #row="{ item }">
           <div
-            class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center">
+            class="grid grid-cols-6 gap-2 items-center text-[#838383] text-center"
+          >
             <div
               v-for="(col, idx) in referralColumns"
               :key="col.key"
@@ -60,7 +70,8 @@
                   ? 'border-r border-[#2A2A2A] pr-2'
                   : ''
               "
-              :title="item[col.key]">
+              :title="item[col.key]"
+            >
               <span v-if="col.key === 'createdAt'">
                 {{ $formatDate(item[col.key] ?? "N/A", { withTime: true }) }}
               </span>
@@ -71,25 +82,29 @@
                   item[col.key] === 'active'
                     ? 'text-emerald-500 font-semibold'
                     : 'text-yellow-500 font-semibold'
-                ">
+                "
+              >
                 {{ item[col.key] }}
               </span>
 
               <div
                 v-else-if="col.key === 'actions'"
-                class="flex gap-[2px] justify-center">
+                class="flex gap-[2px] justify-center"
+              >
                 <UiButton
                   variant="icon"
                   icon="cuida:edit-outline"
                   size="sm"
                   custom-class="!px-1 !text-[#00BDA7] !bg-transparent"
-                  @click="openUpdateModal(item)" />
+                  @click="openUpdateModal(item)"
+                />
                 <UiButton
                   variant="icon"
                   icon="bxs:trash"
                   size="sm"
                   custom-class="!px-1 !text-red-500 !bg-transparent"
-                  @click="openDeleteConfirm(item)" />
+                  @click="openDeleteConfirm(item)"
+                />
               </div>
 
               <span v-else>
@@ -105,7 +120,14 @@
               :items="card"
               :index="(currentPage - 1) * rowsPerPage + idx"
               :map="referralColumns"
-              class="my-2">
+              class="my-2"
+            >
+              <template #appendTitle>
+                <span
+                  class="inline-block w-2 h-2 rounded-full mb-0.5"
+                  :class="card.status ? 'bg-emerald-500' : 'bg-red-500'"
+                />
+              </template>
               <template #format="{ field, value }">
                 <span v-if="field.key === 'price'">
                   {{ card.currency ?? "" }} {{ value ?? "0" }}
@@ -116,7 +138,8 @@
                     value
                       ? 'text-emerald-500 font-semibold'
                       : 'text-red-500 font-semibold'
-                  ">
+                  "
+                >
                   {{ value ? "Active" : "Inactive" }}
                 </span>
               </template>
@@ -127,13 +150,15 @@
                     icon="cuida:edit-outline"
                     size="sm"
                     custom-class="!px-1 !text-[#00BDA7] !bg-transparent"
-                    @click="openUpdateModal(card)" />
+                    @click="openUpdateModal(card)"
+                  />
                   <UiButton
                     variant="icon"
                     icon="bxs:trash"
                     size="sm"
                     custom-class="!px-1 !text-red-500 !bg-transparent"
-                    @click="openDeleteConfirm(card)" /></div
+                    @click="openDeleteConfirm(card)"
+                  /></div
               ></template>
               <template v-if="card.label"></template>
               <template v-else>
@@ -146,12 +171,14 @@
           <UiButton
             variant="text"
             class="!text-[11px] !px-2 !mx-2"
-            @click="openCreate = true">
+            @click="openCreate = true"
+          >
             Create Campaign
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-[#00BDA7]" />
+                custom-class="w-4 h-4 !text-[#00BDA7]"
+              />
             </template>
           </UiButton>
         </template>
@@ -161,10 +188,12 @@
       <!-- Add Referral Campaings -->
       <div
         v-if="referralCampaigns.length < 5 && !campaignsLoading"
-        class="flex flex-col gap-[2px] items-center justify-center py-20">
+        class="flex flex-col gap-[2px] items-center justify-center py-20"
+      >
         <UiIcon
           icon="humbleicons:users"
-          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]" />
+          custom-class="w-[70px] h-[70px] bg-gradient-to-r from-[#00AAFF] to-[#00BDA7]"
+        />
         <p>CREATE MORE CAMPAIGNS</p>
         <p class="italic text-[10px] text-[#626262]">
           Click the button below to create a new referral campaign
@@ -172,12 +201,14 @@
         <div class="py-2">
           <UiButton
             class="!rounded-full !text-[11px]"
-            @click="openCreate = true">
+            @click="openCreate = true"
+          >
             Create Campaign
             <template #icon-left>
               <UiIcon
                 icon="hugeicons:add-01"
-                custom-class="w-4 h-4 !text-white" />
+                custom-class="w-4 h-4 !text-white"
+              />
             </template>
           </UiButton>
         </div>
@@ -188,7 +219,8 @@
     <UiModal
       :show="openCreate"
       title="Create Referral Campaign"
-      @close="(openCreate = false), clearErrors(), resetNewCampaign()">
+      @close="((openCreate = false), clearErrors(), resetNewCampaign())"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <div class="">
@@ -196,10 +228,12 @@
               dark
               label="Name"
               placeholder="Name"
-              v-model="newCampaign.name" />
+              v-model="newCampaign.name"
+            />
             <p
               v-if="errors.name"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.name }}
             </p>
           </div>
@@ -208,16 +242,19 @@
             dark
             label="Description"
             placeholder="Description"
-            v-model="newCampaign.description" />
+            v-model="newCampaign.description"
+          />
           <div class="">
             <UiInput
               dark
               label="Commission Percentage"
               type="number"
-              v-model.number="newCampaign.commissionPercentage" />
+              v-model.number="newCampaign.commissionPercentage"
+            />
             <p
               v-if="errors.commissionPercentage"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.commissionPercentage }}
             </p>
           </div>
@@ -225,7 +262,8 @@
             <UiDate label="Start Date" v-model="newCampaign.startDate" />
             <p
               v-if="errors.startDate"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.startDate }}
             </p>
           </div>
@@ -233,7 +271,8 @@
             <UiDate label="End Date" v-model="newCampaign.endDate" />
             <p
               v-if="errors.endDate"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.endDate }}
             </p>
           </div>
@@ -244,7 +283,8 @@
         <UiButton
           class="w-full py-2.5 !text-[12px] !rounded-full"
           :isLoading="isCreating"
-          @click="createCampaign">
+          @click="createCampaign"
+        >
           Create Campaign
         </UiButton>
       </template>
@@ -254,14 +294,16 @@
     <UiModal
       :show="openUpdate"
       title="Update Campaign"
-      @close="openUpdate = false">
+      @close="openUpdate = false"
+    >
       <template #body>
         <div class="flex flex-col gap-3 px-2">
           <div class="">
             <UiInput dark label="Name" v-model="selectedCampaign.name" />
             <p
               v-if="errors.name"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.name }}
             </p>
           </div>
@@ -273,11 +315,13 @@
                 v-model="selectedCampaign.status"
                 true-value="active"
                 false-value="inactive"
-                size="sm" />
+                size="sm"
+              />
             </div>
             <p
               v-if="errors.status"
-              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]">
+              class="text-red-500 text-[10px] pt-1 pl-2 min-h-[16px]"
+            >
               {{ errors.status }}
             </p>
           </div>
@@ -289,12 +333,14 @@
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px]"
             :isLoading="isUpdateLoading"
-            @click="updateCampaign">
+            @click="updateCampaign"
+          >
             Save Changes
           </UiButton>
           <UiButton
             class="w-full py-2.5 !rounded-full text-white !text-[12px] bg-gray-700 hover:bg-gray-600"
-            @click="openUpdate = false">
+            @click="openUpdate = false"
+          >
             Cancel
           </UiButton>
         </div>
@@ -309,13 +355,15 @@
       type="confirmAlert"
       :isLoading="isDeleteLoading"
       @confirm="deleteCampaign"
-      @close="openConfirm = false" />
+      @close="openConfirm = false"
+    />
     <UiModal
       :show="successModal"
       title="Success"
       :description="successMsg"
       type="successAlert"
-      @close="successModal = false"></UiModal>
+      @close="successModal = false"
+    ></UiModal>
   </div>
 </template>
 
@@ -451,7 +499,7 @@ const createCampaign = async () => {
   try {
     const res = await $api.post(
       "/api/admin/referral/campaigns",
-      newCampaign.value
+      newCampaign.value,
     );
     successMsg.value = res.data?.message ?? "Campaign added successfully";
     successModal.value = true;
@@ -492,7 +540,7 @@ const updateCampaign = async () => {
       {
         name: selectedCampaign.value.name,
         status: selectedCampaign.value.status,
-      }
+      },
     );
     successMsg.value = res.data?.message ?? "Campaign updated successfully";
     successModal.value = true;
@@ -517,7 +565,7 @@ const deleteCampaign = async () => {
 
   try {
     const res = await $api.delete(
-      `/api/admin/referral/campaigns/${selectedCampaign.value.id}`
+      `/api/admin/referral/campaigns/${selectedCampaign.value.id}`,
     );
 
     openConfirm.value = false;
@@ -531,7 +579,7 @@ const deleteCampaign = async () => {
       error.response?.data?.message ??
         error.message ??
         "Failed to delete campaign",
-      "error"
+      "error",
     );
   } finally {
     isDeleteLoading.value = false;
@@ -555,28 +603,5 @@ const clearData = () => {
   filteredCampaigns.value = [];
   isSearching.value = false;
   getCampaigns();
-};
-
-const handleSearchSubmit = () => {
-  const query = search.value?.toLowerCase().trim();
-
-  isSearching.value = !!query;
-
-  if (!query) {
-    filteredCampaigns.value = [];
-  } else {
-    const searchableKeys = referralColumns
-      .map((col) => col.key)
-      .filter((key) => key !== "actions");
-
-    filteredCampaigns.value = referralCampaigns.value.filter((item) =>
-      searchableKeys.some((key) => {
-        const value = item[key];
-        return value != null && String(value).toLowerCase().includes(query);
-      })
-    );
-  }
-
-  currentPage.value = 1;
 };
 </script>

@@ -1,26 +1,29 @@
 <template>
-  <NuxtLink
-    v-if="canAccess"
-    :to="link.path"
-    class="flex items-center gap-3 px-3 py-2 rounded-md transition"
-    :class="[
-      isActive ? activeClass : inactiveClass,
-      isCollapsed ? 'justify-start' : 'justify-start',
-    ]"
-    @click="$emit('click')">
-    <UiIcon :icon="link.icon" custom-class="w-4 h-4" />
+  <ClientOnly>
+    <NuxtLink
+      v-if="canAccess"
+      :to="link.path"
+      class="flex items-center gap-3 px-3 py-2 rounded-md transition"
+      :class="[
+        isActive ? activeClass : inactiveClass,
+        isCollapsed ? 'justify-start' : 'justify-start',
+      ]"
+      @click="$emit('click')"
+    >
+      <UiIcon :icon="link.icon" custom-class="w-4 h-4" />
 
-    <!-- Smooth slide/fade text -->
-    <span
-      class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
-      :class="
-        !isCollapsed
-          ? 'opacity-100 translate-x-0 max-w-[200px]'
-          : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
-      ">
-      {{ link.label }}
-    </span>
-  </NuxtLink>
+      <span
+        class="inline-block text-[12px] whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out"
+        :class="
+          !isCollapsed
+            ? 'opacity-100 translate-x-0 max-w-[200px]'
+            : 'opacity-0 -translate-x-2 max-w-0 pointer-events-none'
+        "
+      >
+        {{ link.label }}
+      </span>
+    </NuxtLink>
+  </ClientOnly>
 </template>
 
 <script setup>

@@ -457,7 +457,7 @@
               <div
                 class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
               >
-                <span class="text-[#838383]">Filters : </span>
+                <span class="text-[#838383] hidden sm:inline"> Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="userSearch" dark />
                   <UiFilter
@@ -504,8 +504,8 @@
               :rowsPerPage="rowsPerPage"
               :totalItems="pagination.totalUsers"
               @page-changed="handlePageChange"
-              @rows-per-page-changed="handleRowsPerPageChange"
               :table-break-points="1000"
+              :search-key="userSearch"
               class="min-h-[265px]"
               server
             >
@@ -611,14 +611,10 @@
               <div
                 class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
               >
-                <span class="text-[#838383]">Filters : </span>
+                <span class="text-[#838383] hidden sm:inline"> Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="userSearch" dark />
-                  <UiFilter
-                    v-model="selectedRole"
-                    icon="fa6-regular:user"
-                    :options="roleOptions"
-                  />
+
                   <UiFilter
                     v-model="rowsPerPage"
                     icon="gg:list"
@@ -656,14 +652,9 @@
               :isLoading="userLoading"
               :currentPage="currentPage"
               :rowsPerPage="rowsPerPage"
-              :totalItems="
-                (isSearchingUsers || isFilteringByRole
-                  ? filteredUsers
-                  : usersData
-                ).length
-              "
+              :totalItems="pagination.totalUsers"
               @page-changed="handlePageChange"
-              @rows-per-page-changed="handleRowsPerPageChange"
+              :search-key="userSearch"
               :table-break-points="1000"
             >
               <template #row="{ item, applyBorder }">
@@ -768,7 +759,7 @@
               <div
                 class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
               >
-                <span class="text-[#838383]">Filters : </span>
+                <span class="text-[#838383] hidden sm:inline"> Filters : </span>
                 <div class="flex flex-wrap">
                   <UiSearch v-model="transactionSearch" dark />
                   <UiFilter
@@ -821,9 +812,9 @@
               :rowsPerPage="transactionRowsPerPage"
               :totalItems="pagination.totalTransactions"
               @page-changed="transactionHandlePageChange"
-              @rows-per-page-changed="transactionandleRowsPerPageChange"
               class="min-h-[265px]"
               :table-break-points="1200"
+              :search-key="transactionSearch"
               server
             >
               <template #row="{ item, applyBorder }">
@@ -894,6 +885,16 @@
                     :map="transactionsColumns"
                     class="my-2"
                   >
+                    <template #appendTitle>
+                      <span
+                        class="inline-block w-2 h-2 rounded-full mb-0.5"
+                        :class="{
+                          'bg-green-500': card.paymentStatus === 'completed',
+                          'bg-yellow-500': card.paymentStatus === 'pending',
+                          'bg-red-500': card.paymentStatus === 'failed',
+                        }"
+                      />
+                    </template>
                     <template #format="{ field, value }">
                       <span v-if="field.key === 'type'" class="capitalize">
                         {{ value.replaceAll("_", " ") }}
@@ -1040,7 +1041,21 @@ const isDeleteLoading = ref(false);
 const userLoading = ref(false);
 const transactionLoading = ref(false);
 
+/**
+ * *****Ref - the original value to use upon reset
+ * weird computed for applying new selected value filtering items etc
+ */
+const pagination = ref({
+  limit: 15,
+  page: 1,
+  currentPage: 1,
+  totalPages: 0,
+  hasPrevPage: false,
+  hasNextPage: false,
+});
+
 const currentPage = ref(1);
+const rowsPerPageRef = ref(5);
 const rowsPerPage = computed({
   get: () => rowsPerPageRef.value,
   set: (val) => {
@@ -1051,8 +1066,13 @@ const rowsPerPage = computed({
     }
   },
 });
+const rowsPerPageOptions = [
+  { label: "5", value: 5 },
+  { label: "10", value: 10 },
+  { label: "15", value: 15 },
+  { label: "20", value: 20 },
+];
 
-const rowsPerPageRef = ref(5);
 const transactionCurrentPage = ref(1);
 const transactionRowsPerPage = computed({
   get: () => rowsPerPageRef.value,
@@ -1063,15 +1083,6 @@ const transactionRowsPerPage = computed({
       getTransactions();
     }
   },
-});
-
-const pagination = ref({
-  limit: 15,
-  page: 1,
-  currentPage: 1,
-  totalPages: 0,
-  hasPrevPage: false,
-  hasNextPage: false,
 });
 
 const selectedRoleRef = ref("Show All");
@@ -1108,7 +1119,6 @@ const selectedType = computed({
     }
   },
 });
-
 const typeOptions = [
   { label: "Show All", value: "Show All" },
   { label: "Completed", value: "Completed" },
@@ -1130,13 +1140,6 @@ const selectedTransaction = computed({
 const transactionOptions = [
   { label: "Show All", value: "Show All" },
   { label: "Subscription Payment", value: "subscription_payment" },
-];
-
-const rowsPerPageOptions = [
-  { label: "5", value: 5 },
-  { label: "10", value: 10 },
-  { label: "15", value: 15 },
-  { label: "20", value: 20 },
 ];
 
 const userColumns = [
@@ -1478,22 +1481,10 @@ const handlePageChange = (page) => {
   getUsers();
 };
 
-// const handleRowsPerPageChange = (rpp) => {
-//   console.log("rpp clicked");
-//   rowsPerPage.value = rpp;
-//   currentPage.value = 1;
-//   getUsers();
-// };
-
 const transactionHandlePageChange = (page) => {
   transactionCurrentPage.value = page;
   getTransactions();
 };
-
-// const transactionandleRowsPerPageChange = (rpp) => {
-//   transactionRowsPerPage.value = rpp;
-//   transactionCurrentPage.value = 1; // reset to first page
-// };
 
 const clearData = () => {
   isClearing.value = true;
@@ -1517,127 +1508,6 @@ const clearTransactions = () => {
   isFilteringStatus.value = false;
   isClearing.value = false;
   getTransactions();
-};
-
-const searchUsers = () => {
-  const query = userSearch.value?.toLowerCase().trim();
-
-  // isSearchingUsers.value = !!query;
-  isSearchingUsers.value = !!query || isFilteringByRole.value;
-
-  if (!query) {
-    filteredUsers.value = [];
-  } else {
-    const searchableKeys = userColumns
-      .map((col) => col.key)
-      .filter((key) => key !== "actions");
-
-    filteredUsers.value = usersData.value.filter((item) =>
-      searchableKeys.some((key) => {
-        const value = item[key];
-        return value != null && String(value).toLowerCase().includes(query);
-      }),
-    );
-  }
-
-  currentPage.value = 1;
-};
-
-const filterByRole = (role) => {
-  if (!role || role === "Show All") {
-    isFilteringByRole.value = false;
-
-    filteredUsers.value = isSearchingUsers.value ? filteredUsers.value : [];
-
-    return;
-  }
-
-  isFilteringByRole.value = true;
-
-  const baseData = isSearchingUsers.value
-    ? filteredUsers.value
-    : usersData.value;
-
-  filteredUsers.value = baseData.filter(
-    (user) => user.role?.toLowerCase() === role.toLowerCase(),
-  );
-
-  currentPage.value = 1;
-};
-
-/**
- * Transaction Table
- */
-
-const searchTransactions = () => {
-  const query = transactionSearch.value?.toLowerCase().trim();
-
-  isSearchingTransaction.value =
-    !!query || isFilteringStatus.value || isFilteringType.value;
-
-  if (!query) {
-    filteredTransactions.value = [];
-  } else {
-    const searchableKeys = transactionsColumns
-      .map((col) => col.key)
-      .filter((key) => key);
-
-    filteredTransactions.value = transactionsData.value.filter((item) =>
-      searchableKeys.some((key) => {
-        const value = item[key];
-        return value != null && String(value).toLowerCase().includes(query);
-      }),
-    );
-  }
-
-  transactionCurrentPage.value = 1;
-};
-
-const filterByStatus = (status) => {
-  if (!status || status === "Show All") {
-    isFilteringStatus.value = false;
-
-    filteredTransactions.value = isSearchingTransaction.value
-      ? filteredTransactions.value
-      : [];
-
-    return;
-  }
-
-  isFilteringStatus.value = true;
-
-  const baseData = isSearchingTransaction.value
-    ? filteredTransactions.value
-    : transactionsData.value;
-
-  filteredTransactions.value = baseData.filter(
-    (tx) => tx.paymentStatus?.toLowerCase() === status.toLowerCase(),
-  );
-
-  transactionCurrentPage.value = 1;
-};
-
-const filterByType = (type) => {
-  if (!type || type === "Show All") {
-    isFilteringType.value = false;
-
-    filteredTransactions.value = isSearchingTransaction.value
-      ? filteredTransactions.value
-      : [];
-    return;
-  }
-
-  isFilteringType.value = true;
-
-  const baseData = isSearchingTransaction.value
-    ? filteredTransactions.value
-    : transactionsData.value;
-
-  filteredTransactions.value = baseData.filter(
-    (tx) => tx.type === type.toLowerCase(),
-  );
-
-  transactionCurrentPage.value = 1;
 };
 
 onMounted(() => {

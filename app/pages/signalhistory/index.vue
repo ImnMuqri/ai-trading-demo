@@ -19,7 +19,7 @@
         <div
           class="flex flex-wrap justify-center sm:justify-end items-center gap-3"
         >
-          <span class="text-[#838383]">Filters : </span>
+          <span class="text-[#838383] hidden sm:inline"> Filters : </span>
           <div class="flex flex-wrap">
             <UiSearch v-model="search" dark />
             <UiFilter
@@ -58,7 +58,6 @@
         :totalItems="pagination.total"
         empty-class="!min-h-[75vh]"
         @page-changed="handlePageChange"
-        @rows-per-page-changed="handleRowsPerPageChange"
         :table-break-points="1000"
         :search-key="search"
         server
@@ -83,11 +82,12 @@
               <span
                 v-else-if="col.key === 'signal'"
                 class="font-semibold"
-                :class="
-                  item[col.key] === 'BUY' ? 'text-green-500' : 'text-red-500'
-                "
+                :class="{
+                  'text-green-500': item[col.key] === 'BUY',
+                  'text-red-500': item[col.key] === 'SELL',
+                }"
               >
-                {{ item[col.key] }}
+                {{ item[col.key] ?? "No Data" }}
               </span>
 
               <div v-else-if="col.key === 'actions'" class="flex">
@@ -391,6 +391,8 @@ definePageMeta({
 const { $api } = useNuxtApp();
 const historyData = ref([]);
 
+const search = ref(null);
+
 const openDetailedAnalysis = ref(false);
 const selectedHistory = ref(null);
 const historyLoading = ref(true);
@@ -402,15 +404,10 @@ const historyColumns = [
   { label: "Actions", key: "actions" },
 ];
 
-const currentPage = ref(1);
-
-const rowsPerPage = computed({
-  get: () => pagination.value.limit,
-  set: (val) => {
-    pagination.value.limit = val;
-    pagination.value.offset = 0;
-  },
-});
+/**
+ * *****Ref - the original value to use upon reset
+ * weird computed for applying new selected value filtering items etc
+ */
 
 const pagination = ref({
   limit: 15,
@@ -418,7 +415,18 @@ const pagination = ref({
   total: 0,
 });
 
-const search = ref(null);
+const currentPage = ref(1);
+const rowsPerPageRef = ref(15);
+const rowsPerPage = computed({
+  get: () => rowsPerPageRef.value,
+  set: (val) => {
+    rowsPerPageRef.value = val;
+    currentPage.value = 1;
+    pagination.value.limit = val;
+    pagination.value.offset = 0;
+    getSignalHistory();
+  },
+});
 const rowsPerPageOptions = [
   { label: "5", value: 5 },
   { label: "10", value: 10 },
@@ -437,7 +445,7 @@ const getSignalHistory = async () => {
   try {
     const res = await $api.get("/api/ai/trading-history", {
       params: {
-        limit: pagination.value.limit,
+        limit: rowsPerPage.value,
         offset: pagination.value.offset,
       },
     });
