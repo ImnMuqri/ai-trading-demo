@@ -34,9 +34,11 @@
 
           <div class="mb-2">
             <UiInput
+              v-model="password"
               dark
               type="password"
-              v-model="password"
+              password
+              :clearable="false"
               placeholder="Password"
               customClass="h-10 pl-10"
             >
@@ -49,7 +51,7 @@
           </div>
           <div class="flex flex-row justify-between px-1 pb-8 pt-5">
             <div class="flex items-center gap-2">
-              <label class="flex items-center cursor-pointer">
+              <label class="flex items-center cursor-pointer gap-2">
                 <input
                   type="checkbox"
                   v-model="rememberPassword"
@@ -57,16 +59,15 @@
                 />
 
                 <span
-                  class="w-3 h-3 rounded-full border border-gray-400 bg-white peer-checked:bg-[#00BDA7]"
+                  class="w-3 h-3 rounded-full border border-gray-400 bg-white peer-checked:bg-[#00BDA7] transition"
                 ></span>
-              </label>
 
-              <label
-                for="isActive"
-                class="text-[12px] text-[#9B9A9A] font-semibold"
-                >Remember me</label
-              >
+                <span class="text-[12px] text-[#9B9A9A] font-semibold">
+                  Remember me
+                </span>
+              </label>
             </div>
+
             <NuxtLink
               to="/forgotpassword"
               class="text-[12px] text-[#00BDA7] px-1 cursor-pointer"
@@ -145,14 +146,18 @@ const handleLogin = async () => {
   transform: translateY(40px);
 }
 .fade-up-enter-active {
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 .fade-up-leave-to {
   opacity: 0;
   transform: translateY(40px);
 }
 .fade-up-leave-active {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
 }
 
 .login-background {

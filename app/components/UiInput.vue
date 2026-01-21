@@ -8,26 +8,49 @@
       <!-- Left icon slot -->
       <div
         v-if="$slots['icon-left']"
-        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+        class="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+      >
         <slot name="icon-left"></slot>
       </div>
 
       <!-- Right icon slot -->
       <div
-        v-if="$slots['icon-right']"
-        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer">
-        <slot name="icon-right"></slot>
+        v-if="(clearable && inputValue) || password || $slots['icon-right']"
+        class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+        @click="rightIconClicked"
+      >
+        <UiIcon
+          v-if="clearable && inputValue"
+          icon="ic:round-close"
+          custom-class="text-gray-400 hover:text-red-500 transition"
+        />
+
+        <UiIcon
+          v-else-if="password"
+          :icon="showPassword ? 'heroicons:eye' : 'heroicons:eye-slash'"
+          custom-class="text-gray-400 hover:text-white transition"
+        />
+
+        <slot v-else name="icon-right"></slot>
       </div>
 
       <!-- Input -->
       <input
         v-if="type !== 'textarea'"
-        :type="type"
+        ref="inputRef"
+        :type="
+          type === 'password' && password
+            ? showPassword
+              ? 'text'
+              : 'password'
+            : type
+        "
         v-model="inputValue"
         :placeholder="placeholder"
         :disabled="isDisabled"
         :readonly="isReadonly"
-        :class="baseClasses" />
+        :class="baseClasses"
+      />
 
       <!-- Textarea -->
       <textarea
@@ -37,7 +60,8 @@
         :disabled="isDisabled"
         :readonly="isReadonly"
         rows="4"
-        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']" />
+        :class="[baseClasses, 'resize-none h-auto min-h-[80px]']"
+      />
     </div>
 
     <!-- Error message -->
@@ -63,16 +87,45 @@ const props = defineProps({
   isReadonly: Boolean,
   customClass: String,
   dark: Boolean,
+  clearable: {
+    type: Boolean,
+    default: true,
+  },
+  password: {
+    type: Boolean,
+    default: false,
+  },
 });
 const slots = useSlots();
 const emit = defineEmits(["update:modelValue"]);
 
+defineExpose({
+  focus: () => inputRef.value?.focus(),
+});
+
 const inputValue = ref(props.modelValue || "");
+const inputRef = ref(null);
+const showPassword = ref(false);
+
+const clear = () => {
+  inputValue.value = "";
+  emit("update:modelValue", "");
+  inputRef.value?.focus();
+};
+
+const rightIconClicked = () => {
+  if (props.clearable && inputValue.value) {
+    clear();
+  } else if (props.password) {
+    showPassword.value = !showPassword.value;
+    inputRef.value?.focus();
+  }
+};
 
 watch(inputValue, (val) => emit("update:modelValue", val));
 watch(
   () => props.modelValue,
-  (val) => (inputValue.value = val)
+  (val) => (inputValue.value = val),
 );
 
 const baseClasses = computed(() => {

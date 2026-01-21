@@ -6,9 +6,11 @@
           class="flex w-[90%] justify-start items-center font-semibold text-lg text_tpt_green place-self-start gap-4"
         >
           <p
-            class="w-6 h-6 flex-shrink-0 flex items-center justify-center bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] rounded-full text_tpt_green !shadow-xl text-[13px]"
+            class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#00BDA7] to-[#A3D0E6] text-[12px] leading-none text_tpt_green !shadow-xl"
           >
-            {{ index + 1 }}
+            <span>
+              {{ index + 1 }}
+            </span>
           </p>
 
           <p class="text-sm">
@@ -84,7 +86,7 @@ const toggle = () => {
 };
 
 const displayFields = computed(() =>
-  props.map.filter((f) => f.key !== "actions")
+  props.map.filter((f) => f.key !== "actions"),
 );
 
 const isDate = (value) => {

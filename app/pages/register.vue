@@ -65,6 +65,8 @@
               placeholder="Password"
               :isDisabled="isLoading"
               type="password"
+              password
+              :clearable="false"
             >
               <template #icon-left>
                 <UiIcon
@@ -287,8 +289,8 @@ const handleRegister = async () => {
 
 <style scoped>
 .register-bg {
-  background-image: url("~/assets/bg/registerOverlay.svg"),
-    url("~/assets/bg/registerBg.svg");
+  background-image:
+    url("~/assets/bg/registerOverlay.svg"), url("~/assets/bg/registerBg.svg");
   background-repeat: no-repeat, no-repeat;
   background-size: cover, cover;
   background-position: center, center;
